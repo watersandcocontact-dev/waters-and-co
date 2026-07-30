@@ -1,5 +1,11 @@
 # AI Missed-Call Reception — Pricing Sheet (draft, adjustable)
 
+**Service area: Australia-wide.** Setup, script writing, call-log review, and
+client reporting are all done remotely — the client's phone number can be
+anywhere in the country (number porting/AU number setup is handled by the
+platform, see `platform_research.md`). Market this nationally, not just
+locally.
+
 Pricing depends heavily on which underlying AI phone platform is chosen (see
 `platform_research.md` once available) — the platform itself usually charges
 a per-minute or per-call usage fee that gets passed through or marked up.

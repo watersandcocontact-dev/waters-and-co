@@ -1,5 +1,11 @@
 # Land Valuation Objection Letter — Reusable Template
 
+**Service area: Australia-wide.** Evidence research, comps-pulling, and letter
+drafting are all done remotely from documents/public records — there's no need
+to visit the property or meet the client in person. Reference docs exist for
+all 8 states/territories (`state_*.md` in this folder), so this can be
+marketed and delivered to clients anywhere in Australia, not just WA.
+
 **IMPORTANT — read before using with a real client:** This is a drafting template
 only. It is not legal advice, and in every state the actual objection must be
 lodged by the property owner (or their authorised agent, which typically requires

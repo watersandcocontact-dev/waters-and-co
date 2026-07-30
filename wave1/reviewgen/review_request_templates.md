@@ -1,5 +1,10 @@
 # Review Request Templates — Australian Consumer Law (ACL) Compliant
 
+**Service area: Australia-wide.** Setting up and managing a client's review-
+request flow and AI response drafts is entirely remote (SMS/email tool
+configuration + ongoing monitoring) — no in-person requirement, so market and
+onboard clients from anywhere in the country.
+
 ## Compliance rules baked into these templates (read before customizing)
 
 Under the Australian Consumer Law and ACCC guidance on online reviews:

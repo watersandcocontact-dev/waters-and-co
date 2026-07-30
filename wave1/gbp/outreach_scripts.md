@@ -3,6 +3,13 @@
 Personalize the [bracketed] hooks using the specific weak point found in the audit
 (see `audit_checklist.md` / `audit_tool.py` output) before every send/call.
 
+**Service area: Australia-wide.** The call and text/email scripts work for any
+prospect anywhere in the country — nothing about GBP cleanup or management
+requires being physically near the client. The in-person script (#2) is just
+one optional channel for prospects you happen to be near; don't read it as
+implying the business only serves local trades. Lead with phone/text/email for
+national reach, and treat in-person as a bonus for local opportunities.
+
 ---
 
 ## 1. Cold call script

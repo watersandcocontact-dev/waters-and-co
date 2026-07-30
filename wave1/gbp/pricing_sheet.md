@@ -1,5 +1,13 @@
 # GBP / Local SEO — Pricing Sheet (draft, adjustable)
 
+**Service area: Australia-wide.** This entire service is delivered remotely —
+GBP access is granted online, photos/posts are supplied digitally, and calls/
+video cover any onboarding — there's no in-person requirement. Market and take
+clients from anywhere in Australia, not just Perth/WA. (Perth was only used as
+the starting point for the initial cold-outreach target list — see
+`target_businesses_perth.md` — that's a prospecting batch, not a service-area
+limit.)
+
 ## One-off profile cleanup — $150-$300
 
 Scope (adjust price by how much cleanup is needed — use the audit score as a guide:
