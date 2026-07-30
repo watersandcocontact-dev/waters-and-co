@@ -48,7 +48,7 @@ Last updated: 2026-07-30 — **Wave 1 + Wave 2 prep fully built, plus the daily-
 3. **Pick and sign up for an AI phone/reception platform** (`wave1/missedcall/platform_research.md`) and give me the API key to activate the webhook.
 4. **Pick and sign up for a review-automation tool** (`wave1/reviewgen/tool_research.md` — NiceJob recommended).
 5. **Pick accounting software (Xero or QBO)** for bookkeeping — clients invite you into theirs, you generally don't pay.
-6. **Review competitor pricing research** (`docs/competitor_pricing_research.md`) and decide whether to adjust your GBP/ReviewGen/MissedCall/LandTax pricing — land tax objection specifically has almost no public competitor pricing, which is itself useful information.
+6. **Review the pricing** — GBP/MissedCall unchanged, and ReviewGen + LandTax now have full pricing sheets built from competitor research (`wave1/reviewgen/pricing_sheet.md`, `wave1/landtax/pricing_sheet.md`) — land tax specifically found zero public competitor pricing anywhere, so that price point is a judgment call worth your sign-off before quoting a real client.
 7. **Review every draft template before client use** — none are legally vetted.
 8. **Re-verify research docs with "unverified" flags** before relying on them (search each file for the word).
 9. **Decide if/when to actually build out the 9 new business lines** from the pricing table — right now they're priced and ready to receive leads, nothing more.

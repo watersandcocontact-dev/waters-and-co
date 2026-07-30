@@ -16,6 +16,12 @@ pricing sheet, not the $100-300 implied here. This table's **$/hr figures**
 still drive queue sorting either way, since they're closer to your actual
 time cost either way and that's what this table is for.
 
+**Update 2026-07-30:** ReviewGen and LandTax now have their own pricing
+sheets too (`wave1/reviewgen/pricing_sheet.md`, `wave1/landtax/pricing_sheet.md`),
+built from real AU competitor research (`docs/competitor_pricing_research.md`)
+rather than this table's rough estimates — those are now the authoritative
+client-facing quotes for those two lines, same status as GBP/MissedCall.
+
 **Business-line scope note:** rows 1, 3, 5, 8, 9, 10, 11 map to the 8
 businesses already fully built (Wave 1 + Wave 2 prep). Rows 2 (land tax,
 already built) plus rows 7, 12–19 introduce **9 businesses with no prior
