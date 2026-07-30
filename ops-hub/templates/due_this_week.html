@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Due This Week — Ops Hub{% endblock %}
+{% block content %}
+<h2>Due within 7 days (incl. overdue)</h2>
+{% if leads %}
+<table>
+  <thead><tr><th>Name</th><th>Line</th><th>Deadline</th><th>Next action</th><th>Status</th></tr></thead>
+  <tbody>
+    {% for lead in leads %}
+    <tr>
+      <td><a class="row-link" href="{{ url_for('main.lead_detail', lead_id=lead.id) }}">{{ lead.name }}</a></td>
+      <td>{{ lead.business_line | line_label }}</td>
+      <td>{{ lead.deadline }}</td>
+      <td>{{ lead.next_action or '—' }}</td>
+      <td><span class="badge status-{{ lead.status }}">{{ lead.status }}</span></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">Nothing due in the next 7 days.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}{% if lead %}Edit Lead{% else %}New Lead{% endif %} — Ops Hub{% endblock %}
+{% block content %}
+<h2>{% if lead %}Edit lead: {{ lead.name }}{% else %}New lead{% endif %}</h2>
+
+<form class="lead-form" method="post">
+  <label>Name</label>
+  <input type="text" name="name" required value="{{ lead.name if lead else '' }}">
+
+  <label>Business line</label>
+  <select name="business_line" id="business_line" onchange="showExtra()">
+    {% for key, label in business_lines %}
+    <option value="{{ key }}" {% if (lead and lead.business_line == key) or (not lead and key == selected_line) %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Status</label>
+  <select name="status">
+    {% for s in statuses %}
+    <option value="{{ s }}" {% if lead and lead.status == s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Next action</label>
+  <input type="text" name="next_action" value="{{ lead.next_action if lead else '' }}">
+
+  <label>Deadline (YYYY-MM-DD — leave blank to auto-calc where applicable, e.g. Land Tax objection window: 60 days from notice for most states, 30 days for NT — set State/Territory below first)</label>
+  <input type="date" name="deadline" value="{{ lead.deadline if lead else '' }}">
+
+  <label>Estimated value ($)</label>
+  <input type="number" step="1" name="estimated_value" value="{{ lead.estimated_value if lead else '' }}">
+
+  <div class="section-title">Contact</div>
+  <label>Contact name</label>
+  <input type="text" name="contact_name" value="{{ lead.contact_name if lead else '' }}">
+  <label>Phone</label>
+  <input type="text" name="contact_phone" value="{{ lead.contact_phone if lead else '' }}">
+  <label>Email</label>
+  <input type="email" name="contact_email" value="{{ lead.contact_email if lead else '' }}">
+  <label>State/Territory</label>
+  <select name="au_state">
+    <option value="">—</option>
+    {% for s in au_states %}
+    <option value="{{ s }}" {% if lead and lead.au_state == s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+
+  <div class="section-title">Business-line details</div>
+  <div id="extra-fields">
+    {% for line_key, fields in extra_fields.items() %}
+    <div class="extra-group" data-line="{{ line_key }}" style="display:none;">
+      {% for fkey, flabel in fields %}
+      <label>{{ flabel }}</label>
+      <input type="text" name="extra__{{ fkey }}" value="{{ lead.extra.get(fkey, '') if lead else '' }}">
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <label>Notes</label>
+  <textarea name="notes">{{ lead.notes if lead else '' }}</textarea>
+
+  <div class="actions">
+    <button class="btn" type="submit">{% if lead %}Save{% else %}Create lead{% endif %}</button>
+    <a class="btn secondary" href="{{ url_for('main.dashboard') }}">Cancel</a>
+    {% if lead %}
+    <form method="post" action="{{ url_for('main.delete_lead', lead_id=lead.id) }}" onsubmit="return confirm('Delete this lead?')" style="margin-left:auto;">
+      <button class="btn secondary" type="submit" style="color:#c0392b;">Delete</button>
+    </form>
+    {% endif %}
+  </div>
+</form>
+
+<script>
+function showExtra() {
+  var sel = document.getElementById('business_line').value;
+  document.querySelectorAll('.extra-group').forEach(function(el) {
+    el.style.display = (el.dataset.line === sel) ? 'block' : 'none';
+  });
+}
+document.addEventListener('DOMContentLoaded', showExtra);
+</script>
+{% endblock %}

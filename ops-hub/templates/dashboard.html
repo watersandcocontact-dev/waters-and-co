@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Ops Hub{% endblock %}
+{% block content %}
+
+<div class="alert-banner">
+  {% if alerts.overdue %}<div class="alert-chip overdue">⚠ {{ alerts.overdue|length }} overdue</div>{% endif %}
+  {% if alerts.due_14 %}<div class="alert-chip due_14">{{ alerts.due_14|length }} due ≤14 days</div>{% endif %}
+  {% if alerts.due_30 %}<div class="alert-chip due_30">{{ alerts.due_30|length }} due ≤30 days</div>{% endif %}
+  {% if alerts.due_60 %}<div class="alert-chip due_60">{{ alerts.due_60|length }} due ≤60 days</div>{% endif %}
+  {% if not (alerts.overdue or alerts.due_14 or alerts.due_30 or alerts.due_60) %}
+  <div class="alert-chip" style="border-color:#2e7d32;color:#2e7d32;">✓ nothing due soon</div>
+  {% endif %}
+</div>
+
+<div class="counts-row">
+  {% for key, label in business_lines %}
+  <div class="count-chip">{{ label }}: <b>{{ counts.get(key, 0) }}</b></div>
+  {% endfor %}
+</div>
+
+<form class="filters" method="get">
+  <select name="business_line" onchange="this.form.submit()">
+    <option value="">All business lines</option>
+    {% for key, label in business_lines %}
+    <option value="{{ key }}" {% if key == selected_line %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <select name="status" onchange="this.form.submit()">
+    <option value="">All statuses</option>
+    {% for s in statuses %}
+    <option value="{{ s }}" {% if s == selected_status %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <select name="order_by" onchange="this.form.submit()">
+    <option value="deadline" {% if order_by == 'deadline' %}selected{% endif %}>Sort: deadline</option>
+    <option value="created" {% if order_by == 'created' %}selected{% endif %}>Sort: newest</option>
+    <option value="value" {% if order_by == 'value' %}selected{% endif %}>Sort: value</option>
+  </select>
+  <a class="btn secondary" href="{{ url_for('main.dashboard') }}">Reset</a>
+</form>
+
+{% if leads %}
+<table>
+  <thead>
+    <tr>
+      <th>Name</th><th>Line</th><th>Status</th><th>Next action</th><th>Deadline</th><th>Value</th><th>Contact</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for lead in leads %}
+    <tr>
+      <td><a class="row-link" href="{{ url_for('main.lead_detail', lead_id=lead.id) }}">{{ lead.name }}</a></td>
+      <td>{{ lead.business_line | line_label }}</td>
+      <td><span class="badge status-{{ lead.status }}">{{ lead.status }}</span></td>
+      <td>{{ lead.next_action or '—' }}</td>
+      <td>{{ lead.deadline or '—' }}</td>
+      <td>{{ '$%.0f'|format(lead.estimated_value) if lead.estimated_value else '—' }}</td>
+      <td>{{ lead.contact_phone or lead.contact_email or '—' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">No leads yet. <a href="{{ url_for('main.new_lead') }}">Add your first one</a>.</div>
+{% endif %}
+
+{% endblock %}
