@@ -9,13 +9,13 @@
 <body>
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="{{ url_for('main.landing') }}">Waters &amp; Co</a>
+      <a class="brand" href="{{ url_for('main.landing') }}">Waters <em>&amp;</em> Co</a>
       <nav>
         <a href="{{ url_for('main.enquire') }}">Contact</a>
       </nav>
     </div>
   </header>
-  <main class="wrap">
+  <main class="wrap fade-in">
     {% block content %}{% endblock %}
   </main>
   <footer class="site-footer">

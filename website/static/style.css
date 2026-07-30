@@ -47,6 +47,24 @@ body {
 
 a { color: var(--gold-bright); }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  main.fade-in {
+    animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
 .wrap {
   max-width: 760px;
   margin: 0 auto;
@@ -55,7 +73,7 @@ a { color: var(--gold-bright); }
 
 /* --- site header (not shown on the bare landing page) --- */
 header.site-header {
-  padding: 1.75rem 0;
+  padding: 1.6rem 0;
   border-bottom: 1px solid var(--ground-line);
 }
 header.site-header .wrap {
@@ -66,12 +84,16 @@ header.site-header .wrap {
 header.site-header a.brand {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: var(--gold-bright);
   text-decoration: none;
   letter-spacing: 0.01em;
+  transition: opacity 0.2s ease;
 }
+header.site-header a.brand:hover { opacity: 0.82; }
+header.site-header a.brand em { font-style: italic; font-weight: 400; color: var(--gold); }
 header.site-header nav a {
+  position: relative;
   font-family: var(--font-label);
   font-size: 12px;
   letter-spacing: 0.14em;
@@ -79,8 +101,20 @@ header.site-header nav a {
   color: var(--linen-dim);
   text-decoration: none;
   margin-left: 1.5rem;
+  transition: color 0.2s ease;
 }
-header.site-header nav a:hover { color: var(--gold); }
+header.site-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -4px;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s ease;
+}
+header.site-header nav a:hover { color: var(--gold-bright); }
+header.site-header nav a:hover::after { transform: scaleX(1); transform-origin: left; }
 
 main { padding: 3.5rem 0 5rem; }
 
@@ -129,6 +163,38 @@ p.body-copy {
   flex-direction: column;
   text-align: center;
   padding: 2rem;
+}
+
+.landing-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 1.5rem;
+}
+.landing-flourish .rule {
+  height: 1px;
+  width: 56px;
+  background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+  opacity: 0.65;
+}
+.landing-flourish .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-flourish, .landing-mark {
+    animation: mark-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .landing-flourish { animation-delay: 0s; }
+  .landing-mark { animation-delay: 0.1s; }
+  @keyframes mark-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
 .landing-mark {
@@ -201,13 +267,27 @@ p.body-copy {
   margin-top: 1rem;
 }
 .card {
+  position: relative;
   background: var(--ground);
-  padding: 1.5rem 1.75rem;
+  padding: 1.5rem 1.75rem 1.5rem 2.1rem;
   text-decoration: none;
   display: block;
-  transition: background 0.15s ease;
+  transition: background 0.25s ease, padding-left 0.25s ease;
 }
-.card:hover { background: var(--ground-raised); }
+.card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--gold);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+.card:hover {
+  background: var(--ground-raised);
+  padding-left: 2.35rem;
+}
+.card:hover::before { transform: scaleY(1); }
 .card .card-title {
   font-family: var(--font-display);
   font-weight: 500;
@@ -224,19 +304,36 @@ p.body-copy {
 
 /* --- pricing table --- */
 .pricing {
-  margin: 2rem 0;
+  margin: 2.25rem 0;
+  padding: 0.25rem 0 0.5rem;
   border-top: 1px solid var(--ground-line);
+  border-bottom: 1px solid var(--ground-line);
+  position: relative;
 }
+.pricing::before, .pricing::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--gold);
+  opacity: 0.45;
+}
+.pricing::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+.pricing::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
 .pricing-row {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: 1rem;
-  padding: 0.9rem 0;
-  border-bottom: 1px solid var(--ground-line);
-  font-size: 14.5px;
+  padding: 0.85rem 0.25rem;
+  font-size: 14px;
 }
+.pricing-row + .pricing-row { border-top: 1px solid var(--ground-line); }
 .pricing-row .label { color: var(--linen-dim); }
 .pricing-row .price {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.05rem;
   color: var(--gold-bright);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
