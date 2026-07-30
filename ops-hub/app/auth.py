@@ -19,11 +19,16 @@ from flask import Blueprint, redirect, render_template_string, request, session,
 bp = Blueprint("auth", __name__)
 
 LOGIN_TEMPLATE = """
-<!doctype html><html><head><title>Sign in — Ops Hub</title>
+<!doctype html><html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Sign in — Ops Hub</title>
 <link rel="stylesheet" href="/static/style.css"></head>
-<body><main style="max-width:360px;margin:80px auto;">
-<h2>Ops Hub</h2>
-{% if error %}<p style="color:#c0392b;">{{ error }}</p>{% endif %}
+<body style="display:flex; min-height:100vh; align-items:center; justify-content:center;">
+<main style="max-width:360px; width:100%; padding:0 20px;">
+<h1 style="text-align:center; margin-bottom:24px;">🗂 Ops Hub</h1>
+{% if error %}<p style="color:var(--red); text-align:center;">{{ error }}</p>{% endif %}
 <form method="post" class="lead-form">
   <label>Password</label>
   <input type="password" name="password" autofocus>

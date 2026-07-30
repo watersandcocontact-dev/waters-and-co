@@ -14,6 +14,7 @@ default (see <code>PRICING.md</code> in the project root) for that business
 line, in that order.</p>
 
 {% if leads %}
+<div class="table-wrap">
 <table>
   <thead>
     <tr><th>Task</th><th>Line</th><th>$/hr</th><th>Deadline</th><th>Next action</th></tr>
@@ -23,13 +24,14 @@ line, in that order.</p>
     <tr>
       <td><a class="row-link" href="{{ url_for('main.lead_detail', lead_id=lead.id) }}">{{ lead.name }}</a></td>
       <td>{{ lead.business_line | line_label }}{% if lead.task_type %} <span class="badge">{{ lead.task_type }}</span>{% endif %}</td>
-      <td class="rate-cell" title="{{ lead.dollar_per_hour_source }}">${{ '%.0f'|format(lead.dollar_per_hour) }}/hr</td>
+      <td><span class="rate-cell" title="{{ lead.dollar_per_hour_source }}">${{ '%.0f'|format(lead.dollar_per_hour) }}/hr</span></td>
       <td>{{ lead.deadline or '—' }}</td>
       <td>{{ lead.next_action }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+</div>
 {% else %}
 <div class="empty-state">Nothing actionable right now — every open case is
 missing a "next action", or there are no open cases. <a href="{{ url_for('main.new_lead') }}">Add a lead</a>

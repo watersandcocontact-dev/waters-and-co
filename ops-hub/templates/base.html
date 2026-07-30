@@ -2,18 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>{% block title %}Ops Hub{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="topbar">
-    <h1>🗂 Ops Hub</h1>
+    <div class="topbar-row">
+      <h1>🗂 Ops Hub</h1>
+      <button class="nav-toggle" type="button" aria-label="Menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+    </div>
     <nav>
       <a href="{{ url_for('main.daily_queue') }}">Daily Queue</a>
       <a href="{{ url_for('main.lines_index') }}">Business Lines</a>
       <a href="{{ url_for('main.all_leads') }}">All Cases</a>
       <a href="{{ url_for('main.due_this_week') }}">Due This Week</a>
-      <a href="{{ url_for('main.new_lead') }}">+ New Lead</a>
+      <a href="{{ url_for('main.new_lead') }}" class="nav-cta">+ New Lead</a>
     </nav>
   </header>
   <main>

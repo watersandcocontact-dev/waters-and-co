@@ -16,6 +16,7 @@
 </form>
 
 {% if leads %}
+<div class="table-wrap">
 <table>
   <thead>
     <tr><th>Name</th><th>Status</th><th>$/hr</th><th>Deadline</th><th>Next action</th><th>Left for you</th></tr>
@@ -25,7 +26,7 @@
     <tr>
       <td><a class="row-link" href="{{ url_for('main.lead_detail', lead_id=lead.id) }}">{{ lead.name }}</a></td>
       <td><span class="badge status-{{ lead.status }}">{{ lead.status }}</span></td>
-      <td class="rate-cell">${{ '%.0f'|format(lead.dollar_per_hour) }}/hr</td>
+      <td><span class="rate-cell">${{ '%.0f'|format(lead.dollar_per_hour) }}/hr</span></td>
       <td>{{ lead.deadline or '—' }}</td>
       <td>{{ lead.next_action or '—' }}</td>
       <td>{{ lead.left_for_you_summary or '—' }}</td>
@@ -33,6 +34,7 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
 {% else %}
 <div class="empty-state">No {{ line_label }} cases yet. <a href="{{ url_for('main.new_lead', business_line=line_key) }}">Add one</a>.</div>
 {% endif %}

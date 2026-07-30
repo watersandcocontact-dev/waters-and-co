@@ -29,7 +29,8 @@
   <button class="btn secondary" type="submit">Log time</button>
 </form>
 {% if time_entries %}
-<table style="margin-bottom:20px;">
+<div class="table-wrap" style="margin-bottom:20px;">
+<table>
   <thead><tr><th>Logged</th><th>Hours</th><th>Note</th></tr></thead>
   <tbody>
     {% for e in time_entries %}
@@ -37,6 +38,7 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
 {% endif %}
 {% endif %}
 
