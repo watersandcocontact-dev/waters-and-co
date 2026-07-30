@@ -1,5 +1,27 @@
 # Remote Access — how to reach the hub from your phone/laptop anywhere
 
+**Status: Tailscale is set up and live (2026-07-30).** Your permanent URL:
+
+```
+http://m-hp.tail28a65e.ts.net:5000
+```
+
+Password is whatever you set as `HUB_PASSWORD` when starting the hub (see
+below) — start it with:
+
+```bash
+cd ops-hub
+export HUB_HOST=$(tailscale ip -4)
+export HUB_PASSWORD="your-password"
+python3 run.py
+```
+
+Works from your phone and this computer (both are on your tailnet). Add
+another device by installing Tailscale on it and signing into the same
+account — no further hub-side changes needed.
+
+---
+
 Two options, in order of what I'd actually recommend using day-to-day.
 
 ## Option A (recommended) — Tailscale. One signup: **you**, free.

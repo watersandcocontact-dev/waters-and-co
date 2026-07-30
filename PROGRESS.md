@@ -16,7 +16,8 @@ Last updated: 2026-07-30 — **Wave 1 + Wave 2 prep fully built, plus the daily-
 - ✅ **Password gate** (`HUB_PASSWORD` env var) — required before any remote exposure, backward-compatible (no password = no login wall, same as before)
 - ✅ **Remote access** — zero-signup Cloudflare quick tunnel built & tested (`ops-hub/scripts/start_remote.sh`); Tailscale recommended as the real daily-use option (needs your signup, see `docs/remote_access.md`)
 - ✅ **Monitoring** — local `ops-hub/scripts/new_case_check.py` (cron-able, no cloud dependency) surfaces new/changed cases in the what/why + done-vs-left format; cloud auto-monitoring isn't possible (see `docs/monitoring.md` for why)
-- **Run it:** `cd ops-hub && python3 run.py` → http://127.0.0.1:5000 (home page is now the Daily Queue)
+- **Run it locally:** `cd ops-hub && python3 run.py` → http://127.0.0.1:5000
+- **Run it for remote/Tailscale access:** `cd ops-hub && HUB_HOST=$(tailscale ip -4) HUB_PASSWORD="..." python3 run.py` → `http://m-hp.tail28a65e.ts.net:5000` from any device on your tailnet
 
 ## B. GBP / local SEO — ✅ complete
 - ✅ Audit checklist/scoring tool, 10 real Perth WA target businesses, content calendar, 3 outreach scripts, pricing sheet, Australia-wide positioning
@@ -46,8 +47,7 @@ Last updated: 2026-07-30 — **Wave 1 + Wave 2 prep fully built, plus the daily-
 
 ## Things only you can do (this is the real punch list)
 
-1. **Sign up for Tailscale** (free) if you want permanent remote access from your phone — see `docs/remote_access.md`. The zero-signup Cloudflare tunnel works tonight but the URL is public and changes every restart.
-2. **Set `HUB_PASSWORD`** before using either remote-access option — the hub has no login until you do.
+1. ✅ **Tailscale is set up and live** — permanent private URL `http://m-hp.tail28a65e.ts.net:5000`, works from your phone. Start the hub with `HUB_HOST=$(tailscale ip -4) HUB_PASSWORD="..." python3 run.py` — see `docs/remote_access.md`.
 3. **Pick and sign up for an AI phone/reception platform** (`wave1/missedcall/platform_research.md`) and give me the API key to activate the webhook.
 4. **Pick and sign up for a review-automation tool** (`wave1/reviewgen/tool_research.md` — NiceJob recommended).
 5. **Pick accounting software (Xero or QBO)** for bookkeeping — clients invite you into theirs, you generally don't pay.
