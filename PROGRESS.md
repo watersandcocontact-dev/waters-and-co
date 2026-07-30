@@ -1,9 +1,18 @@
 # PROGRESS.md — live status
 
-Last updated: 2026-07-30 — **Wave 1 + Wave 2 prep fully built, plus the daily-queue/$-per-hr rework, remote access, and monitoring.**
+Last updated: 2026-07-31 — **Wave 1 + Wave 2 prep fully built, daily-queue/$-per-hr rework, remote access, monitoring, and the Waters & Co public website.**
 
 ## Legend
 ✅ done · 🔶 partial · ⛔ blocked (needs you)
+
+## G. Public website (Waters & Co) — ✅ built, 🔶 not hosted publicly yet
+- ✅ Landing page (hover/tap reveals 3 segments), segment pages, service pages with real pricing, general enquiry page — `website/`
+- ✅ Contact form → creates a Lead directly in the hub's database (same "file" as everything else), tagged by service or `GeneralEnquiry`
+- ✅ Template-based draft-reply generator (no AI call, no cost) attached to every new lead's notes, ready for you to review and send
+- ✅ No phone number anywhere on the site — every page pushes to the contact form
+- ✅ Waters & Co branding applied (dark slate green + gold, Cormorant/Jost) — same system as the brand concept artifact from earlier in this build
+- ⛔ **Not hosted anywhere public** — runs locally on port 5050, alongside the hub on port 5000. No domain registered. See `website/README.md`'s "Not yet done" section for the hosting nuance (the earlier Netlify/Vercel static-site recommendation needs revisiting now that there's a live form backend).
+- Two real bugs found and fixed while building this — see DECISIONS.md 2026-07-31 entry — worth knowing about if you edit `lead_form.html` or the website's lead-update code later.
 
 ## A. Central ops hub — ✅ complete
 - ✅ Data model (SQLite schema, all **17** business lines — the original 8 plus 9 introduced via your pricing table, see F below)

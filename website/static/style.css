@@ -1,0 +1,327 @@
+@font-face {
+  font-family: 'Cormorant';
+  src: url('/static/fonts/cormorant.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant';
+  src: url('/static/fonts/cormorant-italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Jost';
+  src: url('/static/fonts/jost.woff2') format('woff2');
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ground: #182019;
+  --ground-raised: #212b23;
+  --ground-line: rgba(199, 164, 89, 0.16);
+  --gold: #c7a459;
+  --gold-bright: #e3c787;
+  --linen: #e9e2d2;
+  --linen-dim: #a9a290;
+  --font-display: 'Cormorant', serif;
+  --font-label: 'Jost', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--ground);
+  color: var(--linen);
+  font-family: var(--font-label);
+  font-weight: 300;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color: var(--gold-bright); }
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 1.75rem;
+}
+
+/* --- site header (not shown on the bare landing page) --- */
+header.site-header {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--ground-line);
+}
+header.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+header.site-header a.brand {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: var(--gold-bright);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+header.site-header nav a {
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--linen-dim);
+  text-decoration: none;
+  margin-left: 1.5rem;
+}
+header.site-header nav a:hover { color: var(--gold); }
+
+main { padding: 3.5rem 0 5rem; }
+
+.eyebrow {
+  font-family: var(--font-label);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--linen-dim);
+  margin: 0 0 0.75rem;
+}
+
+h1.page-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  color: var(--gold-bright);
+  text-wrap: balance;
+  margin: 0 0 0.75rem;
+}
+
+p.lede {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.2rem;
+  color: var(--linen-dim);
+  margin: 0 0 2.5rem;
+  max-width: 46ch;
+}
+
+p.body-copy {
+  font-size: 15.5px;
+  color: var(--linen);
+  max-width: 60ch;
+  margin: 0 0 1.5rem;
+}
+
+/* --- landing page: the hover interaction --- */
+.landing-stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem;
+}
+
+.landing-mark {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  color: var(--gold-bright);
+  letter-spacing: 0.01em;
+  cursor: default;
+  transition: opacity 0.5s ease;
+  margin: 0;
+}
+.landing-mark em { font-style: italic; font-weight: 400; color: var(--gold); }
+
+.landing-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.6s ease 0.15s;
+  margin-top: 1.75rem;
+}
+
+.landing-stage:hover .landing-mark,
+.landing-stage:focus-within .landing-mark,
+.landing-stage.open .landing-mark {
+  opacity: 0.18;
+}
+.landing-stage:hover .landing-segments,
+.landing-stage:focus-within .landing-segments,
+.landing-stage.open .landing-segments {
+  opacity: 1;
+  max-height: 300px;
+}
+
+.landing-segments a {
+  font-family: var(--font-label);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--linen);
+  text-decoration: none;
+  padding: 0.4rem 0;
+}
+.landing-segments a:hover { color: var(--gold-bright); }
+
+.landing-footer-link {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--linen-dim);
+  text-decoration: none;
+}
+.landing-footer-link:hover { color: var(--gold); }
+
+/* --- cards (segment lists, service lists) --- */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--ground-line);
+  border: 1px solid var(--ground-line);
+  margin-top: 1rem;
+}
+.card {
+  background: var(--ground);
+  padding: 1.5rem 1.75rem;
+  text-decoration: none;
+  display: block;
+  transition: background 0.15s ease;
+}
+.card:hover { background: var(--ground-raised); }
+.card .card-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.35rem;
+  color: var(--gold-bright);
+  margin: 0 0 0.3rem;
+}
+.card .card-sub {
+  font-family: var(--font-label);
+  font-size: 13.5px;
+  color: var(--linen-dim);
+  margin: 0;
+}
+
+/* --- pricing table --- */
+.pricing {
+  margin: 2rem 0;
+  border-top: 1px solid var(--ground-line);
+}
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--ground-line);
+  font-size: 14.5px;
+}
+.pricing-row .label { color: var(--linen-dim); }
+.pricing-row .price {
+  color: var(--gold-bright);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* --- forms --- */
+form.enquiry-form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 480px;
+}
+form.enquiry-form label {
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--linen-dim);
+}
+form.enquiry-form input,
+form.enquiry-form textarea {
+  background: var(--ground-raised);
+  border: 1px solid var(--ground-line);
+  color: var(--linen);
+  font-family: var(--font-label);
+  font-size: 15px;
+  padding: 0.7rem 0.8rem;
+  margin-top: 0.35rem;
+  width: 100%;
+}
+form.enquiry-form input:focus,
+form.enquiry-form textarea:focus {
+  outline: 1px solid var(--gold);
+  border-color: var(--gold);
+}
+form.enquiry-form textarea { min-height: 120px; resize: vertical; }
+form.enquiry-form .field-note {
+  font-size: 12px;
+  color: var(--linen-dim);
+  margin-top: 0.3rem;
+}
+form.enquiry-form button {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold-bright);
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.8rem 1.6rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+form.enquiry-form button:hover { background: var(--gold); color: var(--ground); }
+
+.form-error {
+  color: #e0a37e;
+  font-size: 13.5px;
+  margin-bottom: 0.5rem;
+}
+
+.no-call-note {
+  font-size: 12.5px;
+  color: var(--linen-dim);
+  margin-top: 1rem;
+  max-width: 46ch;
+}
+
+footer.site-footer {
+  border-top: 1px solid var(--ground-line);
+  padding: 2.5rem 0;
+  text-align: center;
+}
+footer.site-footer a.enquire-link {
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--linen-dim);
+  text-decoration: none;
+}
+footer.site-footer a.enquire-link:hover { color: var(--gold); }
+
+@media (max-width: 560px) {
+  header.site-header nav a { margin-left: 1rem; }
+}

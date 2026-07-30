@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Get in touch — Waters &amp; Co{% endblock %}
+{% block content %}
+<p class="eyebrow">Waters &amp; Co</p>
+<h1 class="page-title">Don't see what you're looking for?</h1>
+<p class="lede">Tell us what you need — if it's something we can help with, we'll follow up.</p>
+
+<p class="body-copy">This isn't limited to the services listed on the site. If you're not sure whether we can help, describe what you're after below and we'll let you know.</p>
+
+{% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+
+<form class="enquiry-form" method="post" action="{{ url_for('main.enquire') }}">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+  </div>
+  <div>
+    <label for="phone">Phone <span style="text-transform:none; letter-spacing:0;">(optional)</span></label>
+    <input type="tel" id="phone" name="phone">
+  </div>
+  <div>
+    <label for="message">What do you need?</label>
+    <textarea id="message" name="message" required placeholder="Describe what you're looking for"></textarea>
+  </div>
+  <button type="submit">Send enquiry</button>
+  <p class="no-call-note">We reply by email — if you'd rather not share a phone number, leave it blank and we'll follow up in writing.</p>
+</form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ service.name }} — Waters &amp; Co{% endblock %}
+{% block content %}
+<p class="eyebrow">Waters &amp; Co</p>
+<h1 class="page-title">{{ service.name }}</h1>
+<p class="lede">{{ service.one_liner }}</p>
+
+<p class="body-copy">{{ service.summary }}</p>
+
+<div class="pricing">
+  {% for row in service.pricing %}
+  <div class="pricing-row">
+    <span class="label">{{ row.label }}</span>
+    <span class="price">{{ row.price }}</span>
+  </div>
+  {% endfor %}
+</div>
+
+<p class="eyebrow" style="margin-top:2.5rem;">Get in touch</p>
+
+{% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+
+<form class="enquiry-form" method="post" action="{{ url_for('main.service_contact', slug=slug) }}">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+  </div>
+  <div>
+    <label for="phone">Phone <span style="text-transform:none; letter-spacing:0;">(optional)</span></label>
+    <input type="tel" id="phone" name="phone">
+  </div>
+  <div>
+    <label for="message">Message</label>
+    <textarea id="message" name="message" required placeholder="Tell us a bit about what you need"></textarea>
+  </div>
+  <button type="submit">Send enquiry</button>
+  <p class="no-call-note">We reply by email — if you'd rather not share a phone number, leave it blank and we'll follow up in writing.</p>
+</form>
+{% endblock %}

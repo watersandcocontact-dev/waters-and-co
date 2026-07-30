@@ -28,6 +28,9 @@ BUSINESS_LINES = [
     ("VideoRepurpose", "Video/Podcast Repurposing"),
     ("Downsizing", "Senior Downsizing/Cleanout"),
     ("AirbnbCohost", "Airbnb Co-Hosting (unscoped — likely needs a real estate licence, see DECISIONS.md)"),
+    # Website contact-form catch-all (2026-07-30) — "don't see what you need?"
+    # enquiries that don't match a listed service.
+    ("GeneralEnquiry", "General Enquiry (via website)"),
 ]
 BUSINESS_LINE_KEYS = [k for k, _ in BUSINESS_LINES]
 

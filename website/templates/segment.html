@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ segment.name }} — Waters &amp; Co{% endblock %}
+{% block content %}
+<p class="eyebrow">Waters &amp; Co</p>
+<h1 class="page-title">{{ segment.name }}</h1>
+<p class="lede">{{ segment.tagline }}</p>
+
+<div class="card-list">
+  {% for svc in services %}
+  <a class="card" href="{{ url_for('main.service', slug=svc.slug) }}">
+    <p class="card-title">{{ svc.name }}</p>
+    <p class="card-sub">{{ svc.one_liner }}</p>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

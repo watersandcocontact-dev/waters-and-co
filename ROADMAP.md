@@ -23,7 +23,7 @@ contract with yourself.
 | **Google Ads** | $0 account, ~$500-1,000/mo ad spend if used | Search ads (if you go that route) | *(only if/when you run ads)* | Same — Search Ads work better than Meta for land tax/GBP specifically (real search intent), but neither is needed to launch. |
 | **GitHub** | $0 | Cloud backup of this project (and now, hosting the website if you go the Netlify/Vercel route above) | *(optional but now dual-purpose)* | You have working local git already. Free tier covers both a backup and feeding a free website host. |
 
-**On the segregated-landing-pages website specifically** (from the chat just before this): once built, it's one page per live service, each ad linking to its own page rather than a shared homepage — the plan doesn't need any account beyond a domain + free-tier hosting to actually go live. Nothing built yet; still your call on timing (see Phase 0/1 below — not urgent until outreach outpaces manual capacity).
+**On the segregated-landing-pages website specifically:** built (2026-07-31) — `website/`, one page per live service under 3 segments, each ready for an ad to link straight to it. Runs locally for now; still needs a domain + hosting decision before it's actually live for ads to point to (see `website/README.md`).
 
 ---
 

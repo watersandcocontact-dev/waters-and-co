@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Waters &amp; Co</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="landing-stage" id="stage" tabindex="0">
+    <h1 class="landing-mark">Waters <em>&amp;</em> Co</h1>
+    <nav class="landing-segments">
+      {% for seg in segments %}
+      <a href="{{ url_for('main.segment', slug=seg.slug) }}">{{ seg.name }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+  <a class="landing-footer-link" href="{{ url_for('main.enquire') }}">Contact</a>
+  <script>
+    var stage = document.getElementById('stage');
+    stage.addEventListener('click', function (e) {
+      if (e.target.tagName !== 'A') stage.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
