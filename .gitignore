@@ -1,4 +1,8 @@
 __pycache__/
 *.pyc
 ops-hub/data/*.sqlite3
+ops-hub/data/secret_key.txt
+ops-hub/data/last_check.txt
+ops-hub/data/*.log
+ops-hub/bin/
 venv/

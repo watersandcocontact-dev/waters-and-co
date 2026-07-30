@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ line_label }} — Ops Hub{% endblock %}
+{% block content %}
+
+<p><a href="{{ url_for('main.lines_index') }}">← Business Lines</a></p>
+<h2>{{ line_label }}</h2>
+
+<form class="filters" method="get">
+  <select name="status" onchange="this.form.submit()">
+    <option value="">All statuses</option>
+    {% for s in statuses %}
+    <option value="{{ s }}" {% if s == selected_status %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <a class="btn secondary" href="{{ url_for('main.new_lead', business_line=line_key) }}">+ New {{ line_label }} case</a>
+</form>
+
+{% if leads %}
+<table>
+  <thead>
+    <tr><th>Name</th><th>Status</th><th>$/hr</th><th>Deadline</th><th>Next action</th><th>Left for you</th></tr>
+  </thead>
+  <tbody>
+    {% for lead in leads %}
+    <tr>
+      <td><a class="row-link" href="{{ url_for('main.lead_detail', lead_id=lead.id) }}">{{ lead.name }}</a></td>
+      <td><span class="badge status-{{ lead.status }}">{{ lead.status }}</span></td>
+      <td class="rate-cell">${{ '%.0f'|format(lead.dollar_per_hour) }}/hr</td>
+      <td>{{ lead.deadline or '—' }}</td>
+      <td>{{ lead.next_action or '—' }}</td>
+      <td>{{ lead.left_for_you_summary or '—' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">No {{ line_label }} cases yet. <a href="{{ url_for('main.new_lead', business_line=line_key) }}">Add one</a>.</div>
+{% endif %}
+
+{% endblock %}

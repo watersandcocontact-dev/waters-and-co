@@ -1,7 +1,7 @@
 import json
 from datetime import date, datetime, timedelta
 
-from .config import AUTO_DEADLINE_RULES, DEADLINE_THRESHOLDS
+from .config import AUTO_DEADLINE_RULES, DEADLINE_THRESHOLDS, RATE_CARD
 from .db import get_connection
 
 
@@ -17,7 +17,11 @@ def _row_to_dict(row):
 def list_leads(business_line=None, status=None, order_by="deadline"):
     conn = get_connection()
     try:
-        q = "SELECT * FROM leads WHERE 1=1"
+        q = """
+            SELECT leads.*,
+                   (SELECT COALESCE(SUM(hours), 0) FROM time_entries WHERE lead_id = leads.id) AS actual_hours
+            FROM leads WHERE 1=1
+        """
         params = []
         if business_line:
             q += " AND business_line = ?"
@@ -33,7 +37,14 @@ def list_leads(business_line=None, status=None, order_by="deadline"):
         elif order_by == "value":
             q += " ORDER BY (estimated_value IS NULL) ASC, estimated_value DESC"
         rows = conn.execute(q, params).fetchall()
-        return [_row_to_dict(r) for r in rows]
+        leads = [_row_to_dict(r) for r in rows]
+        for lead in leads:
+            rate_info = dollar_per_hour(lead)
+            lead["dollar_per_hour"] = rate_info["per_hour"]
+            lead["dollar_per_hour_source"] = rate_info["source"]
+        if order_by == "rate":
+            leads.sort(key=lambda lead: lead["dollar_per_hour"] or 0, reverse=True)
+        return leads
     finally:
         conn.close()
 
@@ -41,8 +52,21 @@ def list_leads(business_line=None, status=None, order_by="deadline"):
 def get_lead(lead_id):
     conn = get_connection()
     try:
-        row = conn.execute("SELECT * FROM leads WHERE id = ?", (lead_id,)).fetchone()
-        return _row_to_dict(row) if row else None
+        row = conn.execute(
+            """
+            SELECT leads.*,
+                   (SELECT COALESCE(SUM(hours), 0) FROM time_entries WHERE lead_id = leads.id) AS actual_hours
+            FROM leads WHERE id = ?
+            """,
+            (lead_id,),
+        ).fetchone()
+        if not row:
+            return None
+        lead = _row_to_dict(row)
+        rate_info = dollar_per_hour(lead)
+        lead["dollar_per_hour"] = rate_info["per_hour"]
+        lead["dollar_per_hour_source"] = rate_info["source"]
+        return lead
     finally:
         conn.close()
 
@@ -86,8 +110,9 @@ def create_lead(data):
             """
             INSERT INTO leads
                 (name, business_line, status, next_action, deadline, estimated_value,
-                 notes, contact_name, contact_phone, contact_email, au_state, source, extra_json)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 notes, contact_name, contact_phone, contact_email, au_state, source, extra_json,
+                 task_type, time_estimate_hours, done_summary, left_for_you_summary, source_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 data["name"],
@@ -103,6 +128,11 @@ def create_lead(data):
                 data.get("au_state"),
                 data.get("source") or "manual",
                 json.dumps(extra),
+                data.get("task_type") or None,
+                data.get("time_estimate_hours") or None,
+                data.get("done_summary"),
+                data.get("left_for_you_summary"),
+                data.get("source_url"),
             ),
         )
         conn.commit()
@@ -123,7 +153,9 @@ def update_lead(lead_id, data):
             UPDATE leads SET
                 name = ?, business_line = ?, status = ?, next_action = ?, deadline = ?,
                 estimated_value = ?, notes = ?, contact_name = ?, contact_phone = ?,
-                contact_email = ?, au_state = ?, extra_json = ?, updated_at = datetime('now')
+                contact_email = ?, au_state = ?, extra_json = ?, task_type = ?,
+                time_estimate_hours = ?, done_summary = ?, left_for_you_summary = ?,
+                source_url = ?, updated_at = datetime('now')
             WHERE id = ?
             """,
             (
@@ -139,6 +171,11 @@ def update_lead(lead_id, data):
                 data.get("contact_email"),
                 data.get("au_state"),
                 json.dumps(extra),
+                data.get("task_type") or None,
+                data.get("time_estimate_hours") or None,
+                data.get("done_summary"),
+                data.get("left_for_you_summary"),
+                data.get("source_url"),
                 lead_id,
             ),
         )
@@ -208,6 +245,20 @@ def deadline_alert_buckets():
     return buckets
 
 
+def new_or_updated_since(timestamp_iso):
+    """Leads created or updated since the given ISO datetime string — the
+    data source for scripts/new_case_check.py's periodic monitoring."""
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM leads WHERE created_at > ? OR updated_at > ? ORDER BY created_at ASC",
+            (timestamp_iso, timestamp_iso),
+        ).fetchall()
+        return [_row_to_dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
 def counts_by_line():
     conn = get_connection()
     try:
@@ -217,3 +268,89 @@ def counts_by_line():
         return {r["business_line"]: r["n"] for r in rows}
     finally:
         conn.close()
+
+
+def _rate_card_default(business_line, task_type):
+    rate = RATE_CARD.get(business_line)
+    if isinstance(rate, dict):
+        return rate.get(task_type) or rate.get("management") or next(iter(rate.values()), 0)
+    return rate if rate is not None else 0
+
+
+def dollar_per_hour(lead):
+    """Compute a lead's $/hr and where the number came from, priority order:
+    actual logged hours > the lead's own time estimate > the PRICING.md rate-card
+    default for its business line (+ task type for GBP/MissedCall)."""
+    estimated_value = lead.get("estimated_value")
+    actual_hours = lead.get("actual_hours") or 0
+    time_estimate = lead.get("time_estimate_hours")
+
+    if estimated_value:
+        if actual_hours and actual_hours > 0:
+            return {"per_hour": round(estimated_value / actual_hours, 2), "source": "actual hours logged"}
+        if time_estimate and time_estimate > 0:
+            return {"per_hour": round(estimated_value / time_estimate, 2), "source": "your time estimate"}
+
+    default_rate = _rate_card_default(lead.get("business_line"), lead.get("task_type"))
+    return {"per_hour": default_rate, "source": "rate-card default"}
+
+
+def log_time(lead_id, hours, note=None):
+    conn = get_connection()
+    try:
+        conn.execute(
+            "INSERT INTO time_entries (lead_id, hours, note) VALUES (?, ?, ?)",
+            (lead_id, hours, note),
+        )
+        conn.execute("UPDATE leads SET updated_at = datetime('now') WHERE id = ?", (lead_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def get_time_entries(lead_id):
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM time_entries WHERE lead_id = ? ORDER BY logged_at DESC", (lead_id,)
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def _with_actual_hours_query(where_clause, params):
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            f"""
+            SELECT leads.*,
+                   (SELECT COALESCE(SUM(hours), 0) FROM time_entries WHERE lead_id = leads.id) AS actual_hours
+            FROM leads
+            WHERE {where_clause}
+            """,
+            params,
+        ).fetchall()
+        return [_row_to_dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def daily_queue():
+    """The hub's primary view: every open, actionable lead (not Won/Lost, has
+    a next action set) across ALL business lines, each annotated with its
+    computed $/hr, sorted highest $/hr first — no other sort order.
+
+    "Actionable today" = currently open work with something to do next, not
+    literally scheduled for today's date (most leads don't have day-level
+    scheduling, only an optional deadline) — this is the whole live worklist
+    you'd triage each morning."""
+    leads = _with_actual_hours_query(
+        "status NOT IN ('Won','Lost') AND next_action IS NOT NULL AND next_action != ''", []
+    )
+    for lead in leads:
+        rate_info = dollar_per_hour(lead)
+        lead["dollar_per_hour"] = rate_info["per_hour"]
+        lead["dollar_per_hour_source"] = rate_info["source"]
+    leads.sort(key=lambda lead: lead["dollar_per_hour"] or 0, reverse=True)
+    return leads

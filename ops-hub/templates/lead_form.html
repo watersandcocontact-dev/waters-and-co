@@ -1,7 +1,44 @@
 {% extends "base.html" %}
 {% block title %}{% if lead %}Edit Lead{% else %}New Lead{% endif %} — Ops Hub{% endblock %}
 {% block content %}
-<h2>{% if lead %}Edit lead: {{ lead.name }}{% else %}New lead{% endif %}</h2>
+<h2>{% if lead %}{{ lead.name }}{% else %}New lead{% endif %}</h2>
+
+{% if lead %}
+<p class="hint">
+  {{ lead.business_line | line_label }}{% if lead.task_type %} · {{ lead.task_type }}{% endif %}
+  · <span class="rate-cell">${{ '%.0f'|format(lead.dollar_per_hour) }}/hr</span>
+  <span title="where this number came from">({{ lead.dollar_per_hour_source }})</span>
+  {% if lead.source_url %} · <a class="source-link" href="{{ lead.source_url }}" target="_blank" rel="noopener">source ↗</a>{% endif %}
+</p>
+
+<div class="done-left">
+  <div class="box done">
+    <h4>Done / automated</h4>
+    {{ lead.done_summary or "—" }}
+  </div>
+  <div class="box left">
+    <h4>Left for you</h4>
+    {{ lead.left_for_you_summary or "—" }}
+  </div>
+</div>
+
+<div class="section-title">Time logged ({{ '%.1f'|format(lead.actual_hours or 0) }}h total)</div>
+<form method="post" action="{{ url_for('main.log_time', lead_id=lead.id) }}" style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
+  <input type="number" step="0.1" min="0" name="hours" placeholder="hours" style="width:100px;" required>
+  <input type="text" name="note" placeholder="what you did (optional)" style="flex:1;">
+  <button class="btn secondary" type="submit">Log time</button>
+</form>
+{% if time_entries %}
+<table style="margin-bottom:20px;">
+  <thead><tr><th>Logged</th><th>Hours</th><th>Note</th></tr></thead>
+  <tbody>
+    {% for e in time_entries %}
+    <tr><td>{{ e.logged_at }}</td><td>{{ e.hours }}</td><td>{{ e.note or '—' }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endif %}
 
 <form class="lead-form" method="post">
   <label>Name</label>
@@ -13,6 +50,15 @@
     <option value="{{ key }}" {% if (lead and lead.business_line == key) or (not lead and key == selected_line) %}selected{% endif %}>{{ label }}</option>
     {% endfor %}
   </select>
+
+  <div id="task-type-field" style="display:none;">
+    <label>Task type (affects the $/hr rate-card default)</label>
+    <select name="task_type" id="task_type">
+      <option value="">—</option>
+      <option value="setup" {% if lead and lead.task_type == 'setup' %}selected{% endif %}>Setup</option>
+      <option value="management" {% if lead and lead.task_type == 'management' %}selected{% endif %}>Ongoing management</option>
+    </select>
+  </div>
 
   <label>Status</label>
   <select name="status">
@@ -29,6 +75,9 @@
 
   <label>Estimated value ($)</label>
   <input type="number" step="1" name="estimated_value" value="{{ lead.estimated_value if lead else '' }}">
+
+  <label>Your time estimate (hours — overrides the rate-card default $/hr until actual hours are logged)</label>
+  <input type="number" step="0.1" name="time_estimate_hours" value="{{ lead.time_estimate_hours if lead else '' }}">
 
   <div class="section-title">Contact</div>
   <label>Contact name</label>
@@ -57,12 +106,20 @@
     {% endfor %}
   </div>
 
+  <div class="section-title">Status for you (keep this short — a label + link, not an essay)</div>
+  <label>Done / automated (1-2 lines)</label>
+  <textarea name="done_summary" rows="2">{{ lead.done_summary if lead else '' }}</textarea>
+  <label>Left for you (1-2 lines)</label>
+  <textarea name="left_for_you_summary" rows="2">{{ lead.left_for_you_summary if lead else '' }}</textarea>
+  <label>Source link (primary source — gov page, platform, etc.)</label>
+  <input type="url" name="source_url" value="{{ lead.source_url if lead else '' }}">
+
   <label>Notes</label>
   <textarea name="notes">{{ lead.notes if lead else '' }}</textarea>
 
   <div class="actions">
     <button class="btn" type="submit">{% if lead %}Save{% else %}Create lead{% endif %}</button>
-    <a class="btn secondary" href="{{ url_for('main.dashboard') }}">Cancel</a>
+    <a class="btn secondary" href="{{ url_for('main.all_leads') }}">Cancel</a>
     {% if lead %}
     <form method="post" action="{{ url_for('main.delete_lead', lead_id=lead.id) }}" onsubmit="return confirm('Delete this lead?')" style="margin-left:auto;">
       <button class="btn secondary" type="submit" style="color:#c0392b;">Delete</button>
@@ -72,11 +129,13 @@
 </form>
 
 <script>
+var TASK_TYPE_LINES = {{ task_type_lines.keys() | list | tojson }};
 function showExtra() {
   var sel = document.getElementById('business_line').value;
   document.querySelectorAll('.extra-group').forEach(function(el) {
     el.style.display = (el.dataset.line === sel) ? 'block' : 'none';
   });
+  document.getElementById('task-type-field').style.display = TASK_TYPE_LINES.includes(sel) ? 'block' : 'none';
 }
 document.addEventListener('DOMContentLoaded', showExtra);
 </script>

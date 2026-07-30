@@ -35,8 +35,9 @@
     <option value="deadline" {% if order_by == 'deadline' %}selected{% endif %}>Sort: deadline</option>
     <option value="created" {% if order_by == 'created' %}selected{% endif %}>Sort: newest</option>
     <option value="value" {% if order_by == 'value' %}selected{% endif %}>Sort: value</option>
+    <option value="rate" {% if order_by == 'rate' %}selected{% endif %}>Sort: $/hr</option>
   </select>
-  <a class="btn secondary" href="{{ url_for('main.dashboard') }}">Reset</a>
+  <a class="btn secondary" href="{{ url_for('main.all_leads') }}">Reset</a>
 </form>
 
 {% if leads %}

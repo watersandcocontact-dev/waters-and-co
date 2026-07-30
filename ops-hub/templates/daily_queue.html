@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Daily Queue — Ops Hub{% endblock %}
+{% block content %}
+
+<div class="alert-banner">
+  {% if alerts.overdue %}<div class="alert-chip overdue">⚠ {{ alerts.overdue|length }} overdue</div>{% endif %}
+  {% if alerts.due_14 %}<div class="alert-chip due_14">{{ alerts.due_14|length }} due ≤14 days</div>{% endif %}
+</div>
+
+<h2>Today's queue — highest $/hr first</h2>
+<p class="hint">Clear the top of the list first. Every task is ranked by
+$/hr — actual logged hours, then your own estimate, then the rate-card
+default (see <code>PRICING.md</code> in the project root) for that business
+line, in that order.</p>
+
+{% if leads %}
+<table>
+  <thead>
+    <tr><th>Task</th><th>Line</th><th>$/hr</th><th>Deadline</th><th>Next action</th></tr>
+  </thead>
+  <tbody>
+    {% for lead in leads %}
+    <tr>
+      <td><a class="row-link" href="{{ url_for('main.lead_detail', lead_id=lead.id) }}">{{ lead.name }}</a></td>
+      <td>{{ lead.business_line | line_label }}{% if lead.task_type %} <span class="badge">{{ lead.task_type }}</span>{% endif %}</td>
+      <td class="rate-cell" title="{{ lead.dollar_per_hour_source }}">${{ '%.0f'|format(lead.dollar_per_hour) }}/hr</td>
+      <td>{{ lead.deadline or '—' }}</td>
+      <td>{{ lead.next_action }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">Nothing actionable right now — every open case is
+missing a "next action", or there are no open cases. <a href="{{ url_for('main.new_lead') }}">Add a lead</a>
+or fill in a next action on an existing one.</div>
+{% endif %}
+
+{% endblock %}

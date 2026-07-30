@@ -6,18 +6,62 @@ without a later migration.
 """
 
 BUSINESS_LINES = [
-    # Wave 1
+    # Wave 1 — fully built (hub + templates/research/pricing)
     ("GBP", "GBP / Local SEO"),
     ("ReviewGen", "Review Generation"),
     ("MissedCall", "AI Missed-Call Reception"),
     ("LandTax", "Land Tax / Rates Objection"),
-    # Wave 2 (prep)
+    # Wave 2 (prep) — checklists/research built, not launched
     ("Bookkeeping", "Bookkeeping (non-BAS)"),
     ("Concession", "Energy/Concession Navigation"),
     ("GrantFinder", "SME Grant Finder"),
     ("Pension", "Age Pension / Centrelink Assistance"),
+    # Introduced via PRICING.md (2026-07-30) — priced & ranked in the queue,
+    # but NO service-delivery assets built yet (no audit tools, templates,
+    # or research the way the 8 above got). See DECISIONS.md.
+    ("LostSuper", "Lost Super / TPD Navigation (unscoped)"),
+    ("DeceasedEstate", "Deceased-Estate Admin (unscoped)"),
+    ("TechConcierge", "Senior Tech Concierge (unscoped)"),
+    ("GrantWriting", "Grant Writing — Nonprofit (unscoped)"),
+    ("NDISNav", "NDIS Plan Navigation (unscoped)"),
+    ("NDISCompliance", "NDIS Provider Compliance/Audit-Prep (unscoped)"),
+    ("VideoRepurpose", "Video/Podcast Repurposing (unscoped)"),
+    ("Downsizing", "Senior Downsizing/Cleanout (unscoped)"),
+    ("AirbnbCohost", "Airbnb Co-Hosting (unscoped)"),
 ]
 BUSINESS_LINE_KEYS = [k for k, _ in BUSINESS_LINES]
+
+# Business lines where a single lead might be a "setup" task or an "ongoing
+# management" task with very different $/hr (see PRICING.md rows 3-6) — the
+# lead form shows a task-type selector for these; everything else has one
+# flat default rate.
+TASK_TYPE_LINES = {
+    "GBP": ["setup", "management"],
+    "MissedCall": ["setup", "management"],
+}
+
+# Default $/hr per business line (midpoint of the range in PRICING.md),
+# used to rank the Daily Queue until a lead has its own time-estimate
+# override or actual logged hours. See models.dollar_per_hour().
+RATE_CARD = {
+    "GBP": {"setup": 80, "management": 225},
+    "ReviewGen": 300,
+    "MissedCall": {"setup": 70, "management": 300},
+    "LandTax": 280,
+    "Bookkeeping": 95,
+    "Concession": 140,
+    "GrantFinder": 325,
+    "Pension": 138,
+    "LostSuper": 635,
+    "DeceasedEstate": 65,
+    "TechConcierge": 80,
+    "GrantWriting": 315,
+    "NDISNav": 75,
+    "NDISCompliance": 95,
+    "VideoRepurpose": 80,
+    "Downsizing": 65,
+    "AirbnbCohost": 45,
+}
 
 STATUSES = [
     "New",

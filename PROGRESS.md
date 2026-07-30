@@ -1,61 +1,62 @@
 # PROGRESS.md — live status
 
-Last updated: 2026-07-29 — **Wave 1 fully built, Wave 2 prep fully built. Everything on the original list is done.**
+Last updated: 2026-07-30 — **Wave 1 + Wave 2 prep fully built, plus the daily-queue/$-per-hr rework, remote access, and monitoring.**
 
 ## Legend
 ✅ done · 🔶 partial · ⛔ blocked (needs you)
 
 ## A. Central ops hub — ✅ complete
-- ✅ Data model (SQLite schema, all 8 business lines incl. Wave 2 tags) — `ops-hub/app/config.py`, `db.py`
-- ✅ Web dashboard (list + filter by line/status + "due this week" view) — tested end-to-end
-- ✅ Manual lead-entry form, with per-business-line dynamic fields
-- ✅ Intake webhook receiver — built, safely inactive (503 until you set `INTAKE_WEBHOOK_ENABLED`/`INTAKE_WEBHOOK_SECRET`; see `ops-hub/README.md`)
-- ✅ Deadline-alert mechanism — dashboard banner (14/30/60 day + overdue), state-aware for land tax (NT = 30 days, all others = 60, see DECISIONS.md)
-- ✅ Optional desktop-notification cron script (`ops-hub/scripts/deadline_check.py`, uses `notify-send`, no signup)
-- **Run it:** `cd ops-hub && python3 run.py` → http://127.0.0.1:5000
+- ✅ Data model (SQLite schema, all **17** business lines — the original 8 plus 9 introduced via your pricing table, see F below)
+- ✅ **Daily Queue is now the home page** (`/`) — every open, actionable case across all 17 lines, sorted **highest $/hr first, only sort order**, per your instruction
+- ✅ Per-business-line separated views (`/lines` → `/line/<key>`) — a land tax case and an NDIS case never blur together
+- ✅ "All Cases" full list + filters at `/all` (the old dashboard, kept for when you want the unfiltered view)
+- ✅ Manual lead-entry form, with per-business-line dynamic fields, task-type (setup/management) for GBP & MissedCall, time tracking, and done/left-for-you/source-link fields
+- ✅ Intake webhook receiver — built, safely inactive (503 until you set `INTAKE_WEBHOOK_ENABLED`/`INTAKE_WEBHOOK_SECRET`)
+- ✅ Deadline-alert mechanism — dashboard banner (14/30/60 day + overdue), state-aware for land tax (NT = 30 days, all others = 60)
+- ✅ **Password gate** (`HUB_PASSWORD` env var) — required before any remote exposure, backward-compatible (no password = no login wall, same as before)
+- ✅ **Remote access** — zero-signup Cloudflare quick tunnel built & tested (`ops-hub/scripts/start_remote.sh`); Tailscale recommended as the real daily-use option (needs your signup, see `docs/remote_access.md`)
+- ✅ **Monitoring** — local `ops-hub/scripts/new_case_check.py` (cron-able, no cloud dependency) surfaces new/changed cases in the what/why + done-vs-left format; cloud auto-monitoring isn't possible (see `docs/monitoring.md` for why)
+- **Run it:** `cd ops-hub && python3 run.py` → http://127.0.0.1:5000 (home page is now the Daily Queue)
 
 ## B. GBP / local SEO — ✅ complete
-- ✅ Audit checklist/scoring tool (`wave1/gbp/audit_checklist.md`, `audit_tool.py` — tested)
-- ✅ 10 real target trade businesses in **Perth, WA** (`wave1/gbp/target_businesses_perth.md` — your confirmed city). A placeholder Melbourne list also exists (`target_businesses.md`) from before you confirmed location — kept for reference only, not operational.
-- ✅ Content-calendar template, 3 outreach scripts (call/in-person/text-email), pricing sheet
+- ✅ Audit checklist/scoring tool, 10 real Perth WA target businesses, content calendar, 3 outreach scripts, pricing sheet, Australia-wide positioning
 
 ## C. Review generation — ✅ complete
-- ✅ Review-request templates (ACL-compliant — no incentives/gating, guardrails documented)
-- ✅ AI-response templates (5★/3★/1★ + 2 more variants)
-- ✅ Tool research (`tool_research.md`) — NiceJob, Podium, GatherUp compared; NiceJob recommended as starting point
+- ✅ Templates (ACL-compliant), tool research (NiceJob recommended)
 
 ## D. AI missed-call reception — ✅ complete
-- ✅ Platform research (`platform_research.md`) — Smith.ai, My AI Front Desk, Dialzara, Retell AI+Twilio compared
-- ✅ Call-log review checklist (daily/weekly process + edge cases)
-- ✅ Pricing sheet
+- ✅ Platform research, call-log checklist, pricing sheet
 
 ## E. Land tax / rates objection — ✅ complete
-- ✅ Per-state reference docs, all 8 states/territories (`wave1/landtax/state_*.md`)
-- ✅ Objection letter template (reusable, flags where your/client signature or portal login is required)
-- ✅ Comps-research checklist (per-state free/public sources)
-- ✅ Deadline logic in hub — auto-calculates from `valuation_notice_date`, state-aware (60 days default, 30 for NT — tested both)
+- ✅ All 8 states/territories, objection letter template, comps checklist, state-aware deadline logic
 
 ## Wave 2 prep — ✅ complete
-- ✅ Bookkeeping — onboarding checklist, monthly reconciliation checklist, Xero/QBO bank-feed research (BAS lodgement explicitly flagged out of scope, no TPB registration)
-- ✅ Concession/rebate eligibility matrix — all 8 states, energy/rates/seniors programs (flagged informational/navigation only)
-- ✅ SME grant-finder — business.gov.au monitoring research, eligibility-screening checklist, application-drafting template
-- ✅ Age Pension/Centrelink — document checklist, ARO review letter template (13-week point specifically verified, not assumed — see the template file for the nuance)
-- ✅ Hub schema already includes all 4 Wave 2 business-line tags and their extra fields (done as part of Wave 1's schema work, so no migration needed when you launch these)
+- ✅ Bookkeeping, concessions, grant-finder, pension — all checklists/templates/research built (see prior entries below for detail)
+
+## F. Pricing table expansion (NEW, 2026-07-30) — 🔶 partial by design
+- ✅ `PRICING.md` — your full 17-business rate table, reconciled with existing pricing sheets
+- ✅ All 9 new business lines wired into the hub schema + rate card (Lost Super, Deceased-Estate Admin, Tech Concierge, Grant Writing, NDIS Nav, NDIS Compliance, Video Repurposing, Downsizing, Airbnb Co-Hosting) — priced, filterable, ranked in the queue
+- ⛔ **None of the 9 new lines have service-delivery assets** (no audit tools, templates, or research the way GBP/LandTax/etc. got) — they were introduced via a pricing table, not a build spec. If you want any of these actually launched, that's its own prompt.
+- ✅ Competitor pricing research for the 4 live Wave 1 businesses — `docs/competitor_pricing_research.md` (real AU competitors, recommended price points, differentiation ideas beyond just "cheaper")
 
 ---
 
 ## Things only you can do (this is the real punch list)
 
-1. **Pick and sign up for an AI phone/reception platform** (see `wave1/missedcall/platform_research.md` for the shortlist — Smith.ai, My AI Front Desk, Dialzara, or Retell AI+Twilio) and give me the API key/webhook secret so I can activate `ops-hub/app/webhook.py`.
-2. **Pick and sign up for a review-automation tool** (see `wave1/reviewgen/tool_research.md` — NiceJob recommended as a starting point).
-3. **Pick accounting software (Xero or QBO)** if you want to run the bookkeeping service — see `wave2/bookkeeping/bank_feed_research.md`. Note: clients invite you into *their* subscription; you generally don't need to pay for your own.
-4. **Review every draft template before using it with a real client** — none of these are legally vetted: the land tax objection letter, the ARO review letter, the review-request templates, and the AI response templates. They're solid starting drafts, not final client-facing copy.
-5. **Re-verify the research docs before relying on them** — several files have explicit "unverified" flags where a government page blocked automated access or sources conflicted (notably: VIC's land.vic.gov.au objection page, WA/NSW/QLD energy rebate dollar amounts which are budget-indexed and conflicted across sources, NT's escalation-path ambiguity, and the exact ART/ARO time-limit wording). Search each file for "unverified" or "flagged" to find these before client-facing use.
-6. **Re-verify the 20 GBP target businesses** (10 Perth, 10 Melbourne-reference) immediately before outreach — profiles change, and this is desk research from 29 July 2026.
-7. Everything else is done and ready to use as-is.
+1. **Sign up for Tailscale** (free) if you want permanent remote access from your phone — see `docs/remote_access.md`. The zero-signup Cloudflare tunnel works tonight but the URL is public and changes every restart.
+2. **Set `HUB_PASSWORD`** before using either remote-access option — the hub has no login until you do.
+3. **Pick and sign up for an AI phone/reception platform** (`wave1/missedcall/platform_research.md`) and give me the API key to activate the webhook.
+4. **Pick and sign up for a review-automation tool** (`wave1/reviewgen/tool_research.md` — NiceJob recommended).
+5. **Pick accounting software (Xero or QBO)** for bookkeeping — clients invite you into theirs, you generally don't pay.
+6. **Review competitor pricing research** (`docs/competitor_pricing_research.md`) and decide whether to adjust your GBP/ReviewGen/MissedCall/LandTax pricing — land tax objection specifically has almost no public competitor pricing, which is itself useful information.
+7. **Review every draft template before client use** — none are legally vetted.
+8. **Re-verify research docs with "unverified" flags** before relying on them (search each file for the word).
+9. **Decide if/when to actually build out the 9 new business lines** from the pricing table — right now they're priced and ready to receive leads, nothing more.
+10. **Fill in `done_summary`/`left_for_you_summary`/`source_url` on cases as you create them** — the monitoring script and case-detail view are only as useful as these fields; blank ones just say "no summary set yet."
 
 ## How to pick this back up
 
-- Run the hub (`cd ops-hub && python3 run.py`) to start actually logging real leads.
+- Run the hub (`cd ops-hub && python3 run.py`) — home page is now the Daily Queue, sorted by $/hr.
 - Every business line's assets live under `wave1/<line>/` or `wave2/<line>/`.
-- `DECISIONS.md` has the full reasoning log for every assumption made along the way — read it before assuming something was guessed carelessly.
+- `DECISIONS.md` has the full reasoning log — read it before assuming something was guessed carelessly.
+- `docs/remote_access.md` and `docs/monitoring.md` explain the two newest pieces in detail.

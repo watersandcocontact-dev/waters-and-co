@@ -9,7 +9,9 @@
   <header class="topbar">
     <h1>🗂 Ops Hub</h1>
     <nav>
-      <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('main.daily_queue') }}">Daily Queue</a>
+      <a href="{{ url_for('main.lines_index') }}">Business Lines</a>
+      <a href="{{ url_for('main.all_leads') }}">All Cases</a>
       <a href="{{ url_for('main.due_this_week') }}">Due This Week</a>
       <a href="{{ url_for('main.new_lead') }}">+ New Lead</a>
     </nav>

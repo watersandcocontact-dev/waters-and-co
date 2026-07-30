@@ -89,6 +89,19 @@ form.lead-form .actions { margin-top: 20px; display: flex; gap: 10px; }
 .section-title { font-size: 13px; text-transform: uppercase; color: var(--muted); margin: 20px 0 6px; letter-spacing: 0.03em; }
 
 .empty-state { padding: 40px; text-align: center; color: var(--muted); }
+.hint { color: var(--muted); font-size: 13px; margin-top: -6px; margin-bottom: 16px; max-width: 700px; }
+.rate-cell { font-weight: 700; color: var(--accent); }
+.done-left { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.done-left .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 14px; }
+.done-left .box.done { border-left: 3px solid var(--green); }
+.done-left .box.left { border-left: 3px solid var(--accent); }
+.done-left .box h4 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; color: var(--muted); }
+.line-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.line-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-decoration: none; color: var(--text); display: block; }
+.line-card:hover { border-color: var(--accent); }
+.line-card .n { font-size: 22px; font-weight: 700; }
+.line-card.unscoped { opacity: 0.6; }
+.source-link { font-size: 13px; }
 .counts-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
 .count-chip { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; }
 .count-chip b { color: var(--accent); }

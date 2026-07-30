@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Business Lines — Ops Hub{% endblock %}
+{% block content %}
+
+<h2>Business lines</h2>
+<p class="hint">Each line is kept separate — a land tax case and an NDIS case
+never blur together. Click into one for just that line's cases.</p>
+
+<div class="line-cards">
+  {% for key, label in business_lines %}
+  <a class="line-card{% if '(unscoped)' in label %} unscoped{% endif %}" href="{{ url_for('main.line_view', key=key) }}">
+    <div class="n">{{ counts.get(key, 0) }}</div>
+    <div>{{ label }}</div>
+  </a>
+  {% endfor %}
+</div>
+
+<p class="hint" style="margin-top:20px;">Lines marked "(unscoped)" are priced
+and ready to receive leads, but have no service-delivery assets built yet
+(no templates/research/checklists) — see DECISIONS.md.</p>
+
+{% endblock %}

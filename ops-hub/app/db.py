@@ -19,6 +19,11 @@ CREATE TABLE IF NOT EXISTS leads (
     au_state TEXT,                 -- NSW/VIC/QLD/... nullable, relevant to several lines
     source TEXT DEFAULT 'manual',  -- manual | webhook | referral | import
     extra_json TEXT DEFAULT '{}',  -- business-line-specific fields, see app/config.py
+    task_type TEXT,                -- 'setup' | 'management' | null, see config.TASK_TYPE_LINES
+    time_estimate_hours REAL,      -- per-lead override of the rate-card default
+    done_summary TEXT,             -- what's already done/automated, 1-2 lines
+    left_for_you_summary TEXT,     -- what's left for the human, 1-2 lines
+    source_url TEXT,                -- link to the primary source (gov page, platform, etc.)
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -35,7 +40,27 @@ CREATE TABLE IF NOT EXISTS webhook_log (
     lead_id INTEGER,
     note TEXT
 );
+
+CREATE TABLE IF NOT EXISTS time_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+    hours REAL NOT NULL,
+    note TEXT,
+    logged_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_time_entries_lead_id ON time_entries(lead_id);
 """
+
+# Columns added after the original schema — applied via ALTER TABLE so an
+# existing hub.sqlite3 doesn't need to be wiped. (name, DDL type/default)
+LEADS_MIGRATION_COLUMNS = [
+    ("task_type", "TEXT"),
+    ("time_estimate_hours", "REAL"),
+    ("done_summary", "TEXT"),
+    ("left_for_you_summary", "TEXT"),
+    ("source_url", "TEXT"),
+]
 
 
 def get_connection():
@@ -46,10 +71,18 @@ def get_connection():
     return conn
 
 
+def _migrate(conn):
+    existing = {row["name"] for row in conn.execute("PRAGMA table_info(leads)").fetchall()}
+    for col_name, col_type in LEADS_MIGRATION_COLUMNS:
+        if col_name not in existing:
+            conn.execute(f"ALTER TABLE leads ADD COLUMN {col_name} {col_type}")
+
+
 def init_db():
     conn = get_connection()
     try:
         conn.executescript(SCHEMA)
+        _migrate(conn)
         conn.commit()
     finally:
         conn.close()
