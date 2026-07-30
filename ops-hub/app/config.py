@@ -16,18 +16,18 @@ BUSINESS_LINES = [
     ("Concession", "Energy/Concession Navigation"),
     ("GrantFinder", "SME Grant Finder"),
     ("Pension", "Age Pension / Centrelink Assistance"),
-    # Introduced via PRICING.md (2026-07-30) — priced & ranked in the queue,
-    # but NO service-delivery assets built yet (no audit tools, templates,
-    # or research the way the 8 above got). See DECISIONS.md.
-    ("LostSuper", "Lost Super / TPD Navigation (unscoped)"),
-    ("DeceasedEstate", "Deceased-Estate Admin (unscoped)"),
-    ("TechConcierge", "Senior Tech Concierge (unscoped)"),
-    ("GrantWriting", "Grant Writing — Nonprofit (unscoped)"),
-    ("NDISNav", "NDIS Plan Navigation (unscoped)"),
-    ("NDISCompliance", "NDIS Provider Compliance/Audit-Prep (unscoped)"),
-    ("VideoRepurpose", "Video/Podcast Repurposing (unscoped)"),
-    ("Downsizing", "Senior Downsizing/Cleanout (unscoped)"),
-    ("AirbnbCohost", "Airbnb Co-Hosting (unscoped)"),
+    # Introduced via PRICING.md (2026-07-30). Built out on 2026-07-30 for the
+    # low-regulatory-risk ones (service scope + pricing in wave3-unscoped/).
+    # Still-held ones stay tagged "(unscoped)" — see DECISIONS.md for why.
+    ("LostSuper", "Lost Super / TPD Navigation (referral model)"),
+    ("DeceasedEstate", "Deceased-Estate Admin (unscoped — holding, see DECISIONS.md)"),
+    ("TechConcierge", "Senior Tech Concierge"),
+    ("GrantWriting", "Grant Writing — Nonprofit (unscoped — needs portfolio first)"),
+    ("NDISNav", "NDIS Plan Navigation (unscoped — holding, see DECISIONS.md)"),
+    ("NDISCompliance", "NDIS Provider Compliance/Audit-Prep (unscoped — holding, see DECISIONS.md)"),
+    ("VideoRepurpose", "Video/Podcast Repurposing"),
+    ("Downsizing", "Senior Downsizing/Cleanout"),
+    ("AirbnbCohost", "Airbnb Co-Hosting (unscoped — likely needs a real estate licence, see DECISIONS.md)"),
 ]
 BUSINESS_LINE_KEYS = [k for k, _ in BUSINESS_LINES]
 
@@ -130,6 +130,22 @@ EXTRA_FIELDS = {
     "Pension": [
         ("claim_type", "Claim type (new claim / ARO review / other)"),
         ("centrelink_ref", "Centrelink reference (if any)"),
+    ],
+    "TechConcierge": [
+        ("session_type", "Session type (setup/scam check/troubleshooting/etc.)"),
+        ("device", "Device(s) involved"),
+    ],
+    "VideoRepurpose": [
+        ("platform_targets", "Target platforms (TikTok/Reels/Shorts/LinkedIn)"),
+        ("episode_link", "Episode file/link"),
+    ],
+    "Downsizing": [
+        ("property_address", "Property address"),
+        ("job_type", "Job type (declutter/full clearout/move-prep)"),
+    ],
+    "LostSuper": [
+        ("referral_partner", "Referral partner (TPD lawyer/AFSL adviser)"),
+        ("referral_fee_agreed", "Referral fee agreed ($)"),
     ],
 }
 

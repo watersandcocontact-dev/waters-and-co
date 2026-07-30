@@ -8,7 +8,7 @@ never blur together. Click into one for just that line's cases.</p>
 
 <div class="line-cards">
   {% for key, label in business_lines %}
-  <a class="line-card{% if '(unscoped)' in label %} unscoped{% endif %}" href="{{ url_for('main.line_view', key=key) }}">
+  <a class="line-card{% if '(unscoped' in label or '(research pending)' in label %} unscoped{% endif %}" href="{{ url_for('main.line_view', key=key) }}">
     <div class="n">{{ counts.get(key, 0) }}</div>
     <div>{{ label }}</div>
   </a>

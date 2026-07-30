@@ -33,11 +33,14 @@ Last updated: 2026-07-30 — **Wave 1 + Wave 2 prep fully built, plus the daily-
 ## Wave 2 prep — ✅ complete
 - ✅ Bookkeeping, concessions, grant-finder, pension — all checklists/templates/research built (see prior entries below for detail)
 
-## F. Pricing table expansion (NEW, 2026-07-30) — 🔶 partial by design
+## F. Pricing table expansion (2026-07-30) — 🔶 partial by design
 - ✅ `PRICING.md` — your full 17-business rate table, reconciled with existing pricing sheets
-- ✅ All 9 new business lines wired into the hub schema + rate card (Lost Super, Deceased-Estate Admin, Tech Concierge, Grant Writing, NDIS Nav, NDIS Compliance, Video Repurposing, Downsizing, Airbnb Co-Hosting) — priced, filterable, ranked in the queue
-- ⛔ **None of the 9 new lines have service-delivery assets** (no audit tools, templates, or research the way GBP/LandTax/etc. got) — they were introduced via a pricing table, not a build spec. If you want any of these actually launched, that's its own prompt.
-- ✅ Competitor pricing research for the 4 live Wave 1 businesses — `docs/competitor_pricing_research.md` (real AU competitors, recommended price points, differentiation ideas beyond just "cheaper")
+- ✅ All 9 new business lines wired into the hub schema + rate card — priced, filterable, ranked in the queue
+- ✅ Competitor pricing research for the 4 live Wave 1 businesses — `docs/competitor_pricing_research.md`
+- ✅ ReviewGen and LandTax pricing sheets filled in from that research
+- ✅ **4 of the 9 new lines fully built out** (low regulatory risk): Senior Tech Concierge, Video/Podcast Repurposing, Senior Downsizing/Cleanout, Lost Super/TPD Navigation (referral model, with a compliance note on financial-services referral-fee disclosure) — service scope + pricing under `wave3-unscoped/<line>/`
+- ⛔ **Airbnb Co-Hosting — likely blocked, not built.** Research (`wave3-unscoped/airbnb_cohost/regulatory_research.md`) found paid co-hosting almost certainly needs a real estate/property agent licence in most states — QLD and VIC have actual prosecution precedent for unlicensed operators doing exactly this. WA (your state) has the same statutory pattern. Didn't build sales material for a business that may be illegal to run without a licence you don't have — real next step is confirming with a property lawyer, not templates.
+- ⛔ **5 lines deliberately still held**: Airbnb Co-Hosting (above), Deceased-Estate Admin, Grant Writing (needs a portfolio first per your own pricing note anyway), NDIS Plan Navigation, NDIS Provider Compliance/Audit-Prep — these touch real regulatory frameworks where building client-facing assets needs your explicit scope/qualifications confirmation first, not a reasonable-assumption default. See DECISIONS.md 2026-07-30 entries.
 
 ---
 
@@ -51,8 +54,9 @@ Last updated: 2026-07-30 — **Wave 1 + Wave 2 prep fully built, plus the daily-
 6. **Review the pricing** — GBP/MissedCall unchanged, and ReviewGen + LandTax now have full pricing sheets built from competitor research (`wave1/reviewgen/pricing_sheet.md`, `wave1/landtax/pricing_sheet.md`) — land tax specifically found zero public competitor pricing anywhere, so that price point is a judgment call worth your sign-off before quoting a real client.
 7. **Review every draft template before client use** — none are legally vetted.
 8. **Re-verify research docs with "unverified" flags** before relying on them (search each file for the word).
-9. **Decide if/when to actually build out the 9 new business lines** from the pricing table — right now they're priced and ready to receive leads, nothing more.
-10. **Fill in `done_summary`/`left_for_you_summary`/`source_url` on cases as you create them** — the monitoring script and case-detail view are only as useful as these fields; blank ones just say "no summary set yet."
+9. **If you're serious about Airbnb co-hosting: talk to a property/real estate lawyer first** — the research points to a real estate licence requirement in most states including WA. Don't market this until that's confirmed either way.
+10. **Decide if/when to pursue the 4 still-held business lines** (Deceased-Estate Admin, Grant Writing, NDIS Nav, NDIS Compliance) — each needs an explicit scope/qualifications conversation before I'd build client-facing assets for them.
+11. **Fill in `done_summary`/`left_for_you_summary`/`source_url` on cases as you create them** — the monitoring script and case-detail view are only as useful as these fields; blank ones just say "no summary set yet."
 
 ## How to pick this back up
 
