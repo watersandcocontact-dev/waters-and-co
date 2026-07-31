@@ -37,6 +37,11 @@ BUSINESS_LINES = [
     # came from.
     ("CryptoLiteracy", "Crypto IT / Literacy"),
     ("AIToolsBusiness", "AI Tools for Business"),
+    # Lightweight catch-all for one-off gig/marketplace jobs (Airtasker,
+    # Marketplace, etc.) that don't warrant a dedicated business line unless
+    # the same kind of job starts repeating — see
+    # wave3-unscoped/opportunity_scan/gig_marketplace_scan.md
+    ("OddJobs", "Odd Jobs / Gig Marketplace"),
 ]
 BUSINESS_LINE_KEYS = [k for k, _ in BUSINESS_LINES]
 
@@ -81,6 +86,7 @@ RATE_CARD = {
     "AirbnbCohost": 45,
     "CryptoLiteracy": {"session": 100, "course": 300},
     "AIToolsBusiness": 85,
+    "OddJobs": 50,  # rough default — every job varies, override per-lead with real quoted price/time
 }
 
 STATUSES = [
@@ -174,6 +180,10 @@ EXTRA_FIELDS = {
     "AIToolsBusiness": [
         ("tools_setup", "Tool(s) being set up"),
         ("existing_client", "Reused from existing GBP/ReviewGen/MissedCall client? (y/n)"),
+    ],
+    "OddJobs": [
+        ("platform", "Platform (Airtasker/Marketplace/Gumtree/etc.)"),
+        ("repeat_pattern_flag", "Is this the 2nd+ similar job recently? (y/n — signal to consider a real business line)"),
     ],
 }
 
