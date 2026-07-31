@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Accountant Export — Ops Hub{% endblock %}
+{% block content %}
+
+<h2>Accountant export — FY{{ data.financial_year }}</h2>
+<p class="hint">Generated {{ data.generated }}. This is an organised handoff document, not a lodged
+return and not tax advice — every figure should be reviewed by your accountant.
+<a href="{{ url_for('main.tax_dashboard') }}">← back to tax tracking</a></p>
+
+<div class="section-title">Combined income position</div>
+<div class="table-wrap">
+<table>
+  <tbody>
+    <tr><td>Day-job YTD gross</td><td>${{ '%.2f'|format(data.position.day_job_ytd.gross) }}</td></tr>
+    <tr><td>Day-job YTD tax withheld</td><td>${{ '%.2f'|format(data.position.day_job_ytd.tax_withheld) }}</td></tr>
+    <tr><td>Day-job YTD net</td><td>${{ '%.2f'|format(data.position.day_job_ytd.net) }}</td></tr>
+    <tr><td>Business YTD income (Won leads)</td><td>${{ '%.2f'|format(data.position.business_ytd_income.total) }}</td></tr>
+    <tr><td>Business YTD expenses</td><td>${{ '%.2f'|format(data.position.business_ytd_expenses) }}</td></tr>
+    <tr><td>Business YTD profit</td><td>${{ '%.2f'|format(data.position.business_ytd_profit) }}</td></tr>
+    <tr><td><strong>Combined taxable-ish income (YTD)</strong></td><td><strong>${{ '%.2f'|format(data.position.combined_income) }}</strong></td></tr>
+    <tr><td>Marginal rate on next dollar</td><td>{{ (data.position.marginal_rate * 100)|round(0) }}%</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="section-title">Day-job deductions ({{ data.day_job_expenses|length }})</div>
+{% if data.day_job_expenses %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Date</th><th>Category</th><th>Amount</th><th>Description</th><th>Receipt</th><th>Treatment</th></tr></thead>
+  <tbody>
+    {% for e in data.day_job_expenses %}
+    <tr><td>{{ e.expense_date }}</td><td>{{ e.category }}</td><td>${{ '%.2f'|format(e.amount) }}</td><td>{{ e.description or '—' }}</td><td>{{ e.receipt_held }}</td><td>{{ e.deduction_treatment or '—' }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="hint">None logged yet.</p>
+{% endif %}
+
+<div class="section-title">Business deductions ({{ data.business_expenses|length }})</div>
+{% if data.business_expenses %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Date</th><th>Business line</th><th>Category</th><th>Amount</th><th>Description</th><th>Receipt</th><th>Treatment</th></tr></thead>
+  <tbody>
+    {% for e in data.business_expenses %}
+    <tr><td>{{ e.expense_date }}</td><td>{{ e.context | line_label }}</td><td>{{ e.category }}</td><td>${{ '%.2f'|format(e.amount) }}</td><td>{{ e.description or '—' }}</td><td>{{ e.receipt_held }}</td><td>{{ e.deduction_treatment or '—' }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="hint">None logged yet.</p>
+{% endif %}
+
+<div class="section-title">No-receipt cap usage</div>
+<div class="table-wrap">
+<table>
+  <tbody>
+    {% for name, b in data.no_receipt_caps.items() %}
+    <tr><td>{{ name }}</td><td>${{ '%.2f'|format(b.used) }} used of ${{ b.cap }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<div class="section-title">Speak to your accountant — concrete figures</div>
+<div class="table-wrap">
+<table>
+  <tbody>
+    <tr><td>Concessional super headroom (this FY, employer SG only)</td><td>${{ '%.2f'|format(data.speak_to_accountant.concessional_super_headroom) }}</td></tr>
+    <tr><td>Estimated tax saving if fully used (rough, marginal rate vs 15% inside super)</td><td>${{ '%.2f'|format(data.speak_to_accountant.estimated_tax_saving_if_fully_used) }}</td></tr>
+    <tr><td>Carry-forward note</td><td>{{ data.speak_to_accountant.carry_forward_note }}</td></tr>
+    <tr><td>GST threshold progress</td><td>{{ data.speak_to_accountant.gst_threshold_progress_pct }}%{% if data.speak_to_accountant.gst_flag %} — <strong>THRESHOLD CROSSED</strong>{% endif %}</td></tr>
+    <tr><td>Division 293 flag</td><td>{{ 'YES — crossed' if data.speak_to_accountant.division_293_flag else 'Not yet' }}</td></tr>
+    <tr><td>Logbook vs cents/km</td><td>{{ data.speak_to_accountant.logbook_vs_cents_per_km_note }}</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="section-title">Figures not fully confirmed for this FY</div>
+<ul class="hint">
+  {% for note in data.unconfirmed_figures %}
+  <li>{{ note }}</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

@@ -74,6 +74,43 @@ CREATE TABLE IF NOT EXISTS expansion_spend (
 
 CREATE INDEX IF NOT EXISTS idx_expansion_spend_business_line ON expansion_spend(business_line);
 CREATE INDEX IF NOT EXISTS idx_expansion_spend_status ON expansion_spend(status);
+
+-- Tax tracking (2026-07-31) — day job (PAYG) + all business deductions,
+-- feeding one combined accountant export. See app/config.py TAX_FIGURES
+-- (sourced from wave3-unscoped/tax_tracking/ato_figures_verification.md)
+-- and docs/tax_tracking.md for what this is and isn't (organisation/
+-- flagging tool, not tax advice, not lodgement).
+CREATE TABLE IF NOT EXISTS day_job_pay_periods (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pay_date TEXT NOT NULL,        -- ISO date of the pay day
+    gross REAL NOT NULL,
+    tax_withheld REAL NOT NULL,
+    net REAL NOT NULL,
+    super_amount REAL,             -- employer SG paid this period, nullable if unknown
+    hours_worked REAL,             -- nullable — needed for the day-job-vs-business $/hr comparison
+    notes TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_day_job_pay_periods_date ON day_job_pay_periods(pay_date);
+
+CREATE TABLE IF NOT EXISTS deductible_expenses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    expense_date TEXT NOT NULL,
+    context TEXT NOT NULL,          -- 'day_job' or a business_line key
+    category TEXT NOT NULL,         -- see config.EXPENSE_CATEGORIES
+    amount REAL NOT NULL,
+    description TEXT,
+    receipt_held TEXT NOT NULL DEFAULT 'yes',  -- yes | no_receipt_exception | no_receipt_uncovered
+    no_receipt_bucket TEXT,         -- which cap this counts toward if receipt_held != 'yes': combined_300 | laundry_150 | small_expense_200 | phone_internet_50 | cents_per_km | home_office_hours | null
+    deduction_treatment TEXT,       -- immediate | depreciated | n/a (only meaningful for equipment-type categories)
+    km_count REAL,                  -- for category = vehicle_km entries
+    hours_count REAL,               -- for category = home_office entries (fixed-rate hours)
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_deductible_expenses_context ON deductible_expenses(context);
+CREATE INDEX IF NOT EXISTS idx_deductible_expenses_category ON deductible_expenses(category);
 """
 
 # Columns added after the original schema — applied via ALTER TABLE so an

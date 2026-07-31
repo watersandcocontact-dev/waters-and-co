@@ -6,10 +6,12 @@ from .config import (
     BUDGET_PHASE,
     BUSINESS_LINES,
     EVALUATION_WINDOWS_WEEKS,
+    EXPENSE_CATEGORIES,
     EXTRA_FIELDS,
     STATUSES,
     TASK_TYPE_LABELS,
     TASK_TYPE_LINES,
+    TAX_FIGURES,
     WEEKLY_BUDGET_RANGE,
 )
 
@@ -188,6 +190,62 @@ def spend_outcome(spend_id):
     status = request.form.get("status") or None
     models.update_spend_outcome(spend_id, leads, revenue, status)
     return redirect(url_for("main.expansion"))
+
+
+@bp.route("/tax", methods=["GET"])
+def tax_dashboard():
+    return render_template(
+        "tax.html",
+        position=models.combined_tax_position(),
+        caps=models.no_receipt_cap_usage(),
+        comparison=models.day_job_vs_business_comparison(),
+        pay_periods=models.list_pay_periods(),
+        day_job_expenses=models.list_expenses(context="day_job"),
+        business_expenses=[e for e in models.list_expenses() if e["context"] != "day_job"],
+        business_lines=BUSINESS_LINES,
+        expense_categories=EXPENSE_CATEGORIES,
+        tax_figures=TAX_FIGURES,
+    )
+
+
+@bp.route("/tax/pay-period", methods=["POST"])
+def tax_pay_period():
+    models.create_pay_period(
+        {
+            "pay_date": request.form.get("pay_date"),
+            "gross": float(request.form.get("gross") or 0),
+            "tax_withheld": float(request.form.get("tax_withheld") or 0),
+            "net": float(request.form.get("net") or 0),
+            "super_amount": float(request.form.get("super_amount")) if request.form.get("super_amount") else None,
+            "hours_worked": float(request.form.get("hours_worked")) if request.form.get("hours_worked") else None,
+            "notes": request.form.get("notes"),
+        }
+    )
+    return redirect(url_for("main.tax_dashboard"))
+
+
+@bp.route("/tax/expense", methods=["POST"])
+def tax_expense():
+    models.create_expense(
+        {
+            "expense_date": request.form.get("expense_date"),
+            "context": request.form.get("context"),
+            "category": request.form.get("category"),
+            "amount": float(request.form.get("amount") or 0),
+            "description": request.form.get("description"),
+            "receipt_held": request.form.get("receipt_held"),
+            "no_receipt_bucket": request.form.get("no_receipt_bucket") or None,
+            "deduction_treatment": request.form.get("deduction_treatment") or None,
+            "km_count": float(request.form.get("km_count")) if request.form.get("km_count") else None,
+            "hours_count": float(request.form.get("hours_count")) if request.form.get("hours_count") else None,
+        }
+    )
+    return redirect(url_for("main.tax_dashboard"))
+
+
+@bp.route("/tax/export")
+def tax_export():
+    return render_template("tax_export.html", data=models.accountant_export_data(), tax_figures=TAX_FIGURES)
 
 
 def _form_to_data(form):

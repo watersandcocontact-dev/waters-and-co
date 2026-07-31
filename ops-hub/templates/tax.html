@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Tax Tracking — Ops Hub{% endblock %}
+{% block content %}
+
+<h2>Tax tracking — FY{{ tax_figures.financial_year }}</h2>
+<p class="hint">Organisation and flagging only — not tax advice, not lodgement.
+Figures sourced from ato.gov.au (see <code>wave3-unscoped/tax_tracking/ato_figures_verification.md</code>).
+Two figures are unconfirmed for this specific FY (see bottom of page) — everything here should be
+checked by your accountant before you rely on it. <a href="{{ url_for('main.tax_export') }}">Full accountant export →</a></p>
+
+<div class="section-title">Combined income position (YTD)</div>
+<div class="counts-row">
+  <div class="count-chip">Day-job YTD gross: <b>${{ '%.2f'|format(position.day_job_ytd.gross) }}</b></div>
+  <div class="count-chip">Business YTD income (Won): <b>${{ '%.2f'|format(position.business_ytd_income.total) }}</b></div>
+  <div class="count-chip">Business YTD expenses: <b>${{ '%.2f'|format(position.business_ytd_expenses) }}</b></div>
+  <div class="count-chip">Business YTD profit: <b>${{ '%.2f'|format(position.business_ytd_profit) }}</b></div>
+  <div class="count-chip">Combined income: <b>${{ '%.2f'|format(position.combined_income) }}</b></div>
+  <div class="count-chip">Marginal rate on next $: <b>{{ (position.marginal_rate * 100)|round(0) }}%</b></div>
+</div>
+{% if position.gst_threshold_flag %}
+<div class="alert-chip overdue">⚠ Business income has crossed the ${{ '{:,.0f}'.format(tax_figures.gst_registration_threshold) }} GST threshold — registration required within {{ tax_figures.gst_registration_window_days }} days. Talk to your accountant.</div>
+{% else %}
+<p class="hint">GST threshold progress: {{ position.gst_threshold_progress_pct }}% of ${{ '{:,.0f}'.format(tax_figures.gst_registration_threshold) }}</p>
+{% endif %}
+{% if position.division_293_flag %}
+<div class="alert-chip overdue">⚠ Combined income has crossed the ${{ '{:,.0f}'.format(tax_figures.division_293_threshold) }} Division 293 threshold.</div>
+{% endif %}
+
+<div class="section-title">Day job vs business — $/hr</div>
+<div class="counts-row">
+  <div class="count-chip">Day-job $/hr: <b>${{ comparison.day_job_hourly_rate }}</b></div>
+  <div class="count-chip">Business $/hr (best line): <b>${{ comparison.business_hourly_rate or '—' }}</b></div>
+</div>
+<p class="hint">{{ comparison.signal }}</p>
+<p class="hint"><strong>Before acting on this:</strong> {{ comparison.lending_note }}</p>
+
+<div class="section-title">No-receipt cap usage (YTD)</div>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Cap</th><th>Used</th><th>Cap amount</th><th>Remaining</th></tr></thead>
+  <tbody>
+    <tr><td>Combined work-related ($300, excl. car/travel)</td><td>${{ '%.2f'|format(caps.combined_300.used) }}</td><td>${{ caps.combined_300.cap }}</td><td class="{{ 'deadline-overdue' if caps.combined_300.over else '' }}">${{ caps.combined_300.remaining }}</td></tr>
+    <tr><td>Laundry (inside the $300, not additional)</td><td>${{ '%.2f'|format(caps.laundry_150.used) }}</td><td>${{ caps.laundry_150.cap }}</td><td class="{{ 'deadline-overdue' if caps.laundry_150.over else '' }}">${{ caps.laundry_150.remaining }}</td></tr>
+    <tr><td>Small expenses ≤$10 each (separate provision)</td><td>${{ '%.2f'|format(caps.small_expense_200.used) }}</td><td>${{ caps.small_expense_200.cap }}</td><td class="{{ 'deadline-overdue' if caps.small_expense_200.over else '' }}">${{ caps.small_expense_200.remaining }}</td></tr>
+    <tr><td>Phone/internet (no diary needed under this)</td><td>${{ '%.2f'|format(caps.phone_internet_50.used) }}</td><td>${{ caps.phone_internet_50.cap }}</td><td class="{{ 'deadline-overdue' if caps.phone_internet_50.over else '' }}">${{ caps.phone_internet_50.remaining }}</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="section-title">Log a day-job pay period</div>
+<form class="lead-form" method="post" action="{{ url_for('main.tax_pay_period') }}" style="max-width:600px;">
+  <label>Pay date</label>
+  <input type="date" name="pay_date" required>
+  <label>Gross</label>
+  <input type="number" step="0.01" name="gross" required>
+  <label>Tax withheld</label>
+  <input type="number" step="0.01" name="tax_withheld" required>
+  <label>Net</label>
+  <input type="number" step="0.01" name="net" required>
+  <label>Super paid this period (optional)</label>
+  <input type="number" step="0.01" name="super_amount">
+  <label>Hours worked this period (optional — enables real $/hr comparison)</label>
+  <input type="number" step="0.1" name="hours_worked">
+  <label>Notes</label>
+  <input type="text" name="notes">
+  <div class="actions"><button class="btn" type="submit">Log pay period</button></div>
+</form>
+
+{% if pay_periods %}
+<div class="table-wrap" style="margin-top:16px;">
+<table>
+  <thead><tr><th>Pay date</th><th>Gross</th><th>Tax</th><th>Net</th><th>Super</th><th>Hours</th></tr></thead>
+  <tbody>
+    {% for p in pay_periods %}
+    <tr><td>{{ p.pay_date }}</td><td>${{ '%.2f'|format(p.gross) }}</td><td>${{ '%.2f'|format(p.tax_withheld) }}</td><td>${{ '%.2f'|format(p.net) }}</td><td>{{ ('$' + '%.2f'|format(p.super_amount)) if p.super_amount else '—' }}</td><td>{{ p.hours_worked or '—' }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<div class="section-title">Log a deductible expense</div>
+<form class="lead-form" method="post" action="{{ url_for('main.tax_expense') }}" style="max-width:600px;">
+  <label>Date</label>
+  <input type="date" name="expense_date" required>
+  <label>Context</label>
+  <select name="context" required>
+    <option value="day_job">Day job (Carpentry TA)</option>
+    {% for key, label in business_lines %}
+    <option value="{{ key }}">{{ label }}</option>
+    {% endfor %}
+  </select>
+  <label>Category</label>
+  <select name="category" required>
+    {% for key, meta in expense_categories.items() %}
+    <option value="{{ key }}">{{ meta.label }}</option>
+    {% endfor %}
+  </select>
+  <label>Amount ($)</label>
+  <input type="number" step="0.01" name="amount" required>
+  <label>Description</label>
+  <input type="text" name="description">
+  <label>Receipt held?</label>
+  <select name="receipt_held">
+    <option value="yes">Yes, receipt kept</option>
+    <option value="no_receipt_exception">No receipt — covered by a no-receipt exception</option>
+    <option value="no_receipt_uncovered">No receipt — not covered (don't claim without checking)</option>
+  </select>
+  <label>If no-receipt exception, which cap?</label>
+  <select name="no_receipt_bucket">
+    <option value="">—</option>
+    <option value="combined_300">Combined $300</option>
+    <option value="laundry_150">Laundry $150</option>
+    <option value="small_expense_200">Small expense $200</option>
+    <option value="phone_internet_50">Phone/internet $50</option>
+    <option value="cents_per_km">Cents/km (car — no receipts needed regardless)</option>
+    <option value="home_office_hours">Home office fixed-rate hours</option>
+  </select>
+  <label>Deduction treatment (for equipment)</label>
+  <select name="deduction_treatment">
+    <option value="">n/a</option>
+    <option value="immediate">Immediate (${{ tax_figures.instant_deduction_threshold }} or less)</option>
+    <option value="depreciated">Depreciated over effective life</option>
+  </select>
+  <label>Km count (vehicle_km category only)</label>
+  <input type="number" step="0.1" name="km_count">
+  <label>Hours count (home_office category only)</label>
+  <input type="number" step="0.1" name="hours_count">
+  <div class="actions"><button class="btn" type="submit">Log expense</button></div>
+</form>
+
+<div class="section-title" style="margin-top:24px;">Unconfirmed figures for this FY</div>
+<ul class="hint">
+  {% for note in tax_figures.unconfirmed_for_this_fy %}
+  <li>{{ note }}</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

@@ -216,3 +216,80 @@ EVALUATION_WINDOWS_WEEKS = {
     "referral_partnership": 6,
     "other": 4,
 }
+
+# --- Tax tracking (2026-07-31) ---
+# Figures verified 31 July 2026 against ato.gov.au —
+# see wave3-unscoped/tax_tracking/ato_figures_verification.md for sources
+# and nuance. This is an organisation/flagging tool, NOT tax advice — every
+# figure here should be re-checked before relying on it, and a qualified
+# accountant should sign off before any of this is acted on. Two figures
+# are marked unconfirmed-for-this-year below; the rest were confirmed
+# directly against official ATO pages.
+TAX_FIGURES = {
+    "financial_year": "2026-27",
+    "instant_deduction_threshold": 300,       # individual work-related items <= this = immediate deduction
+    "no_receipt_combined_cap": 300,            # total work-related claims w/o receipts (excl. car/travel/meal allowances)
+    "no_receipt_laundry_cap": 150,             # inside the combined 300, not additional
+    "no_receipt_small_expense_cap": 200,       # separate provision, not inside the 300
+    "no_receipt_small_expense_per_item_max": 10,
+    "no_record_phone_internet_threshold": 50,  # above this needs a 4-week diary
+    "cents_per_km_rate": 0.91,
+    "cents_per_km_max_km": 5000,
+    "home_office_fixed_rate": 0.70,            # CONFIRMED for FY24-25/FY25-26 only — see UNCONFIRMED note below
+    "concessional_super_cap": 32500,
+    "non_concessional_super_cap": 130000,
+    "non_concessional_bring_forward_cap": 390000,
+    "gst_registration_threshold": 75000,
+    "gst_registration_window_days": 21,
+    "division_293_threshold": 250000,
+    # Bracket thresholds unchanged FY25-26 -> FY26-27; the second-bracket
+    # rate drops 16% -> 15% from 1 July 2026 ("now law" per ATO). Medicare
+    # levy (2%) is separate, not included in these marginal rates.
+    "tax_brackets": [
+        {"floor": 0, "ceiling": 18200, "rate": 0.0},
+        {"floor": 18200, "ceiling": 45000, "rate": 0.15},
+        {"floor": 45000, "ceiling": 135000, "rate": 0.30},
+        {"floor": 135000, "ceiling": 190000, "rate": 0.37},
+        {"floor": 190000, "ceiling": None, "rate": 0.45},
+    ],
+    # Concessional-cap carry-forward: 5-year window, eligible if total super
+    # balance was under $500,000 at the prior 30 June. FY2021-22 unused
+    # space expires 30 June 2027 (verification corrected your original
+    # "30 June 2026" claim by one year — it's still usable this FY).
+    "carry_forward_eligible_tsb_threshold": 500000,
+    "carry_forward_years": [
+        {"fy": "2021-22", "expires": "2027-06-30"},
+        {"fy": "2022-23", "expires": "2028-06-30"},
+        {"fy": "2023-24", "expires": "2029-06-30"},
+        {"fy": "2024-25", "expires": "2030-06-30"},
+        {"fy": "2025-26", "expires": "2031-06-30"},
+    ],
+    "unconfirmed_for_this_fy": [
+        "home_office_fixed_rate — confirmed for FY24-25/FY25-26 at 70c, "
+        "ATO had not published an explicit FY26-27 figure as of 31 Jul 2026 "
+        "research date; treated as the likely default, flagged in the UI",
+    ],
+}
+
+# Day-job hourly rate — from your payslip data (gross/hours). Used for the
+# day-job-vs-business $/hr comparison. Update if your rate changes.
+DAY_JOB_HOURLY_RATE = 45.0
+
+# Expense categories, tagged by where they can apply. "day_job" = Carpentry
+# TA specific; "business" = any of the 19 business lines; "both" = either.
+EXPENSE_CATEGORIES = {
+    "tools_equipment": {"label": "Tools & equipment", "context": "both"},
+    "ppe_laundry": {"label": "PPE / protective clothing / laundry", "context": "day_job"},
+    "car_travel": {"label": "Car/travel (multi-site or bulky tools)", "context": "day_job"},
+    "self_education": {"label": "Self-education (current role only)", "context": "day_job"},
+    "union_fees": {"label": "Union/professional association fees", "context": "day_job"},
+    "home_office": {"label": "Home office running costs (fixed-rate hours)", "context": "business"},
+    "software_subscriptions": {"label": "Software/subscriptions", "context": "business"},
+    "insurance": {"label": "Professional indemnity/business insurance", "context": "business"},
+    "asic_fees": {"label": "ASIC fees (business name renewal, etc.)", "context": "business"},
+    "accounting_fees": {"label": "Accounting/bookkeeping fees, bank fees", "context": "business"},
+    "marketing": {"label": "Marketing/advertising (feeds expansion_spend too)", "context": "business"},
+    "vehicle_km": {"label": "Vehicle use, client-facing (cents/km)", "context": "business"},
+    "equipment_depreciation": {"label": "Equipment/depreciation", "context": "business"},
+    "education_business": {"label": "Education/courses for running the business", "context": "business"},
+}

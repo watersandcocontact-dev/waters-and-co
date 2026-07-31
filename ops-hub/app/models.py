@@ -1,7 +1,14 @@
 import json
 from datetime import date, datetime, timedelta
 
-from .config import AUTO_DEADLINE_RULES, DEADLINE_THRESHOLDS, EVALUATION_WINDOWS_WEEKS, RATE_CARD
+from .config import (
+    AUTO_DEADLINE_RULES,
+    DAY_JOB_HOURLY_RATE,
+    DEADLINE_THRESHOLDS,
+    EVALUATION_WINDOWS_WEEKS,
+    RATE_CARD,
+    TAX_FIGURES,
+)
 from .db import get_connection
 
 
@@ -492,3 +499,327 @@ def spend_report():
             s["flag"] = "showing a return — compare against best-performing line below before deciding to scale"
 
     return {"spends": spends, "best_performing_line": best_line}
+
+
+# --- Tax tracking (2026-07-31) ---
+# Organisation/flagging tool, not tax advice. See config.TAX_FIGURES for
+# sourced figures and wave3-unscoped/tax_tracking/ato_figures_verification.md
+# for the research behind them.
+
+def _current_fy_start():
+    """1 July of the current Australian financial year."""
+    today = date.today()
+    year = today.year if today.month >= 7 else today.year - 1
+    return date(year, 7, 1)
+
+
+def create_pay_period(data):
+    conn = get_connection()
+    try:
+        cur = conn.execute(
+            """
+            INSERT INTO day_job_pay_periods
+                (pay_date, gross, tax_withheld, net, super_amount, hours_worked, notes)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                data["pay_date"],
+                data["gross"],
+                data["tax_withheld"],
+                data["net"],
+                data.get("super_amount"),
+                data.get("hours_worked"),
+                data.get("notes"),
+            ),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def list_pay_periods():
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM day_job_pay_periods ORDER BY pay_date DESC"
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def day_job_ytd():
+    fy_start = _current_fy_start().isoformat()
+    conn = get_connection()
+    try:
+        row = conn.execute(
+            """
+            SELECT COALESCE(SUM(gross), 0) AS gross,
+                   COALESCE(SUM(tax_withheld), 0) AS tax_withheld,
+                   COALESCE(SUM(net), 0) AS net,
+                   COALESCE(SUM(super_amount), 0) AS super_amount,
+                   COALESCE(SUM(hours_worked), 0) AS hours_worked,
+                   COUNT(*) AS pay_periods
+            FROM day_job_pay_periods WHERE pay_date >= ?
+            """,
+            (fy_start,),
+        ).fetchone()
+        return dict(row)
+    finally:
+        conn.close()
+
+
+def create_expense(data):
+    conn = get_connection()
+    try:
+        cur = conn.execute(
+            """
+            INSERT INTO deductible_expenses
+                (expense_date, context, category, amount, description,
+                 receipt_held, no_receipt_bucket, deduction_treatment, km_count, hours_count)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                data["expense_date"],
+                data["context"],
+                data["category"],
+                data["amount"],
+                data.get("description"),
+                data.get("receipt_held") or "yes",
+                data.get("no_receipt_bucket"),
+                data.get("deduction_treatment"),
+                data.get("km_count"),
+                data.get("hours_count"),
+            ),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def list_expenses(context=None, since=None):
+    conn = get_connection()
+    try:
+        q = "SELECT * FROM deductible_expenses WHERE 1=1"
+        params = []
+        if context:
+            q += " AND context = ?"
+            params.append(context)
+        if since:
+            q += " AND expense_date >= ?"
+            params.append(since)
+        q += " ORDER BY expense_date DESC"
+        rows = conn.execute(q, params).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def no_receipt_cap_usage():
+    """Sum of no-receipt-exception spend against each cap, YTD, flagged if
+    a cap is exceeded. Caps and bucket meanings: config.TAX_FIGURES."""
+    fy_start = _current_fy_start().isoformat()
+    expenses = list_expenses(since=fy_start)
+    buckets = {
+        "combined_300": {"used": 0.0, "cap": TAX_FIGURES["no_receipt_combined_cap"]},
+        "laundry_150": {"used": 0.0, "cap": TAX_FIGURES["no_receipt_laundry_cap"]},
+        "small_expense_200": {"used": 0.0, "cap": TAX_FIGURES["no_receipt_small_expense_cap"]},
+        "phone_internet_50": {"used": 0.0, "cap": TAX_FIGURES["no_record_phone_internet_threshold"]},
+    }
+    for e in expenses:
+        bucket = e.get("no_receipt_bucket")
+        if bucket in buckets:
+            buckets[bucket]["used"] += e["amount"]
+            # laundry counts inside combined_300 too, not additional
+            if bucket == "laundry_150":
+                buckets["combined_300"]["used"] += e["amount"]
+    for b in buckets.values():
+        b["remaining"] = round(b["cap"] - b["used"], 2)
+        b["over"] = b["used"] > b["cap"]
+    return buckets
+
+
+def business_ytd_income(business_line=None):
+    """Won leads' estimated_value since 1 July, the closest proxy this hub
+    has for realised business income (not cash-received timing)."""
+    fy_start = _current_fy_start().isoformat()
+    conn = get_connection()
+    try:
+        q = (
+            "SELECT business_line, COALESCE(SUM(estimated_value), 0) AS total "
+            "FROM leads WHERE status = 'Won' AND updated_at >= ?"
+        )
+        params = [fy_start]
+        if business_line:
+            q += " AND business_line = ?"
+            params.append(business_line)
+        q += " GROUP BY business_line"
+        rows = conn.execute(q, params).fetchall()
+        by_line = {r["business_line"]: r["total"] for r in rows}
+        return {"by_line": by_line, "total": sum(by_line.values())}
+    finally:
+        conn.close()
+
+
+def business_ytd_expenses():
+    fy_start = _current_fy_start().isoformat()
+    expenses = [e for e in list_expenses(since=fy_start) if e["context"] != "day_job"]
+    return round(sum(e["amount"] for e in expenses), 2)
+
+
+def _marginal_rate_for(income):
+    for bracket in TAX_FIGURES["tax_brackets"]:
+        ceiling = bracket["ceiling"]
+        if ceiling is None or income < ceiling:
+            return bracket["rate"]
+    return TAX_FIGURES["tax_brackets"][-1]["rate"]
+
+
+def combined_tax_position():
+    """Day-job YTD gross + business YTD profit (income - business expenses),
+    combined for a real (not planning-estimate) marginal-rate and
+    threshold position. Not advice — numbers for you and your accountant."""
+    day_job = day_job_ytd()
+    biz_income = business_ytd_income()
+    biz_expenses = business_ytd_expenses()
+    biz_profit = biz_income["total"] - biz_expenses
+
+    combined_income = day_job["gross"] + biz_profit
+    marginal_rate = _marginal_rate_for(combined_income)
+
+    concessional_used = day_job["super_amount"]  # employer SG YTD; personal contributions not tracked separately yet
+    concessional_headroom = round(TAX_FIGURES["concessional_super_cap"] - concessional_used, 2)
+
+    gst_progress = round((biz_income["total"] / TAX_FIGURES["gst_registration_threshold"]) * 100, 1) if TAX_FIGURES["gst_registration_threshold"] else 0
+
+    thresholds_crossed = []
+    for t in (18200, 45000, 135000, 190000):
+        if combined_income >= t:
+            thresholds_crossed.append(t)
+
+    return {
+        "day_job_ytd": day_job,
+        "business_ytd_income": biz_income,
+        "business_ytd_expenses": biz_expenses,
+        "business_ytd_profit": round(biz_profit, 2),
+        "combined_income": round(combined_income, 2),
+        "marginal_rate": marginal_rate,
+        "concessional_super_used": concessional_used,
+        "concessional_super_headroom": concessional_headroom,
+        "gst_threshold_progress_pct": gst_progress,
+        "gst_threshold_flag": biz_income["total"] >= TAX_FIGURES["gst_registration_threshold"],
+        "division_293_flag": combined_income >= TAX_FIGURES["division_293_threshold"],
+        "thresholds_crossed": thresholds_crossed,
+    }
+
+
+def day_job_vs_business_comparison():
+    """Day-job $/hr (fixed rate, or computed from the latest pay period if
+    hours are logged) vs business $/hr (best-performing line). Surfaces a
+    signal, not a decision — see docs/day_job_vs_business.md for why this
+    stays a signal rather than an automated 'go part-time' call (mortgage
+    serviceability and income consistency both matter and aren't tracked
+    here)."""
+    pay_periods = list_pay_periods()
+    day_job_rate = DAY_JOB_HOURLY_RATE
+    if pay_periods and pay_periods[0].get("hours_worked"):
+        latest = pay_periods[0]
+        day_job_rate = round(latest["gross"] / latest["hours_worked"], 2)
+
+    best_line = best_performing_line()
+    business_rate = best_line["avg_dollar_per_hour"] if best_line else None
+
+    won_with_hours = 0
+    conn = get_connection()
+    try:
+        won_with_hours = conn.execute(
+            """
+            SELECT COUNT(*) AS n FROM leads
+            WHERE status = 'Won'
+              AND (SELECT COALESCE(SUM(hours),0) FROM time_entries WHERE lead_id = leads.id) > 0
+            """
+        ).fetchone()["n"]
+    finally:
+        conn.close()
+
+    if won_with_hours < 8:
+        signal = (
+            f"Not enough data yet ({won_with_hours} completed jobs with logged hours) — "
+            "need consistent volume before this comparison means anything. "
+            "Keep logging time on every job."
+        )
+    elif business_rate and business_rate > day_job_rate:
+        signal = (
+            f"Business $/hr (${business_rate}) has been exceeding day-job $/hr (${day_job_rate}) "
+            f"across {won_with_hours} completed jobs. Worth a real conversation about reducing "
+            "day-job days — but check mortgage/lending implications first (see notes)."
+        )
+    else:
+        signal = f"Day-job $/hr (${day_job_rate}) still at or above business average (${business_rate or 0}) — keep both going."
+
+    return {
+        "day_job_hourly_rate": day_job_rate,
+        "business_hourly_rate": business_rate,
+        "best_performing_line": best_line,
+        "won_jobs_with_hours": won_with_hours,
+        "signal": signal,
+        "lending_note": (
+            "Reducing PAYG hours can affect mortgage serviceability — lenders "
+            "typically discount or fully exclude sole-trader income until ~2 years "
+            "of tax returns exist. Worth raising with your mortgage broker/lender "
+            "before changing day-job days, not just comparing $/hr."
+        ),
+    }
+
+
+def accountant_export_data():
+    """Everything for the one-document accountant handoff: day-job +
+    business deductions separated, no-receipt cap usage, combined income
+    position, and the speak-to-your-accountant discussion points with real
+    numbers. Not lodgement, not advice — an organised handoff."""
+    fy_start = _current_fy_start().isoformat()
+    all_expenses = list_expenses(since=fy_start)
+    day_job_expenses = [e for e in all_expenses if e["context"] == "day_job"]
+    business_expenses = [e for e in all_expenses if e["context"] != "day_job"]
+
+    position = combined_tax_position()
+    caps = no_receipt_cap_usage()
+
+    concessional_headroom = position["concessional_super_headroom"]
+    marginal_rate = position["marginal_rate"]
+    # Rough tax-saving estimate: headroom taxed at 15% inside super vs marginal rate outside
+    super_saving_estimate = round(concessional_headroom * max(marginal_rate - 0.15, 0), 2)
+
+    return {
+        "financial_year": TAX_FIGURES["financial_year"],
+        "generated": date.today().isoformat(),
+        "day_job_expenses": day_job_expenses,
+        "business_expenses": business_expenses,
+        "no_receipt_caps": caps,
+        "position": position,
+        "speak_to_accountant": {
+            "concessional_super_headroom": concessional_headroom,
+            "estimated_tax_saving_if_fully_used": super_saving_estimate,
+            "carry_forward_note": (
+                "5-year carry-forward available if total super balance was under "
+                f"${TAX_FIGURES['carry_forward_eligible_tsb_threshold']:,} at last 30 June. "
+                "FY2021-22 unused space expires 30 June 2027 (confirm exact remaining "
+                "amount with accountant — this tool only tracks employer SG, not any "
+                "prior years' unused cap)."
+            ),
+            "gst_threshold_progress_pct": position["gst_threshold_progress_pct"],
+            "gst_flag": position["gst_threshold_flag"],
+            "division_293_flag": position["division_293_flag"],
+            "logbook_vs_cents_per_km_note": (
+                "Worth a real comparison once a few months of vehicle-use data exist — "
+                "cents/km is capped at "
+                f"{TAX_FIGURES['cents_per_km_max_km']:,}km/car/year at "
+                f"${TAX_FIGURES['cents_per_km_rate']}/km "
+                f"(= ${TAX_FIGURES['cents_per_km_max_km'] * TAX_FIGURES['cents_per_km_rate']:,.0f} max); "
+                "logbook method has no cap but needs a 12-week logbook plus ongoing records."
+            ),
+        },
+        "unconfirmed_figures": TAX_FIGURES["unconfirmed_for_this_fy"],
+    }
