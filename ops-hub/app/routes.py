@@ -1,7 +1,17 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 
 from . import models
-from .config import AU_STATES, BUSINESS_LINES, EXTRA_FIELDS, STATUSES, TASK_TYPE_LINES
+from .config import (
+    AU_STATES,
+    BUDGET_PHASE,
+    BUSINESS_LINES,
+    EVALUATION_WINDOWS_WEEKS,
+    EXTRA_FIELDS,
+    STATUSES,
+    TASK_TYPE_LABELS,
+    TASK_TYPE_LINES,
+    WEEKLY_BUDGET_RANGE,
+)
 
 bp = Blueprint("main", __name__)
 
@@ -96,6 +106,7 @@ def new_lead():
         au_states=AU_STATES,
         extra_fields=EXTRA_FIELDS,
         task_type_lines=TASK_TYPE_LINES,
+        task_type_labels=TASK_TYPE_LABELS,
         selected_line=request.args.get("business_line") or BUSINESS_LINES[0][0],
     )
 
@@ -118,6 +129,7 @@ def lead_detail(lead_id):
         au_states=AU_STATES,
         extra_fields=EXTRA_FIELDS,
         task_type_lines=TASK_TYPE_LINES,
+        task_type_labels=TASK_TYPE_LABELS,
         selected_line=lead["business_line"],
         time_entries=time_entries,
     )
@@ -139,6 +151,43 @@ def log_time(lead_id):
         except ValueError:
             pass
     return redirect(url_for("main.lead_detail", lead_id=lead_id))
+
+
+@bp.route("/expansion", methods=["GET", "POST"])
+def expansion():
+    if request.method == "POST":
+        models.create_spend(
+            {
+                "spend_date": request.form.get("spend_date"),
+                "business_line": request.form.get("business_line") or None,
+                "spend_type": request.form.get("spend_type"),
+                "campaign_tag": request.form.get("campaign_tag"),
+                "amount": float(request.form.get("amount") or 0),
+                "funded_by": request.form.get("funded_by"),
+                "notes": request.form.get("notes"),
+            }
+        )
+        return redirect(url_for("main.expansion"))
+
+    report = models.spend_report()
+    return render_template(
+        "expansion.html",
+        spends=report["spends"],
+        best_line=report["best_performing_line"],
+        business_lines=BUSINESS_LINES,
+        budget_phase=BUDGET_PHASE,
+        weekly_budget_range=WEEKLY_BUDGET_RANGE,
+        evaluation_windows=EVALUATION_WINDOWS_WEEKS,
+    )
+
+
+@bp.route("/expansion/<int:spend_id>/outcome", methods=["POST"])
+def spend_outcome(spend_id):
+    leads = int(request.form.get("outcome_leads") or 0)
+    revenue = float(request.form.get("outcome_revenue") or 0)
+    status = request.form.get("status") or None
+    models.update_spend_outcome(spend_id, leads, revenue, status)
+    return redirect(url_for("main.expansion"))
 
 
 def _form_to_data(form):

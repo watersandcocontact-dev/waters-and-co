@@ -1,7 +1,7 @@
 import json
 from datetime import date, datetime, timedelta
 
-from .config import AUTO_DEADLINE_RULES, DEADLINE_THRESHOLDS, RATE_CARD
+from .config import AUTO_DEADLINE_RULES, DEADLINE_THRESHOLDS, EVALUATION_WINDOWS_WEEKS, RATE_CARD
 from .db import get_connection
 
 
@@ -354,3 +354,141 @@ def daily_queue():
         lead["dollar_per_hour_source"] = rate_info["source"]
     leads.sort(key=lambda lead: lead["dollar_per_hour"] or 0, reverse=True)
     return leads
+
+
+# --- Expansion budget + kill-switch (2026-07-31) ---
+# Phase 1 = $0 budget (see config.BUDGET_PHASE) — these functions exist so
+# tracking is ready the moment real spend starts, not retrofitted later.
+
+def create_spend(data):
+    spend_type = data["spend_type"]
+    window_weeks = EVALUATION_WINDOWS_WEEKS.get(spend_type, EVALUATION_WINDOWS_WEEKS["other"])
+    try:
+        spend_date = datetime.strptime(data["spend_date"], "%Y-%m-%d").date()
+        evaluation_due = (spend_date + timedelta(weeks=window_weeks)).isoformat()
+    except (ValueError, KeyError):
+        evaluation_due = None
+
+    conn = get_connection()
+    try:
+        cur = conn.execute(
+            """
+            INSERT INTO expansion_spend
+                (spend_date, business_line, spend_type, campaign_tag, amount,
+                 funded_by, notes, evaluation_due)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                data["spend_date"],
+                data.get("business_line") or None,
+                spend_type,
+                data.get("campaign_tag"),
+                data["amount"],
+                data.get("funded_by") or "personal_income",
+                data.get("notes"),
+                evaluation_due,
+            ),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def update_spend_outcome(spend_id, outcome_leads, outcome_revenue, status=None):
+    conn = get_connection()
+    try:
+        if status:
+            conn.execute(
+                "UPDATE expansion_spend SET outcome_leads = ?, outcome_revenue = ?, "
+                "status = ?, updated_at = datetime('now') WHERE id = ?",
+                (outcome_leads, outcome_revenue, status, spend_id),
+            )
+        else:
+            conn.execute(
+                "UPDATE expansion_spend SET outcome_leads = ?, outcome_revenue = ?, "
+                "updated_at = datetime('now') WHERE id = ?",
+                (outcome_leads, outcome_revenue, spend_id),
+            )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def list_spend(status=None):
+    conn = get_connection()
+    try:
+        q = "SELECT * FROM expansion_spend WHERE 1=1"
+        params = []
+        if status:
+            q += " AND status = ?"
+            params.append(status)
+        q += " ORDER BY spend_date DESC"
+        rows = conn.execute(q, params).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def best_performing_line():
+    """Rough $/hr leader among Won leads with actual hours logged — used as
+    the comparison point for expansion-spend cost-efficiency, per the
+    'compare against what the same dollar would do elsewhere' instruction."""
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            """
+            SELECT leads.business_line, leads.estimated_value,
+                   (SELECT COALESCE(SUM(hours), 0) FROM time_entries WHERE lead_id = leads.id) AS actual_hours
+            FROM leads WHERE status = 'Won' AND estimated_value IS NOT NULL
+            """
+        ).fetchall()
+    finally:
+        conn.close()
+
+    totals = {}
+    for r in rows:
+        if not r["actual_hours"]:
+            continue
+        rate = r["estimated_value"] / r["actual_hours"]
+        line = r["business_line"]
+        totals.setdefault(line, []).append(rate)
+
+    if not totals:
+        return None
+    averaged = {line: sum(rates) / len(rates) for line, rates in totals.items()}
+    best_line = max(averaged, key=averaged.get)
+    return {"business_line": best_line, "avg_dollar_per_hour": round(averaged[best_line], 2)}
+
+
+def spend_report():
+    """Weekly-report-ready view: every spend with computed cost-per-lead,
+    ROI, and a plain-language flag. Not a fully automated kill decision —
+    surfaces the numbers so the call ("keep/adjust/kill") can actually be
+    made with real data behind it, per the underperformance-detection spec."""
+    today = date.today()
+    spends = list_spend()
+    best_line = best_performing_line()
+
+    for s in spends:
+        s["cost_per_lead"] = round(s["amount"] / s["outcome_leads"], 2) if s["outcome_leads"] else None
+        s["roi"] = round((s["outcome_revenue"] - s["amount"]) / s["amount"], 2) if s["amount"] else None
+
+        try:
+            due = datetime.strptime(s["evaluation_due"], "%Y-%m-%d").date() if s["evaluation_due"] else None
+        except ValueError:
+            due = None
+        past_due = due is not None and today >= due
+
+        if s["status"] != "active":
+            s["flag"] = f"already marked {s['status']}"
+        elif not past_due:
+            s["flag"] = f"within evaluation window (due {s['evaluation_due']})"
+        elif not s["outcome_leads"] and not s["outcome_revenue"]:
+            s["flag"] = "NO MEASURABLE RETURN — evaluate now (kill/adjust/pause)"
+        elif s["roi"] is not None and s["roi"] < 0:
+            s["flag"] = "UNDERPERFORMING — costing more than it's returning, review"
+        else:
+            s["flag"] = "showing a return — compare against best-performing line below before deciding to scale"
+
+    return {"spends": spends, "best_performing_line": best_line}

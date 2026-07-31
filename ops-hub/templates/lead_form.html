@@ -55,10 +55,8 @@
 
   <div id="task-type-field" style="display:none;">
     <label>Task type (affects the $/hr rate-card default)</label>
-    <select name="task_type" id="task_type">
+    <select name="task_type" id="task_type" data-current="{{ lead.task_type if lead else '' }}">
       <option value="">—</option>
-      <option value="setup" {% if lead and lead.task_type == 'setup' %}selected{% endif %}>Setup</option>
-      <option value="management" {% if lead and lead.task_type == 'management' %}selected{% endif %}>Ongoing management</option>
     </select>
   </div>
 
@@ -131,13 +129,30 @@
 </form>
 
 <script>
-var TASK_TYPE_LINES = {{ task_type_lines.keys() | list | tojson }};
+var TASK_TYPE_LINES = {{ task_type_lines | tojson }};
+var TASK_TYPE_LABELS = {{ task_type_labels | tojson }};
 function showExtra() {
   var sel = document.getElementById('business_line').value;
   document.querySelectorAll('.extra-group').forEach(function(el) {
     el.style.display = (el.dataset.line === sel) ? 'block' : 'none';
   });
-  document.getElementById('task-type-field').style.display = TASK_TYPE_LINES.includes(sel) ? 'block' : 'none';
+  var taskTypeField = document.getElementById('task-type-field');
+  var taskTypeSelect = document.getElementById('task_type');
+  var options = TASK_TYPE_LINES[sel];
+  if (options) {
+    var current = taskTypeSelect.dataset.current;
+    taskTypeSelect.innerHTML = '<option value="">—</option>';
+    options.forEach(function(opt) {
+      var el = document.createElement('option');
+      el.value = opt;
+      el.textContent = TASK_TYPE_LABELS[opt] || opt;
+      if (opt === current) el.selected = true;
+      taskTypeSelect.appendChild(el);
+    });
+    taskTypeField.style.display = 'block';
+  } else {
+    taskTypeField.style.display = 'none';
+  }
 }
 document.addEventListener('DOMContentLoaded', showExtra);
 </script>

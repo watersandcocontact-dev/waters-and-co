@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Expansion Budget — Ops Hub{% endblock %}
+{% block content %}
+
+<h2>Expansion budget</h2>
+
+{% if budget_phase == "off" %}
+<div class="alert-chip" style="border-color:var(--muted); color:var(--muted); margin-bottom:20px;">
+  Budget phase: OFF — Phase 1, $0 spend. Flip <code>BUDGET_PHASE</code> in
+  <code>app/config.py</code> yourself when you're ready to start; this
+  page tracks/evaluates spend whenever it happens, it doesn't gate it.
+</div>
+{% else %}
+<div class="alert-chip" style="border-color:var(--green); color:var(--green); margin-bottom:20px;">
+  Budget phase: ON — ${{ weekly_budget_range[0] }}-{{ weekly_budget_range[1] }}/week (scales to $100 only once methods show results)
+</div>
+{% endif %}
+
+{% if best_line %}
+<p class="hint">Best-performing line right now: <strong>{{ best_line.business_line | line_label }}</strong>
+  at ${{ best_line.avg_dollar_per_hour }}/hr (from Won leads with logged hours) — use this as the bar
+  any expansion spend should be beating.</p>
+{% else %}
+<p class="hint">No Won leads with logged hours yet — nothing to compare spend against. This fills in once real client work closes out.</p>
+{% endif %}
+
+<div class="section-title">Log new spend</div>
+<form class="lead-form" method="post" style="max-width:600px;">
+  <label>Date</label>
+  <input type="date" name="spend_date" required>
+  <label>Business line (leave blank if brand-wide)</label>
+  <select name="business_line">
+    <option value="">—</option>
+    {% for key, label in business_lines %}
+    <option value="{{ key }}">{{ label }}</option>
+    {% endfor %}
+  </select>
+  <label>Spend type</label>
+  <select name="spend_type" required>
+    {% for key in evaluation_windows.keys() %}
+    <option value="{{ key }}">{{ key.replace('_', ' ') }} (eval. window: {{ evaluation_windows[key] }}wk)</option>
+    {% endfor %}
+  </select>
+  <label>Campaign tag (short, for attribution — e.g. "landtax-search-launch")</label>
+  <input type="text" name="campaign_tag">
+  <label>Amount ($)</label>
+  <input type="number" step="0.01" name="amount" required>
+  <label>Funded by</label>
+  <select name="funded_by">
+    <option value="personal_income">My income this week</option>
+    <option value="business_profit">Retained business profit (self-funding)</option>
+  </select>
+  <label>Notes</label>
+  <textarea name="notes"></textarea>
+  <div class="actions"><button class="btn" type="submit">Log spend</button></div>
+</form>
+
+<div class="section-title" style="margin-top:32px;">All spend</div>
+{% if spends %}
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Date</th><th>Line</th><th>Type</th><th>Tag</th><th>Amount</th><th>Funded by</th>
+        <th>Leads</th><th>Revenue</th><th>Cost/lead</th><th>ROI</th><th>Status</th><th>Flag</th><th>Update outcome</th></tr>
+  </thead>
+  <tbody>
+    {% for s in spends %}
+    <tr>
+      <td>{{ s.spend_date }}</td>
+      <td>{{ s.business_line | line_label if s.business_line else '—' }}</td>
+      <td>{{ s.spend_type.replace('_', ' ') }}</td>
+      <td>{{ s.campaign_tag or '—' }}</td>
+      <td>${{ '%.2f'|format(s.amount) }}</td>
+      <td>{{ 'my income' if s.funded_by == 'personal_income' else 'business profit' }}</td>
+      <td>{{ s.outcome_leads }}</td>
+      <td>${{ '%.2f'|format(s.outcome_revenue) }}</td>
+      <td>{{ ('$' + '%.2f'|format(s.cost_per_lead)) if s.cost_per_lead is not none else '—' }}</td>
+      <td>{{ (('%.0f'|format(s.roi * 100)) + '%') if s.roi is not none else '—' }}</td>
+      <td>{{ s.status }}</td>
+      <td>{{ s.flag }}</td>
+      <td>
+        <form method="post" action="{{ url_for('main.spend_outcome', spend_id=s.id) }}" style="display:flex; gap:4px;">
+          <input type="number" name="outcome_leads" placeholder="leads" value="{{ s.outcome_leads }}" style="width:60px;">
+          <input type="number" step="0.01" name="outcome_revenue" placeholder="revenue" value="{{ s.outcome_revenue }}" style="width:80px;">
+          <select name="status">
+            <option value="active" {% if s.status == 'active' %}selected{% endif %}>active</option>
+            <option value="kept" {% if s.status == 'kept' %}selected{% endif %}>kept</option>
+            <option value="adjusted" {% if s.status == 'adjusted' %}selected{% endif %}>adjusted</option>
+            <option value="killed" {% if s.status == 'killed' %}selected{% endif %}>killed</option>
+          </select>
+          <button class="btn secondary" type="submit">Save</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="empty-state">No spend logged yet.</div>
+{% endif %}
+
+{% endblock %}

@@ -50,6 +50,30 @@ CREATE TABLE IF NOT EXISTS time_entries (
 );
 
 CREATE INDEX IF NOT EXISTS idx_time_entries_lead_id ON time_entries(lead_id);
+
+-- Expansion budget + kill-switch tracking (2026-07-31). Phase 1 = $0 budget,
+-- no real spend yet — this table exists so the tracking is ready the
+-- moment spend actually starts, not built retroactively. See
+-- app/config.py EVALUATION_WINDOWS_WEEKS and BUDGET_PHASE.
+CREATE TABLE IF NOT EXISTS expansion_spend (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    spend_date TEXT NOT NULL,          -- ISO date
+    business_line TEXT,                -- which business line this supported, nullable if brand-wide
+    spend_type TEXT NOT NULL,          -- search_ads | meta_ads | content | tool_subscription | referral_partnership | other
+    campaign_tag TEXT,                 -- short UTM-style tag for attribution matching against leads.source
+    amount REAL NOT NULL,
+    funded_by TEXT NOT NULL DEFAULT 'personal_income',  -- personal_income | business_profit
+    notes TEXT,
+    evaluation_due TEXT,               -- ISO date; spend_date + this spend_type's evaluation window
+    status TEXT NOT NULL DEFAULT 'active',  -- active | kept | adjusted | killed
+    outcome_leads INTEGER DEFAULT 0,   -- manually updated count of attributed leads
+    outcome_revenue REAL DEFAULT 0,    -- manually updated attributed revenue
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_expansion_spend_business_line ON expansion_spend(business_line);
+CREATE INDEX IF NOT EXISTS idx_expansion_spend_status ON expansion_spend(status);
 """
 
 # Columns added after the original schema — applied via ALTER TABLE so an

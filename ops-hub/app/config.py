@@ -31,6 +31,12 @@ BUSINESS_LINES = [
     # Website contact-form catch-all (2026-07-30) — "don't see what you need?"
     # enquiries that don't match a listed service.
     ("GeneralEnquiry", "General Enquiry (via website)"),
+    # 2026-07-31 additions — explicitly designed to reuse Tech Concierge's
+    # client base/booking infra rather than needing anything built from
+    # scratch. See DECISIONS.md for the "reuse-what-exists" filter this
+    # came from.
+    ("CryptoLiteracy", "Crypto IT / Literacy"),
+    ("AIToolsBusiness", "AI Tools for Business"),
 ]
 BUSINESS_LINE_KEYS = [k for k, _ in BUSINESS_LINES]
 
@@ -41,6 +47,15 @@ BUSINESS_LINE_KEYS = [k for k, _ in BUSINESS_LINES]
 TASK_TYPE_LINES = {
     "GBP": ["setup", "management"],
     "MissedCall": ["setup", "management"],
+    # session = live 1:1/workshop delivery, course = the pre-recorded product
+    # (near-zero marginal delivery cost once built, very different $/hr)
+    "CryptoLiteracy": ["session", "course"],
+}
+TASK_TYPE_LABELS = {
+    "setup": "Setup",
+    "management": "Ongoing management",
+    "session": "Live session",
+    "course": "Pre-recorded course",
 }
 
 # Default $/hr per business line (midpoint of the range in PRICING.md),
@@ -64,6 +79,8 @@ RATE_CARD = {
     "VideoRepurpose": 80,
     "Downsizing": 65,
     "AirbnbCohost": 45,
+    "CryptoLiteracy": {"session": 100, "course": 300},
+    "AIToolsBusiness": 85,
 }
 
 STATUSES = [
@@ -150,6 +167,14 @@ EXTRA_FIELDS = {
         ("referral_partner", "Referral partner (TPD lawyer/AFSL adviser)"),
         ("referral_fee_agreed", "Referral fee agreed ($)"),
     ],
+    "CryptoLiteracy": [
+        ("format", "Format (1:1 / workshop / course sale)"),
+        ("investment_boundary_held", "Investment-question boundary held? (y/n + note if redirected)"),
+    ],
+    "AIToolsBusiness": [
+        ("tools_setup", "Tool(s) being set up"),
+        ("existing_client", "Reused from existing GBP/ReviewGen/MissedCall client? (y/n)"),
+    ],
 }
 
 # Business lines with a hard statutory/program deadline that should
@@ -164,4 +189,30 @@ AUTO_DEADLINE_RULES = {
         "valuation_notice_date",
         {"NT": 30, "_default": 60},
     ),
+}
+
+# --- Expansion budget + kill-switch (2026-07-31) ---
+
+# Phase 1 = $0 budget, no spend allowed until you explicitly flip this.
+# This is a code-level switch, not a UI toggle, deliberately — flipping it
+# means editing this file, which matches "I decide when the budget phase
+# starts, don't assume it."
+BUDGET_PHASE = "off"  # "off" | "on"
+WEEKLY_BUDGET_RANGE = (25, 50)  # scales to 100 only once methods show results
+
+# Evaluation window (weeks) before a spend-type needs a real keep/adjust/kill
+# call. Reasoning (logged in DECISIONS.md 2026-07-31): search ads show
+# statistically usable signal fastest since click-through intent is
+# immediate; social/meta ads need longer for audience-based targeting to
+# leave its learning phase; organic content is slowest since indexing and
+# audience compounding both take real time; tool subscriptions aren't really
+# "killable" the same way, they get a monthly cost-review instead; referral
+# partnerships are relationship-based and slower to generate volume.
+EVALUATION_WINDOWS_WEEKS = {
+    "search_ads": 3,
+    "meta_ads": 4,
+    "content": 10,
+    "tool_subscription": 4,
+    "referral_partnership": 6,
+    "other": 4,
 }
