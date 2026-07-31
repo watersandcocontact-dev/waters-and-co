@@ -8,7 +8,7 @@
   {% if alerts.due_30 %}<div class="alert-chip due_30">{{ alerts.due_30|length }} due ≤30 days</div>{% endif %}
   {% if alerts.due_60 %}<div class="alert-chip due_60">{{ alerts.due_60|length }} due ≤60 days</div>{% endif %}
   {% if not (alerts.overdue or alerts.due_14 or alerts.due_30 or alerts.due_60) %}
-  <div class="alert-chip" style="border-color:#2e7d32;color:#2e7d32;">✓ nothing due soon</div>
+  <div class="alert-chip" style="border-color:var(--green);color:var(--green);">✓ nothing due soon</div>
   {% endif %}
 </div>
 

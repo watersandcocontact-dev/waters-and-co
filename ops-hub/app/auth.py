@@ -22,12 +22,12 @@ LOGIN_TEMPLATE = """
 <!doctype html><html><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="dark">
 <title>Sign in — Ops Hub</title>
 <link rel="stylesheet" href="/static/style.css"></head>
-<body style="display:flex; min-height:100vh; align-items:center; justify-content:center;">
+<body style="display:flex; min-height:100vh; align-items:center; justify-content:center; background:var(--bg);">
 <main style="max-width:360px; width:100%; padding:0 20px;">
-<h1 style="text-align:center; margin-bottom:24px;">🗂 Ops Hub</h1>
+<h1 style="text-align:center; margin-bottom:24px;">Waters <em>&amp;</em> Co <span class="tag">Ops Hub</span></h1>
 {% if error %}<p style="color:var(--red); text-align:center;">{{ error }}</p>{% endif %}
 <form method="post" class="lead-form">
   <label>Password</label>
