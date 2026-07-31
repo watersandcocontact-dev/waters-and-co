@@ -123,6 +123,7 @@ def lead_detail(lead_id):
         models.update_lead(lead_id, data)
         return redirect(url_for("main.lead_detail", lead_id=lead_id))
     time_entries = models.get_time_entries(lead_id)
+    payments = models.list_payments_for_lead(lead_id)
     return render_template(
         "lead_form.html",
         lead=lead,
@@ -134,6 +135,9 @@ def lead_detail(lead_id):
         task_type_labels=TASK_TYPE_LABELS,
         selected_line=lead["business_line"],
         time_entries=time_entries,
+        payments=payments,
+        payment_error=request.args.get("payment_error"),
+        payment_result=request.args.get("payment"),
     )
 
 

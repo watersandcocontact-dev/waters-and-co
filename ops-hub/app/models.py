@@ -501,6 +501,78 @@ def spend_report():
     return {"spends": spends, "best_performing_line": best_line}
 
 
+# --- Stripe payments (2026-08-01) ---
+# One row per payment request against a lead. Client-side code never sets
+# status='paid' -- only the Stripe webhook (app/payments.py) does that,
+# after verifying the event signature, so a client can't just hit the
+# success_url and mark themselves paid without actually paying.
+
+def create_payment(data):
+    conn = get_connection()
+    try:
+        cur = conn.execute(
+            """
+            INSERT INTO payments
+                (lead_id, checkout_session_id, checkout_url, amount_cents,
+                 currency, description, status)
+            VALUES (?, ?, ?, ?, ?, ?, 'pending')
+            """,
+            (
+                data["lead_id"],
+                data["checkout_session_id"],
+                data["checkout_url"],
+                data["amount_cents"],
+                data.get("currency") or "aud",
+                data.get("description"),
+            ),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def list_payments_for_lead(lead_id):
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM payments WHERE lead_id = ? ORDER BY created_at DESC", (lead_id,)
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def mark_payment_paid(checkout_session_id, payment_intent_id=None):
+    """Idempotent -- Stripe can and will redeliver the same webhook event."""
+    conn = get_connection()
+    try:
+        conn.execute(
+            """
+            UPDATE payments SET status = 'paid', payment_intent_id = ?,
+                paid_at = datetime('now')
+            WHERE checkout_session_id = ? AND status != 'paid'
+            """,
+            (payment_intent_id, checkout_session_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def mark_payment_status(checkout_session_id, status):
+    """For non-paid terminal states (expired, canceled) via webhook."""
+    conn = get_connection()
+    try:
+        conn.execute(
+            "UPDATE payments SET status = ? WHERE checkout_session_id = ? AND status = 'pending'",
+            (status, checkout_session_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 # --- Tax tracking (2026-07-31) ---
 # Organisation/flagging tool, not tax advice. See config.TAX_FIGURES for
 # sourced figures and wave3-unscoped/tax_tracking/ato_figures_verification.md

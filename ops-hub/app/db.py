@@ -111,6 +111,28 @@ CREATE TABLE IF NOT EXISTS deductible_expenses (
 
 CREATE INDEX IF NOT EXISTS idx_deductible_expenses_context ON deductible_expenses(context);
 CREATE INDEX IF NOT EXISTS idx_deductible_expenses_category ON deductible_expenses(category);
+
+-- Stripe payments (2026-08-01) -- one row per payment request sent to a
+-- client, created against a lead. Status starts 'pending' and is flipped
+-- to 'paid' by the Stripe webhook (app/payments.py) on
+-- checkout.session.completed -- never set client-side, since that would let
+-- someone mark themselves paid by just hitting the success_url.
+CREATE TABLE IF NOT EXISTS payments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+    checkout_session_id TEXT NOT NULL UNIQUE,
+    payment_intent_id TEXT,
+    checkout_url TEXT,
+    amount_cents INTEGER NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'aud',
+    description TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',  -- pending | paid | expired | canceled
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    paid_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_payments_lead_id ON payments(lead_id);
+CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
 """
 
 # Columns added after the original schema — applied via ALTER TABLE so an

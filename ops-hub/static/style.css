@@ -173,6 +173,9 @@ a.row-link:hover { color: var(--accent-bright); }
 .badge.status-Won { background: rgba(127, 191, 136, 0.12); color: var(--green); border-color: var(--green); }
 .badge.status-Lost { background: rgba(224, 119, 106, 0.1); color: var(--red); border-color: var(--red); }
 .badge.status-Active { background: rgba(219, 160, 90, 0.12); color: var(--orange); border-color: var(--orange); }
+.badge.status-paid { background: rgba(127, 191, 136, 0.12); color: var(--green); border-color: var(--green); }
+.badge.status-pending { background: rgba(219, 160, 90, 0.12); color: var(--orange); border-color: var(--orange); }
+.badge.status-expired, .badge.status-canceled { background: rgba(224, 119, 106, 0.1); color: var(--red); border-color: var(--red); }
 
 .deadline-overdue { color: var(--red); font-weight: 700; }
 .deadline-soon { color: var(--orange); font-weight: 600; }

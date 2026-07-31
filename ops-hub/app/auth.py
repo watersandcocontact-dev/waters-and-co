@@ -66,7 +66,7 @@ def init_auth(app):
     def require_login():
         if not _password_required():
             return None
-        exempt = {"auth.login", "static", "webhook.intake"}
+        exempt = {"auth.login", "static", "webhook.intake", "payments.stripe_webhook"}
         if request.endpoint in exempt or request.endpoint is None:
             return None
         if not session.get("authed"):
