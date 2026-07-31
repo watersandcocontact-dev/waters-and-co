@@ -1,14 +1,14 @@
 @font-face {
-  font-family: 'Cormorant';
-  src: url('/static/fonts/cormorant.woff2') format('woff2');
-  font-weight: 300 700;
+  font-family: 'Fraunces';
+  src: url('/static/fonts/fraunces.woff2') format('woff2');
+  font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Cormorant';
-  src: url('/static/fonts/cormorant-italic.woff') format('woff');
-  font-weight: 400;
+  font-family: 'Fraunces';
+  src: url('/static/fonts/fraunces-italic.woff2') format('woff2');
+  font-weight: 400 700;
   font-style: italic;
   font-display: swap;
 }
@@ -28,7 +28,7 @@
   --gold-bright: #e3c787;
   --linen: #e9e2d2;
   --linen-dim: #a9a290;
-  --font-display: 'Cormorant', serif;
+  --font-display: 'Fraunces', serif;
   --font-label: 'Jost', sans-serif;
 }
 

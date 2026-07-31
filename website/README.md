@@ -56,9 +56,10 @@ HTTP).
 
 Font files (`static/fonts/`) and the color system (`static/style.css`)
 match the Waters & Co brand concept — deep slate green (`#182019`), gold
-(`#c7a459`), Cormorant for display type, Jost for labels. Single dark theme
-by design, same reasoning as the original brand concept artifact: the
-identity *is* the dark ground.
+(`#c7a459`), Fraunces for display type (switched from Cormorant 2026-07-31
+after comparing options), Jost for labels. Single dark theme by design,
+same reasoning as the original brand concept artifact: the identity *is*
+the dark ground.
 
 ## Not yet done
 
