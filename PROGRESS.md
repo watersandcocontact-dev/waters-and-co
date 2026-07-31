@@ -1,75 +1,101 @@
 # PROGRESS.md — live status
 
-Last updated: 2026-07-31 — **Wave 1 + Wave 2 prep fully built, daily-queue/$-per-hr rework, remote access, monitoring, and the Waters & Co public website.**
+Last updated: 2026-07-31 — **21 business lines, ops hub with daily queue/expansion budget/tax tracking, public website, daily opportunity scanning. Audited end-to-end this session, zero known regressions.**
 
 ## Legend
 ✅ done · 🔶 partial · ⛔ blocked (needs you)
 
-## G. Public website (Waters & Co) — ✅ built, 🔶 not hosted publicly yet
-- ✅ Landing page (hover/tap reveals 3 segments), segment pages, service pages with real pricing, general enquiry page — `website/`
-- ✅ Contact form → creates a Lead directly in the hub's database (same "file" as everything else), tagged by service or `GeneralEnquiry`
-- ✅ Template-based draft-reply generator (no AI call, no cost) attached to every new lead's notes, ready for you to review and send
-- ✅ No phone number anywhere on the site — every page pushes to the contact form
-- ✅ Waters & Co branding applied (dark slate green + gold, Cormorant/Jost) — same system as the brand concept artifact from earlier in this build
-- ⛔ **Not hosted anywhere public** — runs locally on port 5050, alongside the hub on port 5000. No domain registered. See `website/README.md`'s "Not yet done" section for the hosting nuance (the earlier Netlify/Vercel static-site recommendation needs revisiting now that there's a live form backend).
-- Two real bugs found and fixed while building this — see DECISIONS.md 2026-07-31 entry — worth knowing about if you edit `lead_form.html` or the website's lead-update code later.
+---
 
-## A. Central ops hub — ✅ complete
-- ✅ Data model (SQLite schema, all **17** business lines — the original 8 plus 9 introduced via your pricing table, see F below)
-- ✅ **Daily Queue is now the home page** (`/`) — every open, actionable case across all 17 lines, sorted **highest $/hr first, only sort order**, per your instruction
-- ✅ Per-business-line separated views (`/lines` → `/line/<key>`) — a land tax case and an NDIS case never blur together
-- ✅ "All Cases" full list + filters at `/all` (the old dashboard, kept for when you want the unfiltered view)
-- ✅ Manual lead-entry form, with per-business-line dynamic fields, task-type (setup/management) for GBP & MissedCall, time tracking, and done/left-for-you/source-link fields
-- ✅ Intake webhook receiver — built, safely inactive (503 until you set `INTAKE_WEBHOOK_ENABLED`/`INTAKE_WEBHOOK_SECRET`)
-- ✅ Deadline-alert mechanism — dashboard banner (14/30/60 day + overdue), state-aware for land tax (NT = 30 days, all others = 60)
-- ✅ **Password gate** (`HUB_PASSWORD` env var) — required before any remote exposure, backward-compatible (no password = no login wall, same as before)
-- ✅ **Remote access** — zero-signup Cloudflare quick tunnel built & tested (`ops-hub/scripts/start_remote.sh`); Tailscale recommended as the real daily-use option (needs your signup, see `docs/remote_access.md`)
-- ✅ **Monitoring** — local `ops-hub/scripts/new_case_check.py` (cron-able, no cloud dependency) surfaces new/changed cases in the what/why + done-vs-left format; cloud auto-monitoring isn't possible (see `docs/monitoring.md` for why)
-- **Run it locally:** `cd ops-hub && python3 run.py` → http://127.0.0.1:5000
-- **Run it for remote/Tailscale access:** `cd ops-hub && HUB_HOST=$(tailscale ip -4) HUB_PASSWORD="..." python3 run.py` → `http://m-hp.tail28a65e.ts.net:5000` from any device on your tailnet
+## The three systems, at a glance
 
-## B. GBP / local SEO — ✅ complete
-- ✅ Audit checklist/scoring tool, 10 real Perth WA target businesses, content calendar, 3 outreach scripts, pricing sheet, Australia-wide positioning
+1. **Ops hub** (`ops-hub/`, port 5000) — internal, password-gated, your daily driver. Daily Queue, all 21 business lines, expansion budget tracking, tax tracking.
+2. **Public website** (`website/`, port 5050) — Waters & Co branded, public-facing, no auth. Writes leads straight into the hub's database.
+3. **Standing docs & research** — `wave1/`, `wave2/`, `wave3-unscoped/`, `docs/`, `PRICING.md` — the actual content behind every business line.
 
-## C. Review generation — ✅ complete
-- ✅ Templates (ACL-compliant), tool research (NiceJob recommended)
-
-## D. AI missed-call reception — ✅ complete
-- ✅ Platform research, call-log checklist, pricing sheet
-
-## E. Land tax / rates objection — ✅ complete
-- ✅ All 8 states/territories, objection letter template, comps checklist, state-aware deadline logic
-
-## Wave 2 prep — ✅ complete
-- ✅ Bookkeeping, concessions, grant-finder, pension — all checklists/templates/research built (see prior entries below for detail)
-
-## F. Pricing table expansion (2026-07-30) — 🔶 partial by design
-- ✅ `PRICING.md` — your full 17-business rate table, reconciled with existing pricing sheets
-- ✅ All 9 new business lines wired into the hub schema + rate card — priced, filterable, ranked in the queue
-- ✅ Competitor pricing research for the 4 live Wave 1 businesses — `docs/competitor_pricing_research.md`
-- ✅ ReviewGen and LandTax pricing sheets filled in from that research
-- ✅ **4 of the 9 new lines fully built out** (low regulatory risk): Senior Tech Concierge, Video/Podcast Repurposing, Senior Downsizing/Cleanout, Lost Super/TPD Navigation (referral model, with a compliance note on financial-services referral-fee disclosure) — service scope + pricing under `wave3-unscoped/<line>/`
-- ⛔ **Airbnb Co-Hosting — likely blocked, not built.** Research (`wave3-unscoped/airbnb_cohost/regulatory_research.md`) found paid co-hosting almost certainly needs a real estate/property agent licence in most states — QLD and VIC have actual prosecution precedent for unlicensed operators doing exactly this. WA (your state) has the same statutory pattern. Didn't build sales material for a business that may be illegal to run without a licence you don't have — real next step is confirming with a property lawyer, not templates.
-- ⛔ **5 lines deliberately still held**: Airbnb Co-Hosting (above), Deceased-Estate Admin, Grant Writing (needs a portfolio first per your own pricing note anyway), NDIS Plan Navigation, NDIS Provider Compliance/Audit-Prep — these touch real regulatory frameworks where building client-facing assets needs your explicit scope/qualifications confirmation first, not a reasonable-assumption default. See DECISIONS.md 2026-07-30 entries.
+Both apps need to be running for the website's contact form to work (it imports the hub's code directly). Run both:
+```bash
+cd ops-hub && python3 run.py &
+cd website && python3 run.py &
+```
 
 ---
 
-## Things only you can do (this is the real punch list)
+## A. Central ops hub — ✅ complete, actively used
 
-1. ✅ **Tailscale is set up and live** — permanent private URL `http://m-hp.tail28a65e.ts.net:5000`, works from your phone. Start the hub with `HUB_HOST=$(tailscale ip -4) HUB_PASSWORD="..." python3 run.py` — see `docs/remote_access.md`.
-3. **Pick and sign up for an AI phone/reception platform** (`wave1/missedcall/platform_research.md`) and give me the API key to activate the webhook.
-4. **Pick and sign up for a review-automation tool** (`wave1/reviewgen/tool_research.md` — NiceJob recommended).
-5. **Pick accounting software (Xero or QBO)** for bookkeeping — clients invite you into theirs, you generally don't pay.
-6. **Review the pricing** — GBP/MissedCall unchanged, and ReviewGen + LandTax now have full pricing sheets built from competitor research (`wave1/reviewgen/pricing_sheet.md`, `wave1/landtax/pricing_sheet.md`) — land tax specifically found zero public competitor pricing anywhere, so that price point is a judgment call worth your sign-off before quoting a real client.
-7. **Review every draft template before client use** — none are legally vetted.
-8. **Re-verify research docs with "unverified" flags** before relying on them (search each file for the word).
-9. **If you're serious about Airbnb co-hosting: talk to a property/real estate lawyer first** — the research points to a real estate licence requirement in most states including WA. Don't market this until that's confirmed either way.
-10. **Decide if/when to pursue the 4 still-held business lines** (Deceased-Estate Admin, Grant Writing, NDIS Nav, NDIS Compliance) — each needs an explicit scope/qualifications conversation before I'd build client-facing assets for them.
-11. **Fill in `done_summary`/`left_for_you_summary`/`source_url` on cases as you create them** — the monitoring script and case-detail view are only as useful as these fields; blank ones just say "no summary set yet."
+- ✅ **Daily Queue** (`/`, home page) — every open, actionable case across all 21 lines, sorted highest $/hr first, no other order
+- ✅ Per-line separated views (`/lines` → `/line/<key>`)
+- ✅ "All Cases" full list + filters (`/all`)
+- ✅ Lead form with dynamic per-line fields, task-type rates (setup/management for GBP & MissedCall, session/course for Crypto Literacy), time tracking, done/left-for-you/source-link
+- ✅ Intake webhook — built, inactive until you set `INTAKE_WEBHOOK_ENABLED`/`INTAKE_WEBHOOK_SECRET`
+- ✅ Deadline alerts (14/30/60 day + overdue, state-aware for land tax — NT 30 days, others 60)
+- ✅ Password gate (`HUB_PASSWORD`) + **Tailscale remote access live**: `http://m-hp.tail28a65e.ts.net:5000` from your phone
+- ✅ Local monitoring script (`new_case_check.py`, cron-able) — cloud auto-monitoring isn't possible, see `docs/monitoring.md`
+- ✅ **Expansion budget tracking** (`/expansion`) — spend logging, per-type evaluation windows, cost-per-outcome, keep/adjust/kill flags. Phase 1 = $0, `BUDGET_PHASE` in `app/config.py` is a code-level switch you flip yourself
+- ✅ **Tax tracking** (`/tax`, export at `/tax/export`) — day-job pay periods (seeded with your real 19 July payslip + a derived catch-up entry so YTD is accurate from day one), deductible expenses (day job + any business), no-receipt cap tracking, combined income position, day-job-vs-business $/hr comparison with a mortgage-serviceability flag. Not tax advice — organisation and flagging only
+
+## B. The 21 business lines
+
+**Fully built (service scope + pricing, ready to pitch):**
+GBP/Local SEO, Review Generation, AI Missed-Call Reception, Land Tax Objection (all 8 states), Senior Tech Concierge, Video/Podcast Repurposing, Senior Downsizing/Cleanout, Lost Super/TPD Navigation (referral model), Crypto IT/Literacy (investment-advice guardrail baked in), AI Tools for Business.
+
+**Wave 2 — checklists/research built, not launched:**
+Bookkeeping (non-BAS), Concession/Rebate Navigation, SME Grant-Finder, Age Pension/Centrelink Assistance.
+
+**Lightweight, no dedicated marketing:**
+General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker-style pickups).
+
+**Deliberately held — regulatory complexity, need your explicit sign-off first:**
+- ⛔ Airbnb Co-Hosting — likely needs a real estate licence in most states incl. WA (prosecution precedent in QLD/VIC). Talk to a property lawyer, not more docs.
+- ⛔ Deceased-Estate Admin, NDIS Plan Navigation, NDIS Provider Compliance — real regulatory frameworks, need a scope/qualifications conversation before building client-facing material.
+- ⛔ Grant Writing (Nonprofit) — your own pricing note says it needs a portfolio first, not viable cold.
+
+## C. Public website (Waters & Co) — ✅ built, 🔶 not publicly hosted
+
+- ✅ Landing page (hover/tap reveals 3 segments) → segment pages → service pages with real pricing → contact form
+- ✅ Contact form writes straight into the hub's lead database, tagged by service, with a template-based draft reply attached (no AI call, no cost) for you to review and send
+- ✅ No phone number anywhere — every page pushes to the contact form
+- ✅ Branding: dark slate green + gold, **Fraunces** for display type (switched from Cormorant after comparing 16+ fonts), Jost for labels
+- ⛔ **Not hosted publicly** — runs locally only, no domain registered. The earlier Netlify/Vercel static-site recommendation needs revisiting now there's a live form backend (needs serverless functions there, or a small always-on host)
+
+## D. Opportunity scanning — ✅ built, running daily
+
+- ✅ Scoring rubric (`wave3-unscoped/opportunity_scan/scoring_rubric.md`) — 7 factors, infrastructure-reuse weighted highest, folds in every criterion you gave (learnable-via-self-research, low-cost, simple model, "can't be bothered doing it themselves")
+- ✅ Gig-marketplace scanning process (Airtasker/Marketplace/etc.) — separate, lighter-weight lane for one-off jobs that don't need a dedicated business line
+- ✅ **Daily scheduled task live** (`daily-opportunity-scan`, 9:08am daily) — researches 1-2 candidates, scores them, logs to `candidates_log.md`, drafts assets for anything scoring 25+ with no regulatory complexity, but never wires a new line into the live hub without your confirmation
+- ✅ Local-cron fallback script documented as backup (`run_daily_scan.sh`), not currently needed
+
+## E. Pricing & research foundations
+
+- ✅ `PRICING.md` — full rate table for all 21 lines
+- ✅ Competitor pricing research (`docs/competitor_pricing_research.md`)
+- ✅ ATO tax figures verified for FY2026-27 (`wave3-unscoped/tax_tracking/ato_figures_verification.md`) — 9/11 confirmed, one correction made (super carry-forward expiry), one flagged unconfirmed (WFH rate)
+
+---
+
+## Audit note (2026-07-31)
+
+Ran a full end-to-end pass after today's additions: all 21 business line views, all core hub routes, the expansion and tax modules, and the complete website→hub pipeline (contact form → lead creation → draft email, checked for the `None`-rendering bug that was fixed earlier in the build — confirmed still clean). Zero regressions found. Both apps confirmed running and reachable (hub via Tailscale, website locally).
+
+---
+
+## Things only you can do (the real punch list)
+
+1. **Pick and sign up for an AI phone/reception platform** (`wave1/missedcall/platform_research.md`) and give me the API key to activate the webhook.
+2. **Pick and sign up for a review-automation tool** (`wave1/reviewgen/tool_research.md` — NiceJob recommended).
+3. **Set up Gmail, Stripe, etc.** — you mentioned doing this in parallel; see `ROADMAP.md`'s accounts table for the full list with cost + my pick for each.
+4. **Pick accounting software (Xero or QBO)** for bookkeeping — clients invite you in, you generally don't pay.
+5. **Review every draft template before client use** — none are legally vetted.
+6. **If serious about Airbnb co-hosting: talk to a property/real estate lawyer first.**
+7. **Decide if/when to pursue the 4 still-held lines** — each needs a scope/qualifications conversation.
+8. **Click "Run now" on the `daily-opportunity-scan` scheduled task once**, in the Scheduled sidebar section — pre-approves the tools it needs so future automatic runs don't stall on a permission prompt.
+9. **Log your day-job pay periods and business expenses as they happen** — the tax module is only as useful as what's actually entered; right now it only has the two entries I seeded from your 19 July payslip data.
+10. **Flip `BUDGET_PHASE` to "on" in `ops-hub/app/config.py`** when you're actually ready to spend on expansion — it's a code-level switch, not automatic.
+11. **Read `ROADMAP.md`** — the full plan of attack, phase by phase, updated today.
 
 ## How to pick this back up
 
-- Run the hub (`cd ops-hub && python3 run.py`) — home page is now the Daily Queue, sorted by $/hr.
-- Every business line's assets live under `wave1/<line>/` or `wave2/<line>/`.
-- `DECISIONS.md` has the full reasoning log — read it before assuming something was guessed carelessly.
-- `docs/remote_access.md` and `docs/monitoring.md` explain the two newest pieces in detail.
+- Run both apps (see top of this file).
+- `DECISIONS.md` has the full reasoning log for every assumption — read it before assuming something was guessed carelessly.
+- `ROADMAP.md` is the phase-by-phase plan of attack.
+- `docs/remote_access.md`, `docs/monitoring.md` explain the two infrastructure pieces in detail.
