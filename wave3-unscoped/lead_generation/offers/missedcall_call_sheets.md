@@ -1,14 +1,26 @@
-# Call Sheets — Missed-Call / GBP Tier 1 (read from these)
+# Contact Sheets — Missed-Call / GBP Tier 1
 
-Four calls, each ~2 minutes, advice-first per the Martell method. Goal of
-the first call is NOT to sell — it's to get them talking about the pain,
-confirm it's real, and earn a second conversation. Don't pitch price
-unless they ask "so what do you actually do."
+**Updated 2026-08-01: lead with a text, not a cold call** — see
+`contact_channels_and_strategy.md` for the reasoning. A tradie on the
+tools can't take a call, which is the exact problem being pitched; a
+text gets read between jobs and doesn't need both people free at once.
+Call becomes the follow-up once someone replies, not the opener. Real
+verified contact details for all four below are in
+`contact_channels_and_strategy.md`'s Perth table — **Adept Diesel's
+mobile (0433 087 092) is the best-verified contact of the four, start
+there.**
 
-**Before calling any of these**: re-verify the business is still trading,
-the review/listing detail below is still accurate, and you have a live
-phone number for them (Google listing → website → phone, or via
-Google Maps call button).
+Goal of the first contact is NOT to sell — it's to get them talking
+about the pain, confirm it's real, and earn a second conversation. Don't
+pitch price unless they ask "so what do you actually do."
+
+**Before contacting any of these**: re-verify the business is still
+trading and the review/listing detail below is still accurate.
+
+The scripts below are written as phone openers — for a text, trim to 2-3
+sentences (see the text template in `contact_channels_and_strategy.md`)
+and use as a first message; fall back to the fuller phone version once
+someone's replied and a call is booked.
 
 ---
 
