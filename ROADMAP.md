@@ -1,8 +1,9 @@
 # ROADMAP.md — the plan of attack, from here to fully operational
 
-Everything below reflects the full build as of 2026-07-31: 21 business lines,
-the ops hub (daily queue, expansion budget, tax tracking), the public
-website, and the daily opportunity scan. Milestone-based, not a calendar —
+Everything below reflects the full build as of 2026-08-01: 21 business lines,
+the ops hub (daily queue, expansion budget, tax tracking, Stripe payments,
+referral & loyalty program), the public website, and daily opportunity
+scanning + monthly competitive monitoring. Milestone-based, not a calendar —
 go at whatever pace makes sense. Update this as you go; it's a plan, not a
 contract with yourself.
 
@@ -17,9 +18,16 @@ that is sequencing for later, once real client work is actually flowing.
    (Scheduled sidebar). This is a one-time approval — without it, the
    automatic daily runs will stall waiting on a permission prompt you're
    not there to answer. After this one click, it's fully hands-off.
-2. **Set up Stripe** (payment processing — see accounts table below). This
-   is the one genuine blocker with nothing to fall back on: you can't get
-   paid without it.
+2. **Confirm Stripe is fully live-activated** (payment processing — see
+   accounts table below). ✅ Account created (`acct_1TzJCBRq9KZRjLbM`),
+   payments feature built and tested in the hub (per-lead payment
+   requests → Stripe Checkout → webhook confirms paid), test-mode keys
+   configured and auto-starting with the hub. **Remaining:** check the
+   Dashboard's Test/Live toggle — if it stops you with a business-details/
+   identity/bank-account checklist, that's Stripe's activation flow and
+   needs completing before a real (live-mode) payment can be taken or
+   paid out. Swap the test key in `ops-hub/.stripe_env` for a live one
+   once that's done — no code changes needed.
 3. **Set up a business Gmail** — free, don't wait on a custom domain.
 4. **Review every draft template once, for real** — GBP outreach scripts,
    the land tax objection letter, review-request templates, the ARO
@@ -42,7 +50,7 @@ launch.
 
 | Account | Cost | Needed for | My top pick | Why |
 |---|---|---|---|---|
-| **Payment processing** | $0/mo, ~1.75%+$0.30 per transaction | Getting paid by clients | **Stripe** | Lowest friction to set up solo, handles one-off + recurring (monthly retainers) cleanly, no physical hardware needed since everything here is remote. Square is the alternative if you ever want in-person card tap (e.g. collecting payment on a Downsizing job site). |
+| **Payment processing** | $0/mo, ~1.75%+$0.30 per transaction | Getting paid by clients | **🔶 Built, test mode** — Stripe (`acct_1TzJCBRq9KZRjLbM`). Payments feature live in the hub (per-lead payment requests, Checkout, webhook confirmation). Live-mode activation status unconfirmed — check the Dashboard's Test/Live toggle. | Lowest friction to set up solo, handles one-off + recurring (monthly retainers) cleanly, no physical hardware needed since everything here is remote. Square is the alternative if you ever want in-person card tap (e.g. collecting payment on a Downsizing job site). |
 | **Business email** | $0 (Gmail) | Everything | **✅ Done** — `watersandco.contact@gmail.com` | Set up. Upgrade to Google Workspace later once you have a domain and it's worth the professional address. |
 | **Business name registration** | **~$44 AUD (1yr) / ~$102 AUD (3yr) via ASIC** — approximate, indexed periodically, confirm at asic.gov.au before registering | Only needed if trading as "Waters & Co" (or any name other than your own legal name) | — | Required by law if you invoice/advertise under a business name that isn't your personal name. Doesn't apply if you trade under your own name. |
 | **Domain name** | ~$15-40 AUD/year | Website, professional email | — | Cheap and low-risk to grab early even if the website itself waits — secures the name before someone else does. |

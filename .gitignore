@@ -6,5 +6,8 @@ ops-hub/data/last_check.txt
 ops-hub/data/*.log
 ops-hub/bin/
 ops-hub/.hub_password
+ops-hub/.stripe_env
+ops-hub/.stripe_listen.pid
+ops-hub/stripe_listen.log
 ops-hub/hub.log
 venv/

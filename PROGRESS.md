@@ -1,6 +1,6 @@
 # PROGRESS.md — live status
 
-Last updated: 2026-07-31 — **21 business lines, ops hub with daily queue/expansion budget/tax tracking, public website, daily opportunity scanning. Audited end-to-end this session, zero known regressions.**
+Last updated: 2026-08-01 — **21 business lines, ops hub with daily queue/expansion budget/tax tracking/Stripe payments/referral & loyalty program, public website, daily opportunity scanning + monthly competitive monitoring. Full-state audit run 2026-08-01, 3 real bugs found and fixed (see DECISIONS.md); one real incident that day too — a database deletion mistake during Stripe testing, also logged in DECISIONS.md, not hidden.**
 
 ## Legend
 ✅ done · 🔶 partial · ⛔ blocked (needs you)
@@ -32,7 +32,9 @@ cd website && python3 run.py &
 - ✅ Password gate (`HUB_PASSWORD`) + **Tailscale remote access live**: `http://m-hp.tail28a65e.ts.net:5000` from your phone
 - ✅ Local monitoring script (`new_case_check.py`, cron-able) — cloud auto-monitoring isn't possible, see `docs/monitoring.md`
 - ✅ **Expansion budget tracking** (`/expansion`) — spend logging, per-type evaluation windows, cost-per-outcome, keep/adjust/kill flags. Phase 1 = $0, `BUDGET_PHASE` in `app/config.py` is a code-level switch you flip yourself
-- ✅ **Tax tracking** (`/tax`, export at `/tax/export`) — day-job pay periods (seeded with your real 19 July payslip + a derived catch-up entry so YTD is accurate from day one), deductible expenses (day job + any business), no-receipt cap tracking, combined income position, day-job-vs-business $/hr comparison with a mortgage-serviceability flag. Not tax advice — organisation and flagging only
+- ✅ **Tax tracking** (`/tax`, export at `/tax/export`) — day-job pay periods, deductible expenses (day job + any business), no-receipt cap tracking, combined income position, day-job-vs-business $/hr comparison with a mortgage-serviceability flag. Not tax advice — organisation and flagging only. Currently a single, exactly-confirmed entry (your real 19 July payslip, cross-checked against the actual PDF) as the FY26-27 starting point — log each new payslip as it lands.
+- ✅ **Stripe payments** (`app/payments.py`) — per-lead payment requests (deposit, final balance, etc., a lead can have several over its life), Stripe Checkout Sessions, signature-verified webhook confirms "paid" (never the client-side redirect). Currently **test-mode only** — `ops-hub/.stripe_env` auto-loaded by `launch_hub.sh` alongside a `stripe listen` forwarder (also auto-started, pidfile-guarded). Live-mode activation status on the real account (`acct_1TzJCBRq9KZRjLbM`) unconfirmed — see ROADMAP.md Phase 0.
+- ✅ **Referral & loyalty program** (`/referrals` + a box on each lead's page) — one-time 50% referral bonus (repeatable per converted referral), ongoing referrer-retention discount capped at 10%/mo, loyalty discount for repeat customers, a stacked top tier for both, a margin-floor guardrail flag. Advisory only — computes/recommends, never auto-applies to a Stripe payment amount. Contingency/fixed-external-rate lines (LandTax, NDISNav, NDISCompliance) excluded from eligibility. Discount-rate numbers were judgement calls where the spec only fixed the caps — see DECISIONS.md, worth reviewing.
 
 ## B. The 21 business lines
 
@@ -58,12 +60,17 @@ General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker
 - ✅ Branding: dark slate green + gold, **Fraunces** for display type (switched from Cormorant after comparing 16+ fonts), Jost for labels
 - ⛔ **Not hosted publicly** — runs locally only, no domain registered. The earlier Netlify/Vercel static-site recommendation needs revisiting now there's a live form backend (needs serverless functions there, or a small always-on host)
 
-## D. Opportunity scanning — ✅ built, running daily
+## D. Opportunity scanning & competitive monitoring — ✅ built, running
 
 - ✅ Scoring rubric (`wave3-unscoped/opportunity_scan/scoring_rubric.md`) — 7 factors, infrastructure-reuse weighted highest, folds in every criterion you gave (learnable-via-self-research, low-cost, simple model, "can't be bothered doing it themselves")
 - ✅ Gig-marketplace scanning process (Airtasker/Marketplace/etc.) — separate, lighter-weight lane for one-off jobs that don't need a dedicated business line
 - ✅ **Daily scheduled task live** (`daily-opportunity-scan`, 9:08am daily) — researches 1-2 candidates, scores them, logs to `candidates_log.md`, drafts assets for anything scoring 25+ with no regulatory complexity, but never wires a new line into the live hub without your confirmation
+- ✅ **Global expansion research** (`wave3-unscoped/lead_generation/global_expansion_research.md`, 2026-08-01) — US/UK/Canada/NZ/Ireland demand for the 8 location-independent lines. Real live budgeted Upwork jobs found for Video Repurposing (strongest signal) and GBP/MissedCall; a real US competitor already sells AI reception to HVAC shops. Timezone is a genuine constraint (Perth's early afternoon is dead for every English-speaking market). Priority order given in the doc.
+- ✅ **Launch lead research** (`wave3-unscoped/lead_generation/launch_leads_and_contacts.md`, 2026-08-01) — ranked easiest-to-hardest: 4 warm contacts with a specific documented hook, 22 verified weak-Google-profile trade prospects (12 new + the existing 10), referral-partner targets for LandTax/Downsizing/LostSuper, real named advertising channels per line. Nothing contacted yet — desk research only, re-verify before sending.
+- ✅ **Cowork skill templates** (`cowork-skills/`) — 5 general + 4 Waters & Co-specific (stale-lead-revival, invoice-chase, monday-brief, referral-thank-you), wired to the real hub data model. Inactive until you connect Gmail+Calendar to Claude Cowork yourself.
+- ✅ **Scan run 2026-08-01** — first automated run. Two candidates scored and drafted (neither wired into the live hub — awaiting your confirmation): **Digital Legacy / Account Organiser** (33/35, `wave3-unscoped/digital_legacy/`) and **Photo & Memory Digitisation Concierge** (31/35, `wave3-unscoped/photo_digitisation/`). Both are deliberate bolt-ons to an existing client visit (Tech Concierge / Downsizing) rather than standalone lines. The photo one scored a low 3/5 on market gap on purpose — Perth's scanning market is crowded, so it's scoped as a sorting/coordination layer, not a scan bureau, and its pricing sheet says to stop if the first few upsells don't convert.
 - ✅ Local-cron fallback script documented as backup (`run_daily_scan.sh`), not currently needed
+- ✅ **Competitive monitoring, monthly** (`monthly-competitive-monitor` scheduled task, 1st of the month) — re-checks competitor pricing/reviews for 3-4 business lines per run against `docs/competitive_analysis_full_portfolio.md` (deep, 18-business, sourced complaint quotes — added 2026-08-01) and the older `docs/competitor_pricing_research.md` (GBP-focused). Logs findings (including "nothing changed") to `wave3-unscoped/competitive_monitoring/monitoring_log.md`. Recommends pricing changes, never applies them — same "flag, don't file" pattern as expansion-spend evaluation. **Needs the same one-time "Run now" approval click as the opportunity scan before its automatic runs will go hands-off.**
 
 ## E. Pricing & research foundations
 
@@ -83,15 +90,20 @@ Ran a full end-to-end pass after today's additions: all 21 business line views, 
 
 1. **Pick and sign up for an AI phone/reception platform** (`wave1/missedcall/platform_research.md`) and give me the API key to activate the webhook.
 2. **Pick and sign up for a review-automation tool** (`wave1/reviewgen/tool_research.md` — NiceJob recommended).
-3. **Set up Gmail, Stripe, etc.** — you mentioned doing this in parallel; see `ROADMAP.md`'s accounts table for the full list with cost + my pick for each.
+3. **Confirm Stripe's live-mode activation status** (Gmail's already done) — see `ROADMAP.md` Phase 0 / accounts table.
 4. **Pick accounting software (Xero or QBO)** for bookkeeping — clients invite you in, you generally don't pay.
 5. **Review every draft template before client use** — none are legally vetted.
 6. **If serious about Airbnb co-hosting: talk to a property/real estate lawyer first.**
-7. **Decide if/when to pursue the 4 still-held lines** — each needs a scope/qualifications conversation.
+7. **Decide if/when to pursue the 5 still-held lines** — each needs a scope/qualifications conversation.
 8. **Click "Run now" on the `daily-opportunity-scan` scheduled task once**, in the Scheduled sidebar section — pre-approves the tools it needs so future automatic runs don't stall on a permission prompt.
-9. **Log your day-job pay periods and business expenses as they happen** — the tax module is only as useful as what's actually entered; right now it only has the two entries I seeded from your 19 July payslip data.
+9. **Log your day-job pay periods and business expenses as they happen** — the tax module is only as useful as what's actually entered; it currently has the two recovered entries (see DECISIONS.md 2026-08-01 RECOVERY entry) plus whatever you add going forward.
 10. **Flip `BUDGET_PHASE` to "on" in `ops-hub/app/config.py`** when you're actually ready to spend on expansion — it's a code-level switch, not automatic.
 11. **Read `ROADMAP.md`** — the full plan of attack, phase by phase, updated today.
+12. **If you want the intake webhook or ongoing (non-`stripe listen`) Stripe webhooks actually live**, sign up for Twilio (and/or confirm a stable public URL plan) yourself — account creation isn't something I can do. The code for both is already built and ready the moment you hand me credentials/a URL.
+13. **If you want a GitHub backup of this repo**, create an empty repo yourself and give me the URL — I'll wire up the remote and push, but can't create the account.
+14. **Review the referral/loyalty discount-rate assumptions** (5%/referral retention increment, 10% loyalty base, 20% stacked tier, 50%-of-rate-card margin floor) — my judgement calls, documented in DECISIONS.md 2026-08-01, change `app/config.py`'s `REFERRAL_*`/`LOYALTY_*`/`DISCOUNT_*` constants if you want different numbers.
+15. **Click "Run now" once on `monthly-competitive-monitor`** too, same reason as the opportunity scan (pre-approves its tools).
+16. **Decide whether the two 2026-08-01 scan candidates become real business lines** — Digital Legacy (33/35) and Photo Digitisation (31/35). Scopes and pricing are drafted in `wave3-unscoped/digital_legacy/` and `wave3-unscoped/photo_digitisation/`; nothing was added to `BUSINESS_LINES` in `ops-hub/app/config.py`, deliberately. That's your call, not the scan's.
 
 ## How to pick this back up
 

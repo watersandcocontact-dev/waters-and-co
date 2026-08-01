@@ -74,6 +74,48 @@
 {% else %}
 <p class="hint" style="margin-bottom:20px;">No payment requests yet.</p>
 {% endif %}
+
+<div class="section-title">Referral & loyalty</div>
+{% if referral.referred_by %}<p>Referred by <strong>{{ referral.referred_by.name }}</strong>.</p>{% endif %}
+{% if referral.loyalty_ineligible_line %}
+<p class="hint" style="margin-bottom:20px;">{{ lead.business_line | line_label }} is priced against a contingency/fixed external rate — not eligible for referral/loyalty discounts.</p>
+{% elif referral.tier == 'none' %}
+<p class="hint" style="margin-bottom:20px;">No referral or repeat-customer history on this lead yet.</p>
+{% else %}
+<div class="box {{ 'left' if referral.margin_floor_flag else 'done' }}" style="margin-bottom:20px;">
+  {% if referral.pending_bonuses %}
+  <p>{{ referral.pending_bonuses|length }} one-time referral bonus(es) pending — {{ referral.one_time_bonus_pct }}% off, capped at one per calendar month (extra same-month conversions roll to the next open month):</p>
+  <ul>
+    {% for b in referral.pending_bonuses %}
+    <li>
+      From <strong>{{ b.earned_from_name }}</strong> (converted {{ b.earned_month }}){% if b.applies_to_month != b.earned_month %} — rolled to <strong>{{ b.applies_to_month }}</strong>{% else %} — applies to <strong>{{ b.applies_to_month }}</strong>{% endif %}
+      <form method="post" action="{{ url_for('main.apply_referral_bonus', bonus_id=b.id) }}" style="display:inline;">
+        <button class="btn secondary" type="submit" style="padding:2px 8px; font-size:11px;">Mark applied</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if referral.active_referred_count > 0 %}
+  <p>{{ referral.active_referred_count }} active referred customer(s) — ongoing retention discount.</p>
+  {% endif %}
+  {% if referral.is_repeat_customer %}<p>Repeat customer — loyalty cross-sell discount applies.</p>{% endif %}
+  <p><strong>Recommended discount for this line: {{ referral.recommended_discount_pct }}%</strong> (tier: {{ referral.tier }}) — factor this into the payment amount above, it isn't applied automatically.</p>
+  {% if referral.margin_floor_flag %}<p style="color:var(--red);">⚠ This discount would push {{ lead.business_line | line_label }} below the profitability floor — reconsider before applying in full.</p>{% endif %}
+</div>
+{% endif %}
+{% if referral.referrals_made %}
+<div class="table-wrap" style="margin-bottom:20px;">
+<table>
+  <thead><tr><th>Referred</th><th>Business line</th><th>Status</th></tr></thead>
+  <tbody>
+    {% for r in referral.referrals_made %}
+    <tr><td>{{ r.name }}</td><td>{{ r.business_line | line_label }}</td><td><span class="badge status-{{ r.status }}">{{ r.status }}</span></td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
 {% endif %}
 
 <form class="lead-form" method="post">
@@ -125,6 +167,13 @@
     <option value="">—</option>
     {% for s in au_states %}
     <option value="{{ s }}" {% if lead and lead.au_state == s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <label>Referred by (existing lead, if this one came via referral)</label>
+  <select name="referred_by_lead_id">
+    <option value="">—</option>
+    {% for l in all_leads %}
+    <option value="{{ l.id }}" {% if lead and lead.referred_by_lead_id == l.id %}selected{% endif %}>{{ l.name }} ({{ l.business_line | line_label }})</option>
     {% endfor %}
   </select>
 
@@ -185,6 +234,7 @@ function showExtra() {
     });
     taskTypeField.style.display = 'block';
   } else {
+    taskTypeSelect.value = '';
     taskTypeField.style.display = 'none';
   }
 }

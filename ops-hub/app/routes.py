@@ -110,6 +110,7 @@ def new_lead():
         task_type_lines=TASK_TYPE_LINES,
         task_type_labels=TASK_TYPE_LABELS,
         selected_line=request.args.get("business_line") or BUSINESS_LINES[0][0],
+        all_leads=models.list_leads_basic(),
     )
 
 
@@ -138,6 +139,8 @@ def lead_detail(lead_id):
         payments=payments,
         payment_error=request.args.get("payment_error"),
         payment_result=request.args.get("payment"),
+        all_leads=[l for l in models.list_leads_basic() if l["id"] != lead_id],
+        referral=models.referral_summary(lead_id),
     )
 
 
@@ -194,6 +197,19 @@ def spend_outcome(spend_id):
     status = request.form.get("status") or None
     models.update_spend_outcome(spend_id, leads, revenue, status)
     return redirect(url_for("main.expansion"))
+
+
+@bp.route("/referrals")
+def referrals_dashboard():
+    return render_template("referrals.html", data=models.referral_dashboard())
+
+
+@bp.route("/referral-bonuses/<int:bonus_id>/apply", methods=["POST"])
+def apply_referral_bonus(bonus_id):
+    referrer_lead_id = models.mark_bonus_applied(bonus_id)
+    if referrer_lead_id is None:
+        return "Bonus not found", 404
+    return redirect(url_for("main.lead_detail", lead_id=referrer_lead_id))
 
 
 @bp.route("/tax", methods=["GET"])
@@ -273,5 +289,6 @@ def _form_to_data(form):
         "done_summary": form.get("done_summary"),
         "left_for_you_summary": form.get("left_for_you_summary"),
         "source_url": form.get("source_url"),
+        "referred_by_lead_id": form.get("referred_by_lead_id") or None,
         "extra": extra,
     }

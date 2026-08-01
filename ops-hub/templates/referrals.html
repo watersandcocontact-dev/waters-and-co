@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Referrals & Loyalty — Ops Hub{% endblock %}
+{% block content %}
+
+<h2>Referrals & loyalty</h2>
+<p class="hint">Advisory only — nothing here changes a Stripe payment amount automatically.
+  Figure out the discount here, apply it yourself when creating a payment request on the lead.</p>
+
+<div class="alert-chip" style="border-color:var(--muted); color:var(--muted); margin-bottom:20px;">
+  Estimated total discount cost this month: <strong>${{ '%.2f'|format(data.total_estimated_monthly_cost) }}</strong>
+  — a rough proxy (rate-card default or the lead's own estimated value × discount %), not a real
+  recurring-billing figure since the hub doesn't bill on a subscription model.
+</div>
+
+{% if data.flagged %}
+<div class="section-title" style="color:var(--red);">Margin-floor flags — review before discounting</div>
+<div class="table-wrap" style="margin-bottom:20px;">
+<table>
+  <thead><tr><th>Lead</th><th>Line</th><th>Tier</th><th>Discount</th><th>Est. cost</th></tr></thead>
+  <tbody>
+    {% for e in data.flagged %}
+    <tr>
+      <td><a href="{{ url_for('main.lead_detail', lead_id=e.lead.id) }}">{{ e.lead.name }}</a></td>
+      <td>{{ e.lead.business_line | line_label }}</td>
+      <td>{{ e.summary.tier }}</td>
+      <td>{{ e.summary.recommended_discount_pct }}%</td>
+      <td>${{ '%.2f'|format(e.estimated_monthly_cost) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<div class="section-title">All active referral/loyalty relationships</div>
+{% if data.entries %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Lead</th><th>Line</th><th>Tier</th><th>Discount</th><th>Est. monthly cost</th></tr></thead>
+  <tbody>
+    {% for e in data.entries %}
+    <tr>
+      <td><a href="{{ url_for('main.lead_detail', lead_id=e.lead.id) }}">{{ e.lead.name }}</a></td>
+      <td>{{ e.lead.business_line | line_label }}</td>
+      <td>{{ e.summary.tier }}</td>
+      <td>{{ e.summary.recommended_discount_pct }}%</td>
+      <td>${{ '%.2f'|format(e.estimated_monthly_cost) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="empty-state">No active referral or loyalty relationships yet.</div>
+{% endif %}
+
+{% endblock %}

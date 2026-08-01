@@ -1,5 +1,10 @@
 # Competitor Pricing Research — AU Trade/Property Local-Services Bundle
 
+**See also `competitive_analysis_full_portfolio.md`** (2026-08-01) — a much
+deeper, portfolio-wide (18-business) competitive analysis with sourced
+complaint quotes and cross-cutting weakness patterns. This file stays as the
+original GBP-focused snapshot; the new one supersedes it in depth/scope.
+
 **Research date:** 2026-07-30
 **IMPORTANT:** Pricing in this market moves fast and many providers are quote-gated (no public rate card). Re-verify all figures before finalizing your own price sheet — treat this as directional, not exact.
 

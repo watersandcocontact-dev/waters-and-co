@@ -133,7 +133,33 @@ CREATE TABLE IF NOT EXISTS payments (
 
 CREATE INDEX IF NOT EXISTS idx_payments_lead_id ON payments(lead_id);
 CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
+
+-- Referral bonus ledger (2026-08-01) -- one row per earned one-time 50%
+-- referral bonus (one per converted referral, enforced by the unique index
+-- on earned_from_lead_id). Caps a referrer at one bonus "slot" per
+-- calendar month: if earned_month already has a bonus for this referrer,
+-- applies_to_month rolls forward to the next open month instead of
+-- stacking. ON DELETE CASCADE on both FKs -- see the delete_lead() crash
+-- bug fixed the same day for why that matters.
+CREATE TABLE IF NOT EXISTS referral_bonuses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    referrer_lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+    earned_from_lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+    earned_month TEXT NOT NULL,        -- YYYY-MM, the referred lead's conversion month
+    applies_to_month TEXT NOT NULL,    -- YYYY-MM, may be rolled forward past earned_month
+    status TEXT NOT NULL DEFAULT 'pending',  -- pending | applied
+    applied_at TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_referral_bonuses_referrer ON referral_bonuses(referrer_lead_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_referral_bonuses_earned_from ON referral_bonuses(earned_from_lead_id);
 """
+
+# referred_by_lead_id lives on `leads` itself (added via LEADS_MIGRATION_COLUMNS
+# below) rather than a separate table -- referral chains are just a
+# self-reference, no need for a join table. See models.py's referral
+# functions and DECISIONS.md for the discount-tier reasoning.
 
 # Columns added after the original schema — applied via ALTER TABLE so an
 # existing hub.sqlite3 doesn't need to be wiped. (name, DDL type/default)
@@ -143,6 +169,7 @@ LEADS_MIGRATION_COLUMNS = [
     ("done_summary", "TEXT"),
     ("left_for_you_summary", "TEXT"),
     ("source_url", "TEXT"),
+    ("referred_by_lead_id", "INTEGER REFERENCES leads(id)"),
 ]
 
 

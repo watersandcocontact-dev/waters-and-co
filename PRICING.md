@@ -54,8 +54,13 @@ separate, much larger task if/when you want to actually launch them.
 | 17 | Video/podcast repurposing | `VideoRepurpose` *(new, unscoped)* | $300–800/episode | ~5–7 hrs/episode | **$45–115/hr** |
 | 18 | Senior downsizing/cleanout | `Downsizing` *(new, unscoped)* | $50–80/hr or project flat fee | ~4–6 hrs/job day | **$50–80/hr** |
 | 19 | Airbnb co-hosting | `AirbnbCohost` *(new, unscoped)* | 10–25% of nightly revenue | ~5–7 hrs/wk/listing (with automation) | **$30–60/hr equivalent** |
+| 20 | Crypto IT/Literacy (live session) | `CryptoLiteracy` (task type: session) | per PRICING research in `wave3-unscoped/crypto_literacy/pricing_sheet.md` | ~1 hr | **$100/hr** |
+| 21 | Crypto IT/Literacy (pre-recorded course) | `CryptoLiteracy` (task type: course) | built once, sold repeatedly | n/a — near-zero marginal delivery | **$300/hr equivalent** |
+| 22 | AI Tools for Business | `AIToolsBusiness` | per `wave3-unscoped/ai_tools_business/pricing_sheet.md` | varies | **$85/hr** |
+| 23 | Odd Jobs / gig marketplace | `OddJobs` | per-job, highly variable (Airtasker/Marketplace-style) | varies | **$50/hr** (rough default — override per-lead with the real quoted price/time) |
+| — | General Enquiry (website catch-all) | `GeneralEnquiry` | n/a — not a priced service, a triage bucket for unclassified website enquiries | n/a | **$0/hr by design** — reclassify to a real business line once triaged |
 
-*(19 rows, 17 distinct businesses — rows 3/4 are both MissedCall, rows 5/6 are both GBP, split by task type since setup and ongoing management have very different $/hr.)*
+*(23 numbered rows + 1 unnumbered, 21 distinct hub business lines — rows 3/4 are both MissedCall, rows 5/6 are both GBP, rows 20/21 are both CryptoLiteracy, split by task type since the sub-modes have very different $/hr. Rows 20-23 added 2026-08-01 to cover the 4 lines that existed in `ops-hub/app/config.py` RATE_CARD but were missing from this table — see DECISIONS.md.)*
 
 ## How the hub uses this
 

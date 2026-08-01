@@ -48,6 +48,34 @@ the AI phone platform's payload maps to). If you leave those blank, the
 notification just says "no summary set yet" — a nudge to fill them in, not a
 silent failure.
 
+**1b. `scripts/deadline_check.py` — same pattern, deadline-focused.**
+The dashboard's deadline banner already shows this whenever you open the
+hub; this script is the OS-level nudge for when you haven't. Buckets leads
+into overdue / due-14-days / due-30-days (via `models.deadline_alert_buckets()`)
+and fires a `notify-send` desktop notification per bucket (falls back to
+printing if `notify-send` isn't available). Same manual-or-cron usage as
+`new_case_check.py`:
+```bash
+crontab -e
+# daily 8am:
+0 8 * * * cd "/home/m/claude code/business app/ops-hub" && /usr/bin/python3 scripts/deadline_check.py
+```
+Neither script is actually in crontab yet (checked 2026-08-01) — both are
+built and tested, but running the `crontab -e` line above yourself is the
+one step left to make either of them actually periodic rather than manual.
+
+**1c. Scheduled agent tasks (`daily-opportunity-scan`, `monthly-competitive-monitor`)
+are a different mechanism from the "no cloud monitor" reasoning above** —
+worth flagging since it looks contradictory at a glance. Those two don't
+touch the hub's live database at all (that's what the "cloud can't reach
+local DB" reasoning below is about) — they do web research and write to
+markdown files in this repo, and the scheduled-tasks mechanism runs
+attached to this local Claude Code app rather than purely in Anthropic's
+cloud (per its own tool description: "runs while this app is open; if
+closed when due, runs on next launch"). So they work, but only while this
+app is open on this machine — not truly always-on either, just a
+different kind of "runs when I'm around" than the cron scripts above.
+
 **2. Ask me directly, in a live session.**
 This is the more thorough option — I can read the hub's actual state (not
 just what's changed since a timestamp) and give you real analysis, not a

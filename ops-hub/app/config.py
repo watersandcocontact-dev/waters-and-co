@@ -87,6 +87,7 @@ RATE_CARD = {
     "CryptoLiteracy": {"session": 100, "course": 300},
     "AIToolsBusiness": 85,
     "OddJobs": 50,  # rough default — every job varies, override per-lead with real quoted price/time
+    "GeneralEnquiry": 0,  # website catch-all, not a priced service line itself -- see models.dollar_per_hour
 }
 
 STATUSES = [
@@ -166,7 +167,7 @@ EXTRA_FIELDS = {
         ("episode_link", "Episode file/link"),
     ],
     "Downsizing": [
-        ("property_address", "Property address"),
+        ("downsizing_property_address", "Property address"),
         ("job_type", "Job type (declutter/full clearout/move-prep)"),
     ],
     "LostSuper": [
@@ -280,6 +281,31 @@ TAX_FIGURES = {
         "research date; treated as the likely default, flagged in the UI",
     ],
 }
+
+# --- Referral & loyalty program (2026-08-01) ---
+# Spec gave the referral bonus (one-time 50%) and the ongoing-retention cap
+# (10%/mo flat ceiling) as fixed numbers, but left the per-referral
+# increment, the base loyalty-discount rate, and the stacked top-tier rate
+# to judgement -- picked here, reasoning logged in DECISIONS.md.
+REFERRAL_ONE_TIME_BONUS_PCT = 50       # one-time, off referrer's next invoice, repeatable per converted referral
+REFERRAL_RETENTION_PCT_PER_ACTIVE = 5  # ongoing, per active referred customer...
+REFERRAL_RETENTION_CAP_PCT = 10        # ...capped here regardless of referral count
+LOYALTY_REPEAT_CUSTOMER_PCT = 10       # repeat customer, no referral
+REFERRAL_LOYALTY_STACKED_TIER_PCT = 20 # repeat customer AND active referrer -- its own defined tier, not derived by addition
+
+# Contingency-fee or fixed-external-rate lines -- discounting these doesn't
+# make sense (LandTax is priced against a % of the client's own win, NDIS
+# lines bill at the scheme's fixed Price Guide, not our own rate), per the
+# spec's own carve-out example. Excluded from loyalty/referral discount
+# eligibility entirely.
+DISCOUNT_INELIGIBLE_LINES = {"LandTax", "NDISNav", "NDISCompliance"}
+
+# Guardrail: a discount stack that pushes a line's effective $/hr below this
+# fraction of its rate-card default gets flagged (not blocked -- same
+# "flag, don't auto-decide" pattern as the rest of the hub). 50% chosen as
+# a straightforward "still at least half your usual rate" floor -- see
+# DECISIONS.md.
+DISCOUNT_MARGIN_FLOOR_FRACTION = 0.5
 
 # Day-job hourly rate — from your payslip data (gross/hours). Used for the
 # day-job-vs-business $/hr comparison. Update if your rate changes.

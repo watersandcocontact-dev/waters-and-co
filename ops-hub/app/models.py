@@ -5,8 +5,15 @@ from .config import (
     AUTO_DEADLINE_RULES,
     DAY_JOB_HOURLY_RATE,
     DEADLINE_THRESHOLDS,
+    DISCOUNT_INELIGIBLE_LINES,
+    DISCOUNT_MARGIN_FLOOR_FRACTION,
     EVALUATION_WINDOWS_WEEKS,
+    LOYALTY_REPEAT_CUSTOMER_PCT,
     RATE_CARD,
+    REFERRAL_LOYALTY_STACKED_TIER_PCT,
+    REFERRAL_ONE_TIME_BONUS_PCT,
+    REFERRAL_RETENTION_CAP_PCT,
+    REFERRAL_RETENTION_PCT_PER_ACTIVE,
     TAX_FIGURES,
 )
 from .db import get_connection
@@ -118,8 +125,9 @@ def create_lead(data):
             INSERT INTO leads
                 (name, business_line, status, next_action, deadline, estimated_value,
                  notes, contact_name, contact_phone, contact_email, au_state, source, extra_json,
-                 task_type, time_estimate_hours, done_summary, left_for_you_summary, source_url)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 task_type, time_estimate_hours, done_summary, left_for_you_summary, source_url,
+                 referred_by_lead_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 data["name"],
@@ -140,6 +148,7 @@ def create_lead(data):
                 data.get("done_summary"),
                 data.get("left_for_you_summary"),
                 data.get("source_url"),
+                data.get("referred_by_lead_id") or None,
             ),
         )
         conn.commit()
@@ -149,6 +158,8 @@ def create_lead(data):
 
 
 def update_lead(lead_id, data):
+    if data.get("referred_by_lead_id") and int(data["referred_by_lead_id"]) == lead_id:
+        data = {**data, "referred_by_lead_id": None}
     extra = data.get("extra") or {}
     deadline = _apply_auto_deadline(
         data["business_line"], data.get("deadline") or None, extra, au_state=data.get("au_state")
@@ -162,7 +173,7 @@ def update_lead(lead_id, data):
                 estimated_value = ?, notes = ?, contact_name = ?, contact_phone = ?,
                 contact_email = ?, au_state = ?, extra_json = ?, task_type = ?,
                 time_estimate_hours = ?, done_summary = ?, left_for_you_summary = ?,
-                source_url = ?, updated_at = datetime('now')
+                source_url = ?, referred_by_lead_id = ?, updated_at = datetime('now')
             WHERE id = ?
             """,
             (
@@ -183,6 +194,7 @@ def update_lead(lead_id, data):
                 data.get("done_summary"),
                 data.get("left_for_you_summary"),
                 data.get("source_url"),
+                data.get("referred_by_lead_id") or None,
                 lead_id,
             ),
         )
@@ -194,6 +206,11 @@ def update_lead(lead_id, data):
 def delete_lead(lead_id):
     conn = get_connection()
     try:
+        # Null out anyone who named this lead as their referrer first --
+        # referred_by_lead_id has no ON DELETE clause, and foreign_keys is
+        # ON for every connection, so deleting a referenced lead would
+        # otherwise throw sqlite3.IntegrityError (uncaught -> 500).
+        conn.execute("UPDATE leads SET referred_by_lead_id = NULL WHERE referred_by_lead_id = ?", (lead_id,))
         conn.execute("DELETE FROM leads WHERE id = ?", (lead_id,))
         conn.commit()
     finally:
@@ -571,6 +588,259 @@ def mark_payment_status(checkout_session_id, status):
         conn.commit()
     finally:
         conn.close()
+
+
+# --- Referral & loyalty program (2026-08-01) ---
+# Advisory only -- this computes eligibility/recommended discount %, it
+# never touches a Stripe payment amount automatically. You still decide
+# the actual number when creating a payment request (app/payments.py);
+# these numbers are what to factor in. Config: REFERRAL_* / LOYALTY_* /
+# DISCOUNT_* in config.py, reasoning in DECISIONS.md.
+
+def list_leads_basic():
+    """id + name for every lead, for the "referred by" picker -- cheap,
+    no joins, fine at solo-operator lead volumes."""
+    conn = get_connection()
+    try:
+        rows = conn.execute("SELECT id, name, business_line FROM leads ORDER BY name").fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def _is_repeat_customer(lead, all_won_leads):
+    """Same contact (email, falling back to phone) has another Won lead."""
+    contact_key = (lead.get("contact_email") or "").strip().lower() or (lead.get("contact_phone") or "").strip()
+    if not contact_key:
+        return False
+    for other in all_won_leads:
+        if other["id"] == lead["id"]:
+            continue
+        other_key = (other.get("contact_email") or "").strip().lower() or (other.get("contact_phone") or "").strip()
+        if other_key and other_key == contact_key:
+            return True
+    return False
+
+
+def _month_str(dt_str):
+    """'2026-07-31 16:44:15' or '2026-07-31' -> '2026-07'."""
+    return (dt_str or "")[:7]
+
+
+def _next_month(month_str):
+    year, month = int(month_str[:4]), int(month_str[5:7])
+    month += 1
+    if month > 12:
+        month = 1
+        year += 1
+    return f"{year:04d}-{month:02d}"
+
+
+def _sync_referral_bonuses(conn, referrer_lead_id):
+    """Materialize a referral_bonuses row for every converted (Won) referral
+    that doesn't have one yet -- idempotent (unique index on
+    earned_from_lead_id backs this up at the DB level too). Conversion
+    month is read off the referred lead's updated_at, same proxy
+    business_ytd_income() already uses elsewhere for "when did this
+    convert" since there's no dedicated won_at timestamp.
+
+    Caps the referrer at one bonus per calendar month: if earned_month
+    already has a bonus for this referrer, rolls applies_to_month forward
+    to the next month that doesn't."""
+    converted = conn.execute(
+        "SELECT id, updated_at FROM leads WHERE referred_by_lead_id = ? AND status = 'Won' ORDER BY updated_at",
+        (referrer_lead_id,),
+    ).fetchall()
+    for row in converted:
+        exists = conn.execute(
+            "SELECT id FROM referral_bonuses WHERE earned_from_lead_id = ?", (row["id"],)
+        ).fetchone()
+        if exists:
+            continue
+        earned_month = _month_str(row["updated_at"])
+        applies_to = earned_month
+        while conn.execute(
+            "SELECT id FROM referral_bonuses WHERE referrer_lead_id = ? AND applies_to_month = ?",
+            (referrer_lead_id, applies_to),
+        ).fetchone():
+            applies_to = _next_month(applies_to)
+        conn.execute(
+            """INSERT INTO referral_bonuses
+                (referrer_lead_id, earned_from_lead_id, earned_month, applies_to_month, status)
+               VALUES (?, ?, ?, ?, 'pending')""",
+            (referrer_lead_id, row["id"], earned_month, applies_to),
+        )
+
+
+def list_referral_bonuses(lead_id):
+    conn = get_connection()
+    try:
+        _sync_referral_bonuses(conn, lead_id)
+        conn.commit()
+        rows = conn.execute(
+            """
+            SELECT referral_bonuses.*, leads.name AS earned_from_name
+            FROM referral_bonuses JOIN leads ON leads.id = referral_bonuses.earned_from_lead_id
+            WHERE referrer_lead_id = ?
+            ORDER BY applies_to_month
+            """,
+            (lead_id,),
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def get_referral_bonus(bonus_id):
+    conn = get_connection()
+    try:
+        row = conn.execute("SELECT * FROM referral_bonuses WHERE id = ?", (bonus_id,)).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()
+
+
+def mark_bonus_applied(bonus_id):
+    """Returns the bonus's referrer_lead_id (its own DB-recorded owner,
+    never a client-supplied value) so the caller can redirect correctly
+    without trusting form input for ownership -- fixes an IDOR where a
+    crafted POST could mark any bonus applied and redirect anywhere."""
+    conn = get_connection()
+    try:
+        row = conn.execute("SELECT referrer_lead_id FROM referral_bonuses WHERE id = ?", (bonus_id,)).fetchone()
+        if row is None:
+            return None
+        conn.execute(
+            "UPDATE referral_bonuses SET status = 'applied', applied_at = datetime('now') WHERE id = ? AND status = 'pending'",
+            (bonus_id,),
+        )
+        conn.commit()
+        return row["referrer_lead_id"]
+    finally:
+        conn.close()
+
+
+def referral_summary(lead_id):
+    """Everything needed to show the Referral & Loyalty advisory box on a
+    lead's page: who referred them, who they've referred and whether those
+    converted, repeat-customer status, the recommended discount tier, and
+    a margin-floor flag if that discount would cut too deep into this
+    line's usual rate."""
+    lead = get_lead(lead_id)
+    if lead is None:
+        return None
+
+    conn = get_connection()
+    try:
+        referred_by = None
+        if lead.get("referred_by_lead_id"):
+            row = conn.execute(
+                "SELECT id, name, business_line FROM leads WHERE id = ?", (lead["referred_by_lead_id"],)
+            ).fetchone()
+            referred_by = dict(row) if row else None
+
+        referred_rows = conn.execute(
+            "SELECT id, name, business_line, status FROM leads WHERE referred_by_lead_id = ? ORDER BY created_at",
+            (lead_id,),
+        ).fetchall()
+        referrals_made = [dict(r) for r in referred_rows]
+
+        all_won = [dict(r) for r in conn.execute(
+            "SELECT id, contact_email, contact_phone FROM leads WHERE status = 'Won'"
+        ).fetchall()]
+    finally:
+        conn.close()
+
+    pending_bonuses = [b for b in list_referral_bonuses(lead_id) if b["status"] == "pending"]
+
+    converted_referrals = [r for r in referrals_made if r["status"] == "Won"]
+    # "active" = currently an engaged client, not lost -- Won or any open
+    # in-progress status counts, only Lost drops out.
+    active_referred = [r for r in referrals_made if r["status"] != "Lost"]
+
+    is_repeat = _is_repeat_customer(lead, all_won)
+    is_active_referrer = len(active_referred) > 0
+
+    retention_pct = min(
+        len(active_referred) * REFERRAL_RETENTION_PCT_PER_ACTIVE,
+        REFERRAL_RETENTION_CAP_PCT,
+    ) if is_active_referrer else 0
+
+    if is_repeat and is_active_referrer:
+        tier = "stacked"
+        recommended_pct = REFERRAL_LOYALTY_STACKED_TIER_PCT
+    elif is_repeat:
+        tier = "loyalty"
+        recommended_pct = LOYALTY_REPEAT_CUSTOMER_PCT
+    elif is_active_referrer:
+        tier = "referrer_retention"
+        recommended_pct = retention_pct
+    else:
+        tier = "none"
+        recommended_pct = 0
+
+    line = lead.get("business_line")
+    eligible = line not in DISCOUNT_INELIGIBLE_LINES
+    rate_default = _rate_card_default(line, lead.get("task_type"))
+    margin_floor_flag = False
+    if eligible and recommended_pct and rate_default:
+        effective_rate = rate_default * (1 - recommended_pct / 100)
+        if effective_rate < rate_default * DISCOUNT_MARGIN_FLOOR_FRACTION:
+            margin_floor_flag = True
+
+    return {
+        "referred_by": referred_by,
+        "referrals_made": referrals_made,
+        "converted_referrals_count": len(converted_referrals),
+        "active_referred_count": len(active_referred),
+        "is_repeat_customer": is_repeat,
+        "pending_bonuses": pending_bonuses,
+        "one_time_bonus_pct": REFERRAL_ONE_TIME_BONUS_PCT,
+        "tier": tier,
+        "recommended_discount_pct": recommended_pct if eligible else 0,
+        "loyalty_ineligible_line": not eligible,
+        "margin_floor_flag": margin_floor_flag,
+    }
+
+
+def referral_dashboard():
+    """Portfolio-wide view: every lead currently sitting in a referral/
+    loyalty tier, with a rough estimated monthly discount cost (rate-card
+    default or the lead's own estimated_value, whichever's known -- this is
+    a proxy, not a real recurring-billing figure, since the hub doesn't
+    bill on a subscription model) and any margin-floor flags."""
+    conn = get_connection()
+    try:
+        rows = conn.execute("SELECT id FROM leads WHERE status NOT IN ('Lost')").fetchall()
+    finally:
+        conn.close()
+
+    entries = []
+    total_estimated_monthly_cost = 0.0
+    flagged = []
+    for row in rows:
+        summary = referral_summary(row["id"])
+        if not summary or summary["tier"] == "none":
+            continue
+        lead = get_lead(row["id"])
+        rate_default = _rate_card_default(lead.get("business_line"), lead.get("task_type"))
+        base_value = lead.get("estimated_value") or rate_default or 0
+        estimated_cost = round(base_value * summary["recommended_discount_pct"] / 100, 2)
+        total_estimated_monthly_cost += estimated_cost
+        entry = {
+            "lead": lead,
+            "summary": summary,
+            "estimated_monthly_cost": estimated_cost,
+        }
+        entries.append(entry)
+        if summary["margin_floor_flag"]:
+            flagged.append(entry)
+
+    return {
+        "entries": entries,
+        "total_estimated_monthly_cost": round(total_estimated_monthly_cost, 2),
+        "flagged": flagged,
+    }
 
 
 # --- Tax tracking (2026-07-31) ---
