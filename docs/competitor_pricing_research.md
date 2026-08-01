@@ -159,3 +159,21 @@ All figures above were gathered via web search on **2026-07-30** and reflect a m
 - Re-check the primary competitor sites directly for current numbers, especially Valory, Starworks, and the GBP agencies, since SaaS/agency pricing changes often.
 - For land tax/rates objection specifically, consider calling 2-3 of the valuer/quantity-surveyor firms listed above for an actual quote — no public pricing exists to benchmark against, so a direct quote is the only way to sanity-check the suggested $400-800 flat fee.
 - USD-priced SaaS tools (NiceJob, Podium, Birdeye) will fluctuate in AUD terms with the exchange rate — treat those AUD conversions as approximate.
+
+---
+
+## Re-verification — 2026-08-01 (confirming pricing for the 4 live website services)
+
+Re-ran targeted web searches/fetches two days after the original research to
+check for drift before locking these as **confirmed** client-facing prices.
+Verdict: three of four hold as-is; one competitor (Starworks) materially
+repriced, which sharpens (doesn't undercut) our positioning.
+
+| Service | Finding | Source | Action |
+|---|---|---|---|
+| GBP | Tradius still $297/mo; general market still $500-2,500+/mo for bundled local SEO. No change. | [tradius.com.au](https://tradius.com.au/) | Keep $150-300 cleanup / $100-200/mo — still the cheapest standalone GBP-only offer found. |
+| AI missed-call | **New datapoint:** Valory AI's setup fee is now published — "from $990, scope-dependent" (their monthly tiers $149-$1,299 unchanged). Previously only their monthly ladder was public. | [valory.com.au/resources/ai-receptionist-cost-australia](https://www.valory.com.au/resources/ai-receptionist-cost-australia) | Strengthens the case for our $300-600 setup — now undercuts Valory's setup by ~$400-700, not just Fully Booked's $2,500. No price change, stronger pitch. |
+| Review generation | **Repriced competitor:** Starworks' public tiers are now Essentials $49/mo, Professional $99/mo ("most popular"), Growth $135/mo — down from the $150/$279/$449 cited 2026-07-30. The self-serve SaaS floor genuinely dropped. | [starworks.com.au/pricing](https://www.starworks.com.au/pricing) | Our $100-150/mo Basic tier now sits just above Starworks' *most popular* self-serve tier ($99), not comfortably above their old Starter ($150-300). Differentiation must lean harder on "we do the drafting, you don't log into anything" — see updated note in `wave1/reviewgen/pricing_sheet.md`. Not lowering the price (a managed service pricing below a self-serve tool's popular tier undercuts the "actually managed" pitch), but flagging this needs re-checking again in a month, not treated as settled. |
+| Land tax/rates objection | Confirmed still fully quote-gated — no private provider publishes a fee. Government lodgement still free everywhere checked (NSW, SA, ACT). | [revenue.nsw.gov.au](https://www.revenue.nsw.gov.au/help-centre/resources-library/objections), [sa.gov.au](https://www.sa.gov.au/topics/housing/owning-a-property/objecting-to-a-property-valuation) | No change. $400-800 flat still well-supported as "price at what a valuation report costs, not a discount." |
+
+**Status: all four live-website prices (GBP, MissedCall, ReviewGen, LandTax) confirmed as of 2026-08-01** against current competitor data. Re-verify again before any major site relaunch or after 2-3 months, since this market (especially the AI-receptionist and reputation-management SaaS space) moves fast.

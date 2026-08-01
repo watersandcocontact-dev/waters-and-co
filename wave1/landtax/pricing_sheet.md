@@ -1,4 +1,10 @@
-# Land Tax / Rates Objection — Pricing Sheet (draft, adjustable)
+# Land Tax / Rates Objection — Pricing Sheet
+
+**Status: CONFIRMED 2026-08-01** — cross-checked against competitor research
+(`docs/competitor_pricing_research.md`, sourced 2026-07-30, re-verified
+2026-08-01, no change — market is still 100% quote-gated, nobody publishes a
+fee). This is the live client-facing quote and matches the public website
+exactly.
 
 **Service area: Australia-wide** — see `objection_letter_template.md`.
 

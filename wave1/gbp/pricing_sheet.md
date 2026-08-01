@@ -1,4 +1,9 @@
-# GBP / Local SEO — Pricing Sheet (draft, adjustable)
+# GBP / Local SEO — Pricing Sheet
+
+**Status: CONFIRMED 2026-08-01** — cross-checked against competitor research
+(`docs/competitor_pricing_research.md`, sourced 2026-07-30, re-verified
+2026-08-01, no change). This is the live client-facing quote and matches
+the public website exactly.
 
 **Service area: Australia-wide.** This entire service is delivered remotely —
 GBP access is granted online, photos/posts are supplied digitally, and calls/

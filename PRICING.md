@@ -22,6 +22,18 @@ built from real AU competitor research (`docs/competitor_pricing_research.md`)
 rather than this table's rough estimates — those are now the authoritative
 client-facing quotes for those two lines, same status as GBP/MissedCall.
 
+**Update 2026-08-01 — CONFIRMED for the website:** re-ran competitor checks
+(`docs/competitor_pricing_research.md`'s "Re-verification — 2026-08-01"
+section) for the 4 business lines actually live on the public website — GBP,
+ReviewGen, MissedCall, LandTax. All four hold as-is and are now marked
+**Status: CONFIRMED 2026-08-01** in their own pricing sheets; the numbers in
+`website/webapp/config.py` already match them exactly. One market move
+found and logged (Starworks reputation-management SaaS repriced down to
+$49-135/mo) — didn't change our price, but does sharpen how ReviewGen needs
+to be pitched (managed service vs. self-serve tool, not price alone). The
+other 17 business lines below are priced for internal queue-sorting only —
+none are on the website yet.
+
 **Business-line scope note:** rows 1, 3, 5, 8, 9, 10, 11 map to the 8
 businesses already fully built (Wave 1 + Wave 2 prep). Rows 2 (land tax,
 already built) plus rows 7, 12–19 introduce **9 businesses with no prior

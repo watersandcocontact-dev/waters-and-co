@@ -1,4 +1,12 @@
-# AI Missed-Call Reception — Pricing Sheet (draft, adjustable)
+# AI Missed-Call Reception — Pricing Sheet
+
+**Status: CONFIRMED 2026-08-01** — cross-checked against competitor research
+(`docs/competitor_pricing_research.md`, sourced 2026-07-30, re-verified
+2026-08-01). Re-verification found a new datapoint that *strengthens* this
+pricing without needing a change: Valory AI's setup fee is now public at
+"from $990, scope-dependent" — our $300-600 setup undercuts that by
+$400-700+, on top of already beating Fully Booked's $2,500 setup. This is
+the live client-facing quote and matches the public website exactly.
 
 **Service area: Australia-wide.** Setup, script writing, call-log review, and
 client reporting are all done remotely — the client's phone number can be

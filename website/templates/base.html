@@ -4,6 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Waters &amp; Co{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Waters &amp; Co — Australia-wide service specialists.{% endblock %}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <meta property="og:title" content="Waters &amp; Co">
+  <meta property="og:description" content="Australia-wide service specialists.">
+  <meta property="og:image" content="{{ url_for('static', filename='img/og-banner.png', _external=True) }}">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
