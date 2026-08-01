@@ -1,5 +1,27 @@
 # Contact Strategy — Text First, Not Cold Calls
 
+## Would a Facebook account help find more contact info?
+
+**Yes, meaningfully — but not something I can set up myself.** Of the
+leads checked so far, at least 3 (ABS Paving, Campbelltown Concrete, New
+Tone Painting) have **no phone or email findable anywhere** — Facebook
+is genuinely their only real front door. Beyond individual businesses,
+every city's research hit the same wall: the actual trade Facebook
+groups where these businesses' owners hang out ("Perth Tradies And
+Services For Hire," 4.8K+ members; similar groups likely exist for
+Melbourne/Sydney/Brisbane) are invisible to a logged-out search — that's
+a real, untapped lead source, not just a contact-detail gap.
+
+I can't log into Facebook with your credentials — that's off-limits for
+me regardless (entering passwords/creating account sessions isn't
+something I do). But if you install and connect the **Claude in Chrome**
+browser extension and you're already logged into Facebook in that
+browser, I could browse public Business Pages and groups using your
+existing session — I'd never see or handle the password, just use the
+session the same way you already are. Tried it this session; the
+extension isn't connected here, so this is a "worth setting up" note,
+not something active right now.
+
 ## The actual recommendation
 
 **Default to text, not a cold call.** A tradie on the tools can't take a
@@ -58,9 +80,9 @@ other's clients? No obligation either way."*
 | Business | Best channel | Details |
 |---|---|---|
 | Concreting Melbourne | **Text** — two real mobiles confirmed | Director Tom McCloskey 0468 600 780, Office Manager Celeste Sharp 0426 278 200, quotes@concretingmelbourne.com.au |
+| Melbourne Gas & Air | **Text** — mobile-format number found | 0460 025 723 |
+| Local Werribee Plumber | Call — landline only | (03) 8582 2002, no email/mobile found |
 | Urban Tide Plumbing, Sutton Security & Electrics, Beachside, Webb Plumbing | Website contact form or call | Confirmed real businesses via suttonse.com.au etc. — check each site's contact page before reaching out, not yet individually verified for a direct mobile |
-| Local Werribee Plumber | Call or website | localwerribeeplumber.com.au |
-| Melbourne Gas & Air | Call or website | melbournegasair.com.au |
 
 ### Brisbane
 
@@ -68,8 +90,11 @@ other's clients? No obligation either way."*
 |---|---|---|
 | JB Concrete & Construction | **Text** — mobile already on file | 0404 295 320 (confirmed via the original research), also facebook.com/JBCONCRETEANDCONSTRUCTION |
 | Cantwell Concreting | **Text** — mobile already on file | 0419 202 096 |
+| Quality Aussie Tilers (Sean Kennedy) | **Text** — real mobile confirmed | 0458 668 315, Qualityaussietilers@gmail.com |
+| The Plumbing Gang | Email or call — landline | info@theplumbinggang.com, 1300 671 525 (not SMS-capable, a 1300 number) |
+| Q Roofing | Call — landline only | 07 5546 8099, no email/mobile found |
 | Essential Plumbing and Gas, Your Plumbing Solution, Leak Free Plumbing Solutions | Website contact form or call | Real confirmed businesses (essentialplumbingandgas.com.au, yourplumbingsolution.com.au, leakfreeplumbingsolutions.com.au) — check each site before reaching out |
-| Quality Aussie Tilers, Q Roofing, Pamir Tiling, The Plumbing Gang, DC Electrical | Not yet individually verified | Use the Google Maps listing's call/message button, or website if one turns up |
+| Pamir Tiling, DC Electrical | Not yet individually verified | Use the Google Maps listing's call/message button, or website if one turns up |
 
 ### Sydney
 
@@ -77,8 +102,11 @@ other's clients? No obligation either way."*
 |---|---|---|
 | **B Concrete** | **Skip or GBP message only** | Their own one-star review says the listed number is wrong — I couldn't find a working replacement either. Genuinely hard to reach; don't burn time here, try the Google Business Profile's own "Message" button if it has one, otherwise deprioritise despite being the strongest pain signal. |
 | Campbelltown Concrete | Facebook (unclaimed GBP) | facebook.com/campbelltownconcrete |
-| Amazing Fencing | Website or Instagram | Confirmed real via current site + Instagram |
-| Jacob Smith Concreting, D&N Plumbing, Singhrenovationsandrepairs, Sydney Roofers, New Tone Painting | Not yet individually verified | Use the Google Maps listing's call/message button |
+| D & N Plumbing Services | Email or call | service@dnplumbing.com.au, 02 9457 9000 (landline) |
+| Amazing Fencing | Email — 1800/landline only, no mobile | sales@amazingfencing.com.au, 1800 739 359, (02) 9831 8211 — good email, poor phone options |
+| New Tone Painting and Decorating | Facebook only | No phone/email surfaced — facebook.com/NewTone01 is the real channel |
+| Jacob Smith Concreting | **Unverified — treat cautiously** | No contact details found at all outside the bare Google Maps listing; possible the business name/spelling from the review scan is slightly off. Try the Maps listing's own call/message button before assuming this one's dead. |
+| Singhrenovationsandrepairs, Sydney Roofers | Not yet individually verified | Use the Google Maps listing's call/message button |
 
 ## Process for the rest of the list (not individually verified yet)
 
