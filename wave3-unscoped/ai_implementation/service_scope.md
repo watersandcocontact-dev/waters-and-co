@@ -6,6 +6,51 @@ setup/training) — this is custom automation *building*, i.e. literally
 what Claude Code does for Waters & Co's own ops hub, sold as a service to
 other small businesses. Genuinely new capability, not a repackage.
 
+**Reconciliation note (2026-08-02):** this line was independently
+validated with real market data on 2026-08-01 (see the pricing gap
+below). A separate, older planning document described the same
+opportunity as "AI Automation & Document Processing Consulting" with
+three named sub-services and a sovereignty/privacy differentiator —
+folded that framing in below since it's a genuinely useful way to scope
+and pitch this, but the pricing stays anchored to tonight's actual
+sourced data, not that document's earlier estimates.
+
+## Three sub-services (priority order)
+
+1. **Business-process automation & AI agent building** — the flagship,
+   and what's actually described below (n8n/Make-style pipelines and
+   custom agents, using Claude Code as the build engine).
+2. **Custom RAG chatbots** — a client's own documents/website turned into
+   an accurate assistant, positioned against generic API-wrapper
+   competitors on accuracy and privacy (their data never leaves local
+   infrastructure once that infrastructure exists — see the hardware
+   note below).
+3. **Document processing / intelligent document processing (IDP)** —
+   extraction, classification, summarisation at volume. Worth watching
+   specifically for Perth's resources/mining sector, which generates
+   large volumes of compliance/safety documentation that's genuinely
+   privacy- and sovereignty-sensitive — enterprise IDP tools cost
+   thousands/year, real room for a nimble local operator. Not yet
+   pursued, flagged as the standout of the three for later prioritising.
+
+## The differentiator to lead with once local infrastructure exists
+
+A local inference stack (in planning — you're setting this up directly
+on a separate machine, not something built through this session) would
+be directly reusable as *billable service infrastructure*, not just an
+internal tool — zero marginal inference cost beyond electricity (a real
+cost advantage over competitors paying per-token cloud fees at volume),
+and genuine data sovereignty (processing never leaves local
+infrastructure, relevant to Australian privacy law and specifically to
+mining/resources compliance work, where offshore cloud AI providers can
+be compelled to disclose data under foreign law regardless of physical
+storage location). **Don't compete on price in the commoditised low end**
+(generic content writing, simple FAQ bots, cheap API-wrapper chatbots) —
+target privacy-sensitive, document-heavy niches instead: resources/
+mining, legal, healthcare-adjacent (non-clinical), finance,
+government-adjacent. This positioning doesn't depend on the local stack
+being live yet — it's the pitch to build toward.
+
 ## What's actually delivered
 
 - **A single, clearly-scoped automation build** for a small business with
