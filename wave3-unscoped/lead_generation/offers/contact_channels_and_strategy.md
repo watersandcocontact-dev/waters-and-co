@@ -108,6 +108,14 @@ other's clients? No obligation either way."*
 | Jacob Smith Concreting | **Unverified — treat cautiously** | No contact details found at all outside the bare Google Maps listing; possible the business name/spelling from the review scan is slightly off. Try the Maps listing's own call/message button before assuming this one's dead. |
 | Singhrenovationsandrepairs, Sydney Roofers | Not yet individually verified | Use the Google Maps listing's call/message button |
 
+### Perth Tier 2 (spot-checked 2026-08-02)
+
+| Business | Best channel | Details |
+|---|---|---|
+| Wanneroo Blinds & Curtains | Email or call | info@wblinds.com.au, (08) 9302 1002 |
+| Morgan Mechanical Services | Call — landline only | (08) 9248 7478, morganmechanical.com.au (no email/mobile found) |
+| Power Gyprock Renovation, AquaMazing Pool Services, Fast Security and Garage Door Repair, Martin's Mowing & Garden Care | **Google Maps message/call button only** | Genuinely no web presence found beyond the bare Maps listing (checked, not just skipped) — consistent with why these were flagged as leads in the first place (their own thin online footprint is the pitch). Don't burn more search time here; the Maps listing is the real front door. |
+
 ## Process for the rest of the list (not individually verified yet)
 
 For every remaining business: check the Google Business Profile first —
