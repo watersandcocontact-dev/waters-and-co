@@ -31,10 +31,12 @@ def create_app():
     from .auth import init_auth
     from .payments import bp as payments_bp
     from .routes import bp as main_bp
+    from .sms import bp as sms_bp
     from .webhook import bp as webhook_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(webhook_bp)
+    app.register_blueprint(sms_bp)
     app.register_blueprint(payments_bp)
     app.register_blueprint(auth_bp)
     init_auth(app)

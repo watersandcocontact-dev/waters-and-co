@@ -157,6 +157,54 @@ def create_lead(data):
         conn.close()
 
 
+def _normalize_phone(phone):
+    """Strip everything but digits, then keep the last 9 (AU mobile/landline
+    body without country code or leading 0) so +61..., 0..., and space/dash
+    formatted numbers all compare equal."""
+    digits = "".join(ch for ch in (phone or "") if ch.isdigit())
+    return digits[-9:] if len(digits) >= 9 else digits
+
+
+def find_lead_by_phone(phone):
+    """Best-effort match of an inbound SMS sender to an existing lead, for
+    the httpSMS inbound webhook (see app/sms.py). Returns the most recently
+    updated matching lead, or None if nothing matches."""
+    target = _normalize_phone(phone)
+    if not target:
+        return None
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT id, contact_phone FROM leads WHERE contact_phone IS NOT NULL "
+            "ORDER BY updated_at DESC, id DESC"
+        ).fetchall()
+    finally:
+        conn.close()
+    for row in rows:
+        if _normalize_phone(row["contact_phone"]) == target:
+            return get_lead(row["id"])
+    return None
+
+
+def append_note(lead_id, text):
+    """Append a timestamped line to a lead's notes without clobbering
+    existing notes -- used by the SMS inbound webhook so a client's reply
+    lands in their case record instead of overwriting prior notes."""
+    stamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    line = f"[{stamp}] {text}"
+    conn = get_connection()
+    try:
+        existing = conn.execute("SELECT notes FROM leads WHERE id = ?", (lead_id,)).fetchone()
+        combined = (existing["notes"] + "\n" + line) if existing and existing["notes"] else line
+        conn.execute(
+            "UPDATE leads SET notes = ?, updated_at = datetime('now') WHERE id = ?",
+            (combined, lead_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def update_lead(lead_id, data):
     if data.get("referred_by_lead_id") and int(data["referred_by_lead_id"]) == lead_id:
         data = {**data, "referred_by_lead_id": None}

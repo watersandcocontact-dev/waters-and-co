@@ -76,10 +76,12 @@ python3 run.py
 
 - No email notifications (would require a mail-account signup); deadline alerts are
   dashboard-only, shown as a banner at 14/60/30-day thresholds plus overdue.
-- Dependencies: Flask and stripe, installed to the user site-packages with
-  `python3 -m pip install --user --break-system-packages flask stripe` (this
-  machine's Debian/Ubuntu Python blocks plain global pip installs and `venv`
-  needs a missing `python3-venv` apt package this session couldn't install
-  without sudo).
+- Dependencies: Flask, stripe, requests, and PyJWT, installed to the user
+  site-packages with
+  `python3 -m pip install --user --break-system-packages flask stripe requests pyjwt`
+  (this machine's Debian/Ubuntu Python blocks plain global pip installs and
+  `venv` needs a missing `python3-venv` apt package this session couldn't
+  install without sudo). requests/PyJWT are for the httpSMS module
+  (`app/sms.py`) -- see `docs/httpsms_setup.md`.
 - Not hardened for the public internet — this is a local ops tool. If you ever expose
   it beyond localhost, put it behind auth first.

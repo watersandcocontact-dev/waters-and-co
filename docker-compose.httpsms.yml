@@ -1,0 +1,46 @@
+# httpSMS self-hosting compose file — NOT run yet, yours to deploy.
+# See docs/httpsms_setup.md for the full setup walkthrough.
+#
+# httpSMS ships its own docker-compose.yml in the project repo
+# (https://github.com/NdoleStudio/httpsms) which orchestrates the API,
+# web UI, database, and cache — clone that repo and use its compose file
+# directly rather than this one; this file is a reference for the
+# environment variables the ops hub's side of the integration expects
+# httpSMS to have configured, so you don't have to cross-reference their
+# docs and this repo's while setting it up.
+#
+# Fill in every <...> placeholder before running `docker compose up --build`
+# from inside the cloned httpsms repo, using this as your .env reference.
+
+# --- Firebase (push notifications) ---
+# FIREBASE_API_KEY=<from your Firebase project settings>
+# FIREBASE_AUTH_DOMAIN=<project-id>.firebaseapp.com
+# FIREBASE_PROJECT_ID=<your Firebase project id>
+# FIREBASE_STORAGE_BUCKET=<project-id>.appspot.com
+# FIREBASE_MESSAGING_SENDER_ID=<from Firebase project settings>
+# FIREBASE_APP_ID=<from Firebase project settings>
+# FIREBASE_MEASUREMENT_ID=<from Firebase project settings>
+# FIREBASE_CREDENTIALS=<service account JSON, as a single-line string or mounted file>
+# GCP_PROJECT_ID=<same as FIREBASE_PROJECT_ID usually>
+
+# --- SMTP (notification emails) ---
+# SMTP_USERNAME=<your email address>
+# SMTP_PASSWORD=<an app password, not your real password -- e.g. a Gmail App Password>
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+
+# --- Cloudflare Turnstile (protects the message-search endpoint) ---
+# CLOUDFLARE_TURNSTILE_SITE_KEY=<frontend key, free tier is fine>
+# CLOUDFLARE_TURNSTILE_SECRET_KEY=<backend key>
+
+# --- System user (used internally by httpSMS's event queue) ---
+# EVENTS_QUEUE_USER_ID=<generate a UUID>
+# EVENTS_QUEUE_USER_API_KEY=<generate a random secret>
+
+# Once httpSMS is running and paired to the work phone's Android app,
+# the values you actually feed back into THIS repo (the ops hub) are:
+#   HTTPSMS_ENABLED=1
+#   HTTPSMS_API_KEY=<the API key httpSMS's own dashboard gives you>
+#   HTTPSMS_FROM_NUMBER=<the work phone's number>
+#   HTTPSMS_API_URL=<your self-hosted API URL, e.g. http://localhost:8000>
+#   HTTPSMS_WEBHOOK_SECRET=<the signing secret for the message.phone.received webhook>
