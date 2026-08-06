@@ -25,6 +25,15 @@ def create_app():
         static_folder=str(ROOT / "static"),
     )
     app.secret_key = _load_or_create_secret_key()
+    # Defense-in-depth against CSRF on the session cookie: browsers won't
+    # attach a Lax cookie to a cross-site POST, which covers every
+    # state-changing form in this app (delete_lead, payments, referral
+    # bonuses, etc.) without needing per-form CSRF tokens. Not forcing
+    # SESSION_COOKIE_SECURE here since the hub is sometimes reached through
+    # a reverse proxy (Tailscale Funnel) that terminates HTTPS upstream of
+    # this process -- forcing it blind could silently break login there.
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
     init_db()
 
     from .auth import bp as auth_bp

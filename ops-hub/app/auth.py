@@ -11,8 +11,10 @@ a personal single-operator tool, not a multi-user system. If HUB_PASSWORD is
 not set, auth is skipped entirely (today's default, unchanged).
 """
 
+import hmac
 import os
 from functools import wraps
+from urllib.parse import urlparse
 
 from flask import Blueprint, redirect, render_template_string, request, session, url_for
 
@@ -42,15 +44,27 @@ def _password_required():
     return bool(os.environ.get("HUB_PASSWORD"))
 
 
+def _safe_next(candidate):
+    """Only allow same-site relative redirect targets (never an off-site URL)."""
+    if not candidate or not candidate.startswith("/") or candidate.startswith("//"):
+        return None
+    parsed = urlparse(candidate)
+    if parsed.netloc or parsed.scheme:
+        return None
+    return candidate
+
+
 @bp.route("/login", methods=["GET", "POST"])
 def login():
     if not _password_required():
         return redirect(url_for("main.daily_queue"))
     error = None
     if request.method == "POST":
-        if request.form.get("password") == os.environ.get("HUB_PASSWORD"):
+        expected = os.environ.get("HUB_PASSWORD", "")
+        supplied = request.form.get("password", "")
+        if expected and hmac.compare_digest(supplied, expected):
             session["authed"] = True
-            return redirect(request.args.get("next") or url_for("main.daily_queue"))
+            return redirect(_safe_next(request.args.get("next")) or url_for("main.daily_queue"))
         error = "Wrong password."
     return render_template_string(LOGIN_TEMPLATE, error=error)
 
@@ -66,7 +80,17 @@ def init_auth(app):
     def require_login():
         if not _password_required():
             return None
-        exempt = {"auth.login", "static", "webhook.intake", "payments.stripe_webhook"}
+        # These endpoints authenticate via their own shared-secret header check
+        # (see webhook.py / sms.py), not the session login -- they must stay
+        # reachable without a session or every real webhook call 302s to /login.
+        exempt = {
+            "auth.login",
+            "static",
+            "webhook.intake",
+            "webhook.website_lead",
+            "payments.stripe_webhook",
+            "sms.sms_inbound",
+        }
         if request.endpoint in exempt or request.endpoint is None:
             return None
         if not session.get("authed"):

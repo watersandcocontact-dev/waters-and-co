@@ -29,6 +29,7 @@ still wiring things up.
 """
 
 import json
+import hmac
 import os
 
 from flask import Blueprint, jsonify, request
@@ -75,7 +76,16 @@ def intake():
         )
 
     secret = os.environ.get("INTAKE_WEBHOOK_SECRET")
-    if secret and request.headers.get("X-Intake-Secret") != secret:
+    if not secret:
+        # Fail closed, same pattern as /webhook/website-lead below -- an
+        # enabled-but-unconfigured webhook must never silently accept
+        # unauthenticated leads.
+        _log("intake", payload, note="rejected: INTAKE_WEBHOOK_ENABLED=1 but INTAKE_WEBHOOK_SECRET not set")
+        return (
+            jsonify({"status": "error", "message": "INTAKE_WEBHOOK_SECRET not configured on the hub"}),
+            503,
+        )
+    if not hmac.compare_digest(request.headers.get("X-Intake-Secret", ""), secret):
         _log("intake", payload, note="rejected: bad/missing secret")
         return jsonify({"status": "error", "message": "invalid secret"}), 401
 
@@ -127,7 +137,7 @@ def website_lead():
             jsonify({"status": "error", "message": "WEBSITE_WEBHOOK_SECRET not configured on the hub"}),
             503,
         )
-    if request.headers.get("X-Website-Secret") != secret:
+    if not hmac.compare_digest(request.headers.get("X-Website-Secret", ""), secret):
         _log("website-lead", payload, note="rejected: bad/missing secret")
         return jsonify({"status": "error", "message": "invalid secret"}), 401
 
