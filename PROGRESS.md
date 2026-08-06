@@ -139,6 +139,58 @@ from the full `DECISIONS.md` history (2026-07-29 onward) plus live-logged events
 for tonight's research/drafting work, per Owner's follow-up instruction to log
 every step taken so far, not just going forward.
 
+---
+
+## 2026-08-07 — Spring-clean audit pass (security fix, deploy fix, email re-check, 11 more leads)
+
+Per Owner's "double check everything, get it ready for the morning" instruction:
+
+**Security audit (real HIGH finding, fixed):** the ops-hub's login gate's exempt
+list was missing the website-lead and SMS-inbound webhooks — with `HUB_PASSWORD`
+set (the documented live config), both got 302-redirected to `/login` instead of
+running their own secret check, meaning **every real contact-form lead submitted
+through the live site right now would silently fail**. Fixed, plus hardened:
+constant-time secret comparisons, an open-redirect guard on `/login`, fail-closed
+behaviour on the intake webhook, `SESSION_COOKIE_SAMESITE=Lax`. Local hub process
+restarted to pick up the fix — confirmed via direct request the webhook no longer
+302s. Full findings: see the 2026-08-07 SECURITY entry in `DECISIONS.md`.
+
+**Website deploy bug (found, fix pushed):** the live Render deployment was
+serving a stale build missing the favicon/OG-image tags that already exist
+correctly on GitHub's `main`. Pushed a fresh commit to trigger a redeploy — **as
+of this write-up, still confirming it went through; check `watersandco.info`'s
+page source for `<link rel="icon"` before relying on it, and if it's still
+missing, trigger a manual deploy from the Render dashboard yourself.**
+
+**Mobile + desktop re-check:** landing page, Small Business Support segment
+(group headings intact), and Downsizing service page (the one that had the
+mobile price-overflow bug) all checked at 375px and desktop — zero overflow,
+correct pricing, correct segment order.
+
+**Email re-audit:** programmatically checked all 92 drafted emails for
+structure/duplicates/length. Found and fixed 1 real issue — Electrician Services
+Adelaide was independently sourced twice with two different pitches; marked the
+weaker one do-not-send.
+
+**11 more leads found** (spring-clean opportunity scan): 5 Perth
+downsizing/estate-clearance businesses as referral partners for Digital
+Legacy/Photo Digitisation, 6 Geelong VIC trades (new geography, GBP/reviews
+angle). Full writeup: `wave3-unscoped/lead_generation/new_verticals_2026-08-07.md`.
+
+**New deliverable:** `wave3-unscoped/lead_generation/offers/morning_send_list.md`
+— all 91 sendable emails reformatted into one easy-scan doc (who / what they do
+/ what we're offering / the draft), grouped by offer type, exactly per the
+Owner's requested format. This is the file to actually work through in the
+morning — the `tailored_emails_master.md` file stays as the full sourcing-note
+version for reference.
+
+**Known issue, not fixable by me:** Owner reports the Linux desktop Claude app
+can't connect to Gmail (times out on the OAuth callback), only claude.ai can.
+This doesn't block tonight's work since nothing here needs Gmail access — every
+email is a prepared draft for the Owner to paste and send from their own inbox.
+If it matters for other workflows, worth reporting as a bug via the desktop
+app's own feedback channel; it's outside what this session can fix.
+
 ## How to pick this back up
 
 - Run both apps (see top of this file).

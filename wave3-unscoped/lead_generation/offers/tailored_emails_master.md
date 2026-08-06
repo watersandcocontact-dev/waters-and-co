@@ -94,15 +94,25 @@ read as a person reaching out, not a campaign.
 >
 > I help small trade businesses with fixed-fee monthly bookkeeping — clear reporting, one predictable bill. Worth a quick look, or happy to just outline what I'd tidy up first if that's more useful.
 
-### 6. Electrician Services Adelaide (Adelaide, SA)
-**To:** enquiries@electricianservicesadelaide.au
-**Why:** Small family-owned business, roughly a decade trading across domestic/maintenance/solar, no dedicated admin mentioned.
+### 6. ~~Electrician Services Adelaide (Adelaide, SA)~~ — DUPLICATE, DO NOT SEND
+**Resolved 2026-08-07 audit:** this is the same business as #39 (same email,
+`enquiries@electricianservicesadelaide.au`) — found independently by two
+different research passes with two different pitches (bookkeeping here, thin
+Google/Facebook reviews at #39). Sending both would look sloppy. **Send #39
+instead** (the reviews angle is the more concrete, visible-to-them pain
+signal). The bookkeeping angle below is a legitimate second offer — worth
+raising as a natural follow-up once they reply to #39, not as a separate
+cold open.
+
+<details><summary>Original bookkeeping-angle draft (kept for the follow-up, not for cold send)</summary>
 
 > Subject: Quick one for Electrician Services Adelaide
 >
 > Hi — noticed you cover domestic, maintenance and solar work, which usually means a decent spread of invoicing types to keep straight. Ten years in, that's often grown messier than it needs to be, especially without dedicated admin support.
 >
 > I run fixed-fee monthly bookkeeping for small trade businesses — one predictable bill instead of an open-ended hourly one. Happy to have a quick chat about it, or just send through what I'd look at first if that's easier.
+
+</details>
 
 ### 7. AJ Blunt Painting (Adelaide, SA)
 **To:** info@ajbluntpaint.com.au
@@ -945,15 +955,160 @@ better; converted into the same researched structure as everything above.
 
 ## Final status — all researched batches converted
 
-81 tailored emails now drafted (45 trade-service prospects across 6 regional
-batches + 10 land-tax referral partners + 10 video-repurposing prospects + 12
-real-estate AI lead-response agents + 4 older verified contacts). Every other
-older verified contact already has a personalized, ready-to-send text message in
-`msb_ready_to_send.md`/`missedcall_call_sheets.md` following the identical
-researched structure (specific hook, no hard pitch, soft close) — text being the
-right channel for tradies who can't take a call mid-job. None of the above has
-been sent — every item is a prepared draft, per the standing
-confirm-before-send rule. Send one at a time, re-verify the contact is still
-current immediately before sending (all research has an expiry — profiles and
-job ads change), and log the outcome to the ml_training_log the same way the
+81 tailored emails drafted, **80 actually sendable** (45 trade-service prospects
+across 6 regional batches + 10 land-tax referral partners + 10 video-repurposing
+prospects + 12 real-estate AI lead-response agents + 4 older verified contacts,
+minus #6 which is a confirmed duplicate of #39 — see that entry, kept but marked
+do-not-send). Every other older verified contact already has a personalized,
+ready-to-send text message in `msb_ready_to_send.md`/`missedcall_call_sheets.md`
+following the identical researched structure (specific hook, no hard pitch, soft
+close) — text being the right channel for tradies who can't take a call mid-job.
+None of the above has been sent — every item is a prepared draft, per the
+standing confirm-before-send rule. Send one at a time, re-verify the contact is
+still current immediately before sending (all research has an expiry — profiles
+and job ads change), and log the outcome to the ml_training_log the same way the
 research itself was logged.
+
+**2026-08-07 spring-clean audit pass:** re-checked all 81 entries for structural
+consistency (To/Why/Subject/soft-close present), duplicate emails across batches,
+and word count. Found and fixed 1 real issue (the #6/#39 duplicate above). Every
+other entry checked out — consistent format, no leftover placeholder text, no
+other duplicate contacts, all within the researched 50-120 word target once the
+audit script's false-positive matches (it was accidentally sweeping up trailing
+section text past a `##`-level heading) were excluded.
+
+---
+
+## Downsizing/Estate-Clearance — referral partners for Digital Legacy + Photo Digitisation (Perth)
+
+Same referral-partnership structure as the Land Tax section above, not a direct
+service pitch. These businesses physically clear the house; we handle the
+photos/documents/accounts they set aside — a clean complementary handoff.
+
+### 82. Queens of Clutter (Perth/Mandurah)
+**To:** info@queensofclutter.com.au
+**Why:** Dedicated downsizing service ("only the items you need and love make it to your new home"); no digitising/photo/account service mentioned.
+
+> Subject: A resource for your downsizing clients
+>
+> Hi — with downsizing clients, I'd imagine there's often a box of old photos or paperwork that gets set aside because there's no time to deal with it during the move itself. I help with exactly that part — sorting and digitising photos, organising accounts — once the physical side is handled.
+>
+> Thought it might be useful to have as something to point clients to, rather than something that ends up sitting in a box in their new place. Worth a look?
+
+### 83. Well Organised (Perth metro)
+**To:** info@wellorganised.com.au
+**Why:** Downsizing + house clearance + packing services; no digital-photo or account-management offering.
+
+> Subject: A resource for your downsizing clients
+>
+> Hi — noticed you handle downsizing, clearance and packing. I'd guess that often turns up boxes of old photos and documents that don't fit neatly into the move itself. I help clients sort and digitise exactly that, and organise their online accounts, once the physical clear-out is done.
+>
+> Thought it might be a useful thing to have on hand for clients — worth a look?
+
+### 84. Packed to Perfection — Janet Britton (Jolimont/Perth)
+**To:** janet@packedtoperfection.com.au
+**Why:** Explicitly serves retirees moving into assisted living plus deceased-estate support; no digital component.
+
+> Subject: A resource for your clients
+>
+> Hi Janet — with the assisted-living and deceased-estate side of your work, I'd imagine boxes of old photos and paperwork come up often, the kind of thing that's emotionally loaded and easy to set aside rather than deal with in the moment. I help sort, digitise, and organise exactly that material once the practical move is done.
+>
+> Thought it might be worth having as something to point clients to — worth a look?
+
+### 85. Perth Resale Specialists (Wangara/Perth)
+**To:** hello@perthresalespecialists.com.au
+**Why:** Deceased-estate clearance specialist that explicitly sets aside documents/photographs for review rather than digitising them — strongest signal of the five.
+
+> Subject: A resource for your clients
+>
+> Hi — noticed you already set aside documents and photographs for family review rather than dealing with them as part of the clearance itself, which tells me this comes up often. I help families sort and digitise exactly that material, and organise a deceased relative's online accounts, once it's been set aside.
+>
+> Thought it'd be worth having as a ready option to point clients to for that step — worth a look?
+
+### 86. We Empty Houses — Sian (Perth)
+**To:** sian@weemptyhouses.com.au
+**Why:** Deceased-estate emptying, decluttering, downsizing, and hoarding clean-outs; no archival/digitisation service mentioned.
+
+> Subject: A resource for your clients
+>
+> Hi Sian — with deceased-estate and hoarding clean-outs, I'd imagine old photos and important documents turn up regularly, often mixed in with everything else. I help families sort and digitise that material and organise online accounts, once the physical clear-out's done.
+>
+> Thought it might be useful to have on hand for clients — worth a look?
+
+---
+
+## Geelong, VIC — new geography (GBP/reviews angle)
+
+### 87. Justin Drew Plumbing (Grovedale/Geelong)
+**To:** justin@justindrewplumbing.com.au
+**Why:** Only 1 review on Localsearch despite the site claiming "over 20 years" experience.
+
+> Subject: Quick one for Justin Drew Plumbing
+>
+> Hi Justin — noticed your Localsearch listing shows only 1 review despite your site mentioning over 20 years in the trade. That's a big gap between the real track record and what actually shows up when someone's comparing plumbers.
+>
+> I help trade businesses build up a steady flow of genuine reviews. Worth a quick look, or happy to send through what I'd do first?
+
+### 88. AWDW Plumbing & Gasfitting (Newtown/Geelong)
+**To:** awdwplumbing@gmail.com
+**Why:** Only 3 reviews on Localsearch; own site shows no review count, testimonials, or years-in-business claim at all.
+
+> Subject: Quick one for AWDW Plumbing & Gasfitting
+>
+> Hi — noticed your Localsearch listing shows only 3 reviews, and your own site doesn't show any review count or testimonials either. That's the kind of gap that quietly costs jobs to whoever's showing up with more visible proof.
+>
+> I help trade businesses build up genuine reviews steadily, no extra admin for you. Worth a quick chat, or happy to point out what I'd fix first?
+
+### 89. Monaghan Plumbing Group (Geelong)
+**To:** chris.mpg@outlook.com
+**Why:** Only 2 reviews on Localsearch despite the site claiming "15+ Years of Experience," "5 Star Google Reviews," and "300+ Jobs Completed."
+
+> Subject: Quick one for Monaghan Plumbing Group
+>
+> Hi Chris — noticed your site mentions 5-star Google reviews and 300+ jobs completed, but the actual Localsearch listing only shows 2 reviews. That's a real gap between what's genuinely been achieved and what a first-time customer actually sees when they search.
+>
+> I help trade businesses close that gap and build up genuine reviews. Worth a quick look, or happy to send through what I'd do first?
+
+### 90. Place Electrical — Clinton (Geelong/Bellarine/Surf Coast)
+**To:** clinton@placeelectrical.com.au
+**Why:** Family-owned, "over 20 years" serving the region, but only 3 testimonials shown and no independent Google review count displayed.
+
+> Subject: Quick one for Place Electrical
+>
+> Hi Clinton — noticed your site's been serving the region for over 20 years but only shows 3 testimonials, with no independent Google review count visible anywhere. That's a lot of trust built up that isn't really showing where people compare electricians before calling.
+>
+> I help trade businesses build up genuine reviews. Worth a quick look, or happy to send through what I'd do first?
+
+### 91. Your Local Electrician — Beekmans family (Geelong)
+**To:** geelong@mrelectric.com.au
+**Why:** Family-owned and operated "for the last five decades" — no reviews, ratings, or testimonial count displayed anywhere.
+
+> Subject: Quick one for Your Local Electrician
+>
+> Hi — five decades as a family business is a genuinely rare thing, but I noticed there's no reviews, ratings or testimonials showing anywhere on the site. That's a lot of trust and history that isn't backed up by anything visible when someone's comparing electricians online.
+>
+> I help trade businesses build that proof up properly. Worth a quick chat, or happy to point out what I'd fix first?
+
+### 92. Green Earth Electrical (North Geelong)
+**To:** office@greenearthelectrical.com
+**Why:** Site links to a testimonials page but displays no actual testimonial content, review count, or star rating anywhere.
+
+> Subject: Quick one for Green Earth Electrical
+>
+> Hi — noticed your site has a testimonials page linked, but it's not actually showing any testimonials, review count, or rating. That's an easy thing to miss but it means anyone clicking through to check finds nothing there.
+>
+> I help trade businesses build up genuine reviews and keep them properly displayed. Worth a quick look, or happy to send through what I'd do first?
+
+---
+
+## Final status — spring-clean pass complete
+
+**92 tailored emails drafted, 91 sendable** (81 from the overnight push + 11 from
+the 2026-08-07 spring-clean opportunity scan, minus #6 which is a confirmed
+duplicate of #39 — marked do-not-send, see that entry). Breakdown: 51 direct
+trade-service prospects (GBP/reviews/missed-call/bookkeeping angles) across 8
+regional batches, 10 land-tax referral partners, 5 downsizing/estate-clearance
+referral partners, 10 video-repurposing prospects, 12 real-estate AI
+lead-response agents, 4 older verified contacts. None sent — every item a
+prepared draft awaiting per-item confirmation. See the standalone
+"easy-read" summary doc for a quick-scan version of all of these before sending.
