@@ -11,3 +11,4 @@ ops-hub/.stripe_listen.pid
 ops-hub/stripe_listen.log
 ops-hub/hub.log
 venv/
+ops-hub/.website_webhook_secret

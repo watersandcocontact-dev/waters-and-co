@@ -13,6 +13,20 @@ fi
 export HUB_PASSWORD
 HUB_PASSWORD="$(cat "$PW_FILE")"
 
+# Website contact-form webhook secret -- same persist-to-a-gitignored-file
+# pattern as HUB_PASSWORD above, so a hub restart (e.g. after a code update)
+# never silently loses it again. This value must match Render's
+# HUB_WEBHOOK_SECRET env var exactly -- if you ever regenerate this file,
+# update Render's value to match too, or the live site's contact form will
+# fail (see docs/website_deployment.md).
+WEBHOOK_SECRET_FILE=".website_webhook_secret"
+if [ ! -f "$WEBHOOK_SECRET_FILE" ]; then
+  python3 -c "import secrets; print(secrets.token_urlsafe(24))" > "$WEBHOOK_SECRET_FILE"
+  chmod 600 "$WEBHOOK_SECRET_FILE"
+fi
+export WEBSITE_WEBHOOK_SECRET
+WEBSITE_WEBHOOK_SECRET="$(cat "$WEBHOOK_SECRET_FILE")"
+
 # Stripe payments (optional) -- if you've set up .stripe_env (see
 # README.md "Taking payments (Stripe)"), pick up the keys automatically so
 # payment links + live webhook confirmation just work, no manual export.
@@ -31,7 +45,7 @@ fi
 
 # Reuse whichever address is already serving, if any.
 RUNNING_URL=""
-for candidate in "$TAILSCALE_IP" "127.0.0.1"; do
+for candidate in "127.0.0.1" "$TAILSCALE_IP"; do
   [ -z "$candidate" ] && continue
   if curl -s -o /dev/null -m 1 "http://${candidate}:5000/"; then
     RUNNING_URL="http://${candidate}:5000/"
@@ -40,9 +54,14 @@ for candidate in "$TAILSCALE_IP" "127.0.0.1"; do
 done
 
 if [ -z "$RUNNING_URL" ]; then
-  export HUB_HOST="${TAILSCALE_IP:-127.0.0.1}"
+  # Bind ALL interfaces (0.0.0.0) whenever Tailscale is available, not just
+  # the Tailscale IP alone -- see run.py's own docstring for the 2026-08-07
+  # bug this fixes (Funnel's proxy target is localhost, which a
+  # Tailscale-IP-only bind silently didn't listen on -> 502 on every real
+  # webhook call). HUB_HOST just needs to be truthy now, not an actual IP.
+  export HUB_HOST="${TAILSCALE_IP:+1}"
   setsid nohup python3 run.py >> hub.log 2>&1 < /dev/null &
-  URL="http://${HUB_HOST}:5000/"
+  URL="http://127.0.0.1:5000/"
   for _ in $(seq 1 30); do
     curl -s -o /dev/null -m 1 "$URL" && { RUNNING_URL="$URL"; break; }
     sleep 0.3
@@ -73,7 +92,15 @@ if [ -n "${STRIPE_SECRET_KEY:-}" ]; then
   if [ "$LISTEN_RUNNING" = 0 ] && command -v stripe >/dev/null 2>&1; then
     HOST_PORT="${RUNNING_URL#http://}"
     HOST_PORT="${HOST_PORT%/}"
-    setsid nohup stripe listen --forward-to "${HOST_PORT}/webhook/stripe" \
+    # stripe listen refuses a live-mode secret key (sk_live_...) unless
+    # --live is passed explicitly -- without this it fails outright and
+    # the webhook listener silently never comes up, so live payments never
+    # get their checkout.session.completed event delivered.
+    LIVE_FLAG=()
+    case "$STRIPE_SECRET_KEY" in
+      sk_live_*) LIVE_FLAG=(--live) ;;
+    esac
+    setsid nohup stripe listen "${LIVE_FLAG[@]}" --forward-to "${HOST_PORT}/webhook/stripe" \
       --api-key "$STRIPE_SECRET_KEY" >> stripe_listen.log 2>&1 < /dev/null &
     echo $! > "$LISTEN_PIDFILE"
   fi
