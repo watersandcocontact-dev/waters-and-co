@@ -59,7 +59,7 @@ General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker
 - ✅ Contact form writes straight into the hub's lead database, tagged by service, with a template-based draft reply attached (no AI call, no cost) for you to review and send
 - ✅ No phone number anywhere — every page pushes to the contact form
 - ✅ Branding: dark slate green + gold, **Fraunces** for display type (switched from Cormorant after comparing 16+ fonts), Jost for labels
-- 🔶 **Deployment prep complete, not yet deployed** — the real blocker (website only worked with the hub on the same machine) is fixed: `HUB_MODE=remote` calls a new authenticated `/webhook/website-lead` endpoint on the hub instead of a local import, tested end-to-end against a throwaway repo copy (zero regression on local mode either). `render.yaml`/`wsgi.py`/`requirements.txt` ready; full walkthrough in `docs/website_deployment.md`. **Remaining, all yours:** register the "Waters & Co" business name (ASIC), buy `watersandco.com` (Cloudflare Registrar), create a Render account and deploy, run the Tailscale Funnel command on the hub machine, point DNS at Render once the domain exists.
+- ✅ **LIVE at [watersandco.info](https://watersandco.info)** (2026-08-07) — real domain, real HTTPS, real deploy. Hosted on Render (free tier, `render.yaml` Blueprint), talking to this hub over a Tailscale-Funnel-exposed webhook (`HUB_MODE=remote`, only `/webhook/website-lead` is public — the dashboard/login stay private on the tailnet). DNS via Cloudflare. Verified end-to-end with 3 real test submissions all the way through to real hub lead records (#7-9, test data, Owner to delete). Full setup trail in `docs/website_deployment.md` and DECISIONS.md's 2026-08-07 entry.
 
 ## D. Opportunity scanning & competitive monitoring — ✅ built, running
 
@@ -76,6 +76,7 @@ General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker
 ## E. Pricing & research foundations
 
 - ✅ `PRICING.md` — full rate table for all 25 lines, 12 re-priced 2026-08-06 from real sourced competitor research
+- ✅ **`ml_training_log/`** (started 2026-08-07) — structured JSONL process log, forward-only, complementing the hub's own DB (outcomes) and the prose DECISIONS.md/PROGRESS.md (narrative) with the *reasoning* side (what was searched, why a lead was accepted/rejected, pricing logic) — for future ML training on how the business actually operates.
 - ✅ Competitor pricing research (`docs/competitor_pricing_research.md`)
 - ✅ ATO tax figures verified for FY2026-27 (`wave3-unscoped/tax_tracking/ato_figures_verification.md`) — 9/11 confirmed, one correction made (super carry-forward expiry), one flagged unconfirmed (WFH rate)
 
@@ -105,6 +106,38 @@ Ran a full end-to-end pass after today's additions: all 21 business line views, 
 14. **Review the referral/loyalty discount-rate assumptions** (5%/referral retention increment, 10% loyalty base, 20% stacked tier, 50%-of-rate-card margin floor) — my judgement calls, documented in DECISIONS.md 2026-08-01, change `app/config.py`'s `REFERRAL_*`/`LOYALTY_*`/`DISCOUNT_*` constants if you want different numbers.
 15. **Click "Run now" once on `monthly-competitive-monitor`** too, same reason as the opportunity scan (pre-approves its tools).
 16. **Decide whether the two 2026-08-01 scan candidates become real business lines** — Digital Legacy (33/35) and Photo Digitisation (31/35). Scopes and pricing are drafted in `wave3-unscoped/digital_legacy/` and `wave3-unscoped/photo_digitisation/`; nothing was added to `BUSINESS_LINES` in `ops-hub/app/config.py`, deliberately. That's your call, not the scan's.
+
+---
+
+## 2026-08-07 — Overnight lead-gen + tailored email drafting, complete
+
+Per Owner's "extensive search, continue until I return" instruction: researched
+and drafted **81 individually tailored cold emails** (not one blanket email —
+every one references a real, specific, verified pain signal for that business)
+across `wave3-unscoped/lead_generation/offers/tailored_emails_master.md`:
+
+- 45 direct trade-service prospects (GBP/reviews/missed-call angle) across 6
+  regional batches — Perth/Adelaide, Brisbane allied health, Melbourne/Sydney
+  hospitality, Gold Coast/Sunshine Coast, Newcastle/Hobart/Darwin, Adelaide/Canberra.
+- 10 Land Tax referral-partnership emails (buyers agents/property tax accountants).
+- 10 Video/Podcast Repurposing prospect emails.
+- 12 Real Estate AI Lead-Response emails (UK/US/Canada solo & small-team agents).
+- 4 older verified contacts (email channel) not already covered by an existing text.
+
+Every other older verified contact already had a personalized ready-to-send
+**text** (`msb_ready_to_send.md`/`missedcall_call_sheets.md`) — text being the
+right channel for on-the-tools tradies, per `contact_channels_and_strategy.md`.
+Copywriting structure researched and sourced (soft CTA ~3x reply rate, personalized
+2-3x reply rate) — see the master file's own header for citations.
+
+**Nothing has been sent.** Every item is a prepared draft awaiting per-item
+confirmation, per the standing rule. Next real step is the Owner reviewing and
+approving sends, one at a time, re-verifying each contact is still current first.
+
+Also backfilled `ml_training_log/events.jsonl` with 48 structured events derived
+from the full `DECISIONS.md` history (2026-07-29 onward) plus live-logged events
+for tonight's research/drafting work, per Owner's follow-up instruction to log
+every step taken so far, not just going forward.
 
 ## How to pick this back up
 

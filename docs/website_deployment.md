@@ -78,7 +78,7 @@ connect the repo:
 
 ### 3. Point your domain at Render (once purchased)
 
-Once you've bought `watersandco.com` (or whatever you land on):
+Once you've bought your domain — **watersandco.info**, confirmed 2026-08-06:
 
 1. In Render's dashboard → your service → **Settings → Custom Domain** →
    add the domain.

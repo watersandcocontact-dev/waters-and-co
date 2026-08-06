@@ -204,9 +204,35 @@
     <button class="btn" type="submit">{% if lead %}Save{% else %}Create lead{% endif %}</button>
     <a class="btn secondary" href="{{ url_for('main.all_leads') }}">Cancel</a>
     {% if lead %}
-    <form method="post" action="{{ url_for('main.delete_lead', lead_id=lead.id) }}" onsubmit="return confirm('Delete this lead?')" style="margin-left:auto;">
-      <button class="btn secondary" type="submit" style="color:var(--red);">Delete</button>
+    <form method="post" action="{{ url_for('main.delete_lead', lead_id=lead.id) }}" id="delete-lead-form" style="margin-left:auto;">
+      <button class="btn secondary" type="button" id="delete-lead-btn" style="color:var(--red);">Delete</button>
     </form>
+    <script>
+      // Plain two-click confirm instead of window.confirm() -- some mobile/
+      // in-app browsers silently suppress native confirm() popups, which
+      // made Delete look completely broken (button did nothing, no error,
+      // no dialog). This works everywhere since it's just DOM, not a
+      // browser API that can be blocked. Reverts after 3s if not confirmed.
+      (function () {
+        var btn = document.getElementById('delete-lead-btn');
+        var form = document.getElementById('delete-lead-form');
+        var armed = false;
+        var revertTimer = null;
+        btn.addEventListener('click', function () {
+          if (!armed) {
+            armed = true;
+            btn.textContent = 'Really delete? Tap again';
+            revertTimer = setTimeout(function () {
+              armed = false;
+              btn.textContent = 'Delete';
+            }, 3000);
+          } else {
+            clearTimeout(revertTimer);
+            form.submit();
+          }
+        });
+      })();
+    </script>
     {% endif %}
   </div>
 </form>
