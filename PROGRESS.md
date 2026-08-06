@@ -1,6 +1,6 @@
 # PROGRESS.md — live status
 
-Last updated: 2026-08-01 — **21 business lines, ops hub with daily queue/expansion budget/tax tracking/Stripe payments/referral & loyalty program, public website, daily opportunity scanning + monthly competitive monitoring. Full-state audit run 2026-08-01, 3 real bugs found and fixed (see DECISIONS.md); one real incident that day too — a database deletion mistake during Stripe testing, also logged in DECISIONS.md, not hidden.**
+Last updated: 2026-08-06 — **25 business lines, ops hub with daily queue/expansion budget/tax tracking/Stripe payments/referral & loyalty program/httpSMS, public website (now 9 segments/17 services — every line with real pricing is now public). 12 lines re-priced today from real sourced 2026 competitor research (was internal guesses before). Full-state audit run 2026-08-01, 3 real bugs found and fixed (see DECISIONS.md); one real incident that day too — a database deletion mistake during Stripe testing, also logged in DECISIONS.md, not hidden.**
 
 ## Legend
 ✅ done · 🔶 partial · ⛔ blocked (needs you)
@@ -9,7 +9,7 @@ Last updated: 2026-08-01 — **21 business lines, ops hub with daily queue/expan
 
 ## The three systems, at a glance
 
-1. **Ops hub** (`ops-hub/`, port 5000) — internal, password-gated, your daily driver. Daily Queue, all 21 business lines, expansion budget tracking, tax tracking.
+1. **Ops hub** (`ops-hub/`, port 5000) — internal, password-gated, your daily driver. Daily Queue, all 25 business lines, expansion budget tracking, tax tracking.
 2. **Public website** (`website/`, port 5050) — Waters & Co branded, public-facing, no auth. Writes leads straight into the hub's database.
 3. **Standing docs & research** — `wave1/`, `wave2/`, `wave3-unscoped/`, `docs/`, `PRICING.md` — the actual content behind every business line.
 
@@ -23,7 +23,7 @@ cd website && python3 run.py &
 
 ## A. Central ops hub — ✅ complete, actively used
 
-- ✅ **Daily Queue** (`/`, home page) — every open, actionable case across all 21 lines, sorted highest $/hr first, no other order
+- ✅ **Daily Queue** (`/`, home page) — every open, actionable case across all 25 lines, sorted highest $/hr first, no other order
 - ✅ Per-line separated views (`/lines` → `/line/<key>`)
 - ✅ "All Cases" full list + filters (`/all`)
 - ✅ Lead form with dynamic per-line fields, task-type rates (setup/management for GBP & MissedCall, session/course for Crypto Literacy), time tracking, done/left-for-you/source-link
@@ -37,13 +37,13 @@ cd website && python3 run.py &
 - ✅ **SMS module** (`app/sms.py`) — native texting via a self-hosted httpSMS instance and the work phone's real SIM, ready but inactive (`HTTPSMS_ENABLED`). Outbound `send_sms()` reusable across every business line, rate-limited locally. Inbound webhook matches replies to existing leads by phone number and appends to notes, or creates a new GeneralEnquiry lead if no match. Tested end-to-end against a throwaway DB copy — one real bug found and fixed (phone-match tiebreak). Self-hosting httpSMS itself (Docker + a paired Android phone) is yours to do — see `docs/httpsms_setup.md`.
 - ✅ **Referral & loyalty program** (`/referrals` + a box on each lead's page) — one-time 50% referral bonus (repeatable per converted referral), ongoing referrer-retention discount capped at 10%/mo, loyalty discount for repeat customers, a stacked top tier for both, a margin-floor guardrail flag. Advisory only — computes/recommends, never auto-applies to a Stripe payment amount. Contingency/fixed-external-rate lines (LandTax, NDISNav, NDISCompliance) excluded from eligibility. Discount-rate numbers were judgement calls where the spec only fixed the caps — see DECISIONS.md, worth reviewing.
 
-## B. The 21 business lines
+## B. The 25 business lines
 
-**Fully built (service scope + pricing, ready to pitch):**
-GBP/Local SEO, Review Generation, AI Missed-Call Reception, Land Tax Objection (all 8 states), Senior Tech Concierge, Video/Podcast Repurposing, Senior Downsizing/Cleanout, Lost Super/TPD Navigation (referral model), Crypto IT/Literacy (investment-advice guardrail baked in), AI Tools for Business.
+**Fully built (service scope + pricing, ready to pitch) — all 17 now live on the public website:**
+GBP/Local SEO, Review Generation, AI Missed-Call Reception, Land Tax Objection (all 8 states), Senior Tech Concierge, Video/Podcast Repurposing, Senior Downsizing (now split coordination/labour), Lost Super/TPD Navigation (free-to-client + referral model), Crypto IT/Literacy (investment-advice guardrail baked in), AI Tools for Business, AI Implementation for SMEs ($990-4,000), AI Lead-Response for Real Estate Agents ($129-199/mo, US/UK/Canada), Bookkeeping non-BAS ($149-449/mo), SME Grant-Finder ($79-99 flat), Age Pension/Centrelink Assistance ($249-349 flat), **Digital Legacy / Account Organiser** (2026-08-06, new — $120-320 tiered), **Photo & Memory Digitisation Concierge** (2026-08-06, new — coordination fee over bureau pass-through cost).
 
-**Wave 2 — checklists/research built, not launched:**
-Bookkeeping (non-BAS), Concession/Rebate Navigation, SME Grant-Finder, Age Pension/Centrelink Assistance.
+**Deliberately NOT on the website — re-classified 2026-08-06:**
+- Energy/Concession Navigation — no viable AU paid market found (covered by free government/charity channels); folded into Tech Concierge/Downsizing visits as a free value-add instead.
 
 **Lightweight, no dedicated marketing:**
 General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker-style pickups).
@@ -55,11 +55,11 @@ General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker
 
 ## C. Public website (Waters & Co) — ✅ built, 🔶 not publicly hosted
 
-- ✅ Landing page (hover/tap reveals 3 segments) → segment pages → service pages with real pricing → contact form
+- ✅ Landing page (hover/tap reveals 9 segments) → segment pages → service pages with real pricing → contact form. **2026-08-06 (first pass): added AI Implementation for SMEs and AI Lead-Response for Real Estate Agents.** **2026-08-06 (second pass, same day): researched and added the remaining 11 lines that only had internal guesses** — Bookkeeping, SME Grant-Finder, Age Pension/Centrelink, Senior Tech Concierge, Crypto IT/Literacy, AI Tools for Business, Digital Legacy, Senior Downsizing (split into coordination/labour tiers), Photo & Memory Digitisation, Lost Super Navigation, Video/Podcast Repurposing — every one backed by real 2026 competitor research, not estimates (see `DECISIONS.md`). Energy/Concession Navigation researched and deliberately **not** added — no viable AU paid market exists for it. Every business line with real pricing is now public; only the 5 regulatory-held lines (NDIS x2, Deceased-Estate, Grant Writing, Airbnb) and the always-internal ones (GeneralEnquiry, OddJobs) remain off the site. Malachite/gold branding finished and applied site-wide (background image + separate crisp text layer, `website/static/img/hero-background.jpg` + `wordmark-gold.png`).
 - ✅ Contact form writes straight into the hub's lead database, tagged by service, with a template-based draft reply attached (no AI call, no cost) for you to review and send
 - ✅ No phone number anywhere — every page pushes to the contact form
 - ✅ Branding: dark slate green + gold, **Fraunces** for display type (switched from Cormorant after comparing 16+ fonts), Jost for labels
-- ⛔ **Not hosted publicly** — runs locally only, no domain registered. The earlier Netlify/Vercel static-site recommendation needs revisiting now there's a live form backend (needs serverless functions there, or a small always-on host)
+- 🔶 **Deployment prep complete, not yet deployed** — the real blocker (website only worked with the hub on the same machine) is fixed: `HUB_MODE=remote` calls a new authenticated `/webhook/website-lead` endpoint on the hub instead of a local import, tested end-to-end against a throwaway repo copy (zero regression on local mode either). `render.yaml`/`wsgi.py`/`requirements.txt` ready; full walkthrough in `docs/website_deployment.md`. **Remaining, all yours:** register the "Waters & Co" business name (ASIC), buy `watersandco.com` (Cloudflare Registrar), create a Render account and deploy, run the Tailscale Funnel command on the hub machine, point DNS at Render once the domain exists.
 
 ## D. Opportunity scanning & competitive monitoring — ✅ built, running
 
@@ -75,7 +75,7 @@ General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker
 
 ## E. Pricing & research foundations
 
-- ✅ `PRICING.md` — full rate table for all 21 lines
+- ✅ `PRICING.md` — full rate table for all 25 lines, 12 re-priced 2026-08-06 from real sourced competitor research
 - ✅ Competitor pricing research (`docs/competitor_pricing_research.md`)
 - ✅ ATO tax figures verified for FY2026-27 (`wave3-unscoped/tax_tracking/ato_figures_verification.md`) — 9/11 confirmed, one correction made (super carry-forward expiry), one flagged unconfirmed (WFH rate)
 

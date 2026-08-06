@@ -8,15 +8,16 @@
 </head>
 <body>
   <div class="landing-stage" id="stage" tabindex="0">
-    <div class="landing-flourish" aria-hidden="true">
-      <span class="rule"></span><span class="dot"></span><span class="rule"></span>
+    <div class="landing-mark-wrap">
+      <h1 class="landing-mark">
+        <img class="landing-mark-img" src="{{ url_for('static', filename='img/wordmark-gold.png') }}" alt="Waters &amp; Co">
+      </h1>
+      <nav class="landing-segments">
+        {% for seg in segments %}
+        <a href="{{ url_for('main.segment', slug=seg.slug) }}">{{ seg.name }}</a>
+        {% endfor %}
+      </nav>
     </div>
-    <h1 class="landing-mark">Waters <em>&amp;</em> Co</h1>
-    <nav class="landing-segments">
-      {% for seg in segments %}
-      <a href="{{ url_for('main.segment', slug=seg.slug) }}">{{ seg.name }}</a>
-      {% endfor %}
-    </nav>
   </div>
   <a class="landing-footer-link" href="{{ url_for('main.enquire') }}">Contact</a>
   <script>

@@ -1,53 +1,50 @@
-# Digital Legacy / Account Organiser — Pricing Sheet (draft, adjustable)
+# Digital Legacy / Account Organiser — Pricing Sheet
 
-**No figure for this line existed in `PRICING.md`** — this is a new
-addition from the 2026-08-01 opportunity scan, not sourced from your
-original pricing table. Treat every number here as a starting assumption.
+Password manager setup, critical-account inventory, platform legacy-contact
+features enabled, written handover document for family. Bolt-on to an
+existing Tech Concierge visit — the highest-margin way to sell this (no
+second trip).
 
-Anchored to Tech Concierge ($60–100/session, ~1hr, per `PRICING.md` row 13)
-since it's the same client, same visit format, same booking flow. Priced
-slightly above it because the session runs longer and produces a tangible
-written deliverable rather than a fix-and-leave.
-
-## Sessions
+## Pricing (verified 2026-08-06, unchanged from the original draft)
 
 | Package | Price | Time | Effective $/hr |
 |---|---|---|---|
-| **Starter** — password manager set up, top ~10 critical accounts inventoried, one legacy feature enabled | $120–150 | ~1.5 hr | **$80–100/hr** |
-| **Full inventory** — complete account sweep, all platform legacy features enabled, subscription sweep, written handover page | $250–320 | ~3 hr (often split over 2 visits) | **$83–107/hr** |
-| **Annual refresh** — update the existing inventory | $80–100 | ~1 hr | **$80–100/hr** |
+| Starter — password manager, top ~10 accounts, one legacy feature | **$120–150** | ~1.5hr | $80–100/hr |
+| Full inventory — complete sweep, all legacy features, subscription sweep, written handover | **$250–320** | ~3hr | $83–107/hr |
+| Annual refresh | **$80–100** | ~1hr | $80–100/hr |
+| Bolt-on Starter (same visit as another job) | **$90–110** | — | best margin — no second trip |
+| Couple/household rate | **+$60–80** | — | second person's accounts, same visit |
 
-## Add-ons and bundling
+## Competitor evidence (verified 2026-08-06)
 
-- **Bolt-on to an existing Tech Concierge visit**: $90–110 for the Starter
-  scope when done in the same visit as another job — no second trip, so
-  the travel time is already paid for and the $/hr is actually *better*
-  than the standalone rate despite the lower ticket price. This is the
-  highest-margin way to sell this line and should be the default pitch.
-- **Couple/household rate**: +$60–80 to cover a second person's accounts
-  in the same visit. Marginal time cost is well under the marginal
-  revenue — the setup explanation only happens once.
+**Confirmed: genuinely thin/near-nonexistent paid market.** Four distinct
+search angles (AU + international, "digital legacy," "digital estate
+organiser," "password manager setup for seniors," "digital executor")
+converged on the same result.
 
-## The subscription-sweep angle (use this in the pitch)
+| Name | What it is | Price found |
+|---|---|---|
+| **Digital Care Services Australia** (Wollongong, the one direct real-world AU match — human-delivered, senior-focused) | In-home/Zoom guided digital organisation session | **Not published** — quote-only. Sells a companion journal product for $99. |
+| GoodTrust (US) | Software + paid consultation add-on | Add-on price not published; base plan $149 USD/yr |
+| Trustworthy (US) | Digital vault + concierge add-on | Subscription $120-240 USD/yr; concierge fee undisclosed |
+| US professional-organiser proxy (digital-organizing specialists) | Hourly personal service | $150-200+/hr — the one real hourly benchmark found |
 
-The account inventory routinely surfaces forgotten recurring charges. A
-client cancelling two or three unused subscriptions at ~$15/mo each
-recovers the Starter fee inside a year. Lead with this on price
-objections — it reframes the session from a cost to a payback, and it's an
-honest claim, not a projection, because you find the subscriptions live in
-front of them.
+Sources: digitalcareservices.com.au, mygoodtrust.com, trustworthy.com,
+beautifullymoved.com — all fetched directly 2026-08-06.
 
-Don't *guarantee* a dollar saving up front (you don't know what they have
-until you look) — frame it as "most people find a couple they'd forgotten."
+## Reasoning
 
-## Notes
+These figures sit comfortably below the one genuine hourly proxy found (US
+digital-organizing specialists at $150-200+/hr) while the only direct AU
+human-delivered competitor discloses no price to undercut — the draft
+numbers already satisfy "cheaper than any comparable competitor" by a wide
+margin without needing to go lower and undervalue a deliverable that has
+real production cost (the written handover document).
 
-- Set the default rate-card entry at **$95/hr** if this line is confirmed
-  into the hub — midpoint of the standalone range, slightly above
-  TechConcierge's $80.
-- Track the annual-refresh clients separately once there are any: a
-  refresh is near-pure margin (the hard work was done in the first
-  session) and is the closest thing this line has to recurring revenue.
-- The written handover page is the deliverable clients actually show their
-  family — it's also free marketing to the adult children, who are the
-  segment most likely to book the next one. Put contact details on it.
+## Status
+
+**CONFIRMED 2026-08-06** — market thinness itself is the finding, not a
+research gap; four independent search angles converged. `PRICING.md` row 26
+(new) and `ops-hub/app/config.py` (new `DigitalLegacy` business_line key)
+added. Revisit after the first 3-5 real client sessions establish actual
+time-on-tools.

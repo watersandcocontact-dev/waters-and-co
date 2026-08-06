@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% block title %}{{ segment.name }} — Waters &amp; Co{% endblock %}
 {% block content %}
-<p class="eyebrow">Waters &amp; Co</p>
 <h1 class="page-title">{{ segment.name }}</h1>
 <p class="lede">{{ segment.tagline }}</p>
 
+{% for group in groups %}
+{% if group.heading %}<p class="group-heading">{{ group.heading }}</p>{% endif %}
 <div class="card-list">
-  {% for svc in services %}
+  {% for svc in group.services %}
   <a class="card" href="{{ url_for('main.service', slug=svc.slug) }}">
     <p class="card-title">{{ svc.name }}</p>
     <p class="card-sub">{{ svc.one_liner }}</p>
   </a>
   {% endfor %}
 </div>
+{% endfor %}
 {% endblock %}

@@ -1,0 +1,26 @@
+# Render Blueprint for the Waters & Co public website ONLY — the ops hub
+# stays running on your own machine exactly as it already does (see
+# docs/website_deployment.md for why, and the full setup walkthrough).
+#
+# To deploy: push this repo to GitHub, then in Render: New -> Blueprint,
+# connect the repo, Render reads this file automatically.
+#
+# Fill in the env vars marked sync: false in Render's dashboard yourself
+# (never commit real secrets to this file).
+services:
+  - type: web
+    name: waters-co-website
+    runtime: python
+    plan: free
+    rootDir: website
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app
+    envVars:
+      - key: HUB_MODE
+        value: remote
+      - key: HUB_WEBHOOK_URL
+        sync: false   # your Tailscale Funnel URL, e.g. https://your-machine.your-tailnet.ts.net
+      - key: HUB_WEBHOOK_SECRET
+        sync: false   # must match WEBSITE_WEBHOOK_SECRET set on the hub machine
+      - key: PYTHON_VERSION
+        value: "3.12"

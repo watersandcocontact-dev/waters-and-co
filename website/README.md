@@ -1,9 +1,16 @@
 # Waters & Co — public website
 
 Public marketing site, separate from the internal ops hub but writing into
-the same lead database (`ops-hub/data/hub.sqlite3`) via a direct import of
-the hub's `models.create_lead()` — every enquiry lands in the same place as
-every other lead, tagged `source: website`.
+the same lead database (`ops-hub/data/hub.sqlite3`) — every enquiry lands
+in the same place as every other lead, tagged `source: website`.
+
+Two modes, switched by the `HUB_MODE` env var (default `local`): local
+development uses a direct Python import of the hub's `models.py` (both
+apps on the same machine, same SQLite file); production (`HUB_MODE=remote`,
+what Render uses) calls an authenticated webhook on the hub instead, since
+a deployed website can't reach a local file/import. **See
+`docs/website_deployment.md` for the full deployment walkthrough** —
+Tailscale Funnel setup, Render config, DNS.
 
 ## Structure
 
@@ -40,7 +47,7 @@ no email-sending account configured anyway.
 No phone number is shown anywhere on the site by design — every page pushes
 toward the contact form instead of a call.
 
-## Run it
+## Run it (local development)
 
 ```bash
 cd website
@@ -49,8 +56,10 @@ python3 run.py
 
 Opens on **port 5050** (the ops hub uses 5000 — run both side by side, the
 hub needs to be running for the contact form to actually save leads, since
-this app imports the hub's `models.py` directly rather than going over
-HTTP).
+local mode imports the hub's `models.py` directly rather than going over
+HTTP). For production deployment (Render), see `docs/website_deployment.md`
+— the app needs `HUB_MODE=remote` plus `HUB_WEBHOOK_URL`/`HUB_WEBHOOK_SECRET`
+instead, since a deployed site can't import local files.
 
 ## Branding
 
@@ -63,13 +72,13 @@ the dark ground.
 
 ## Not yet done
 
-- **Hosting/deployment** — this runs locally only right now. See
-  `ROADMAP.md`'s accounts table for the hosting recommendation
-  (Netlify/Vercel free tier) — but note that recommendation assumed a
-  purely static site; a live contact-form backend needs either serverless
-  functions on those platforms or a small always-on host instead. Revisit
-  when ready to actually go public.
-- **Domain name** — not registered.
+- **Actually deployed** — code/config is ready (`render.yaml`, `wsgi.py`,
+  `requirements.txt`, `docs/website_deployment.md`), but nobody's clicked
+  deploy yet. That needs a GitHub push + a Render account (your own
+  account/payment — see the deployment doc).
+- **Domain name** — not registered yet; going with a global `.com` per your
+  call (not `.com.au`, since `.com.au` needs an ASIC business-name
+  registration first and you want worldwide reach anyway).
 - Visual QA of the landing-page hover animation — verified structurally
   (DOM, class toggling, CSS rules present and correctly scoped) but the
   actual fade transition couldn't be visually confirmed in this session's

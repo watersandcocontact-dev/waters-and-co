@@ -1,30 +1,44 @@
-# Senior Tech Concierge — Pricing Sheet (draft, adjustable)
+# Senior Tech Concierge — Pricing Sheet
 
-Based on `PRICING.md` row 13 ($60-100/session, ~1hr → $60-100/hr).
-
-## Per-session pricing
+## Pricing
 
 | Session type | Price |
 |---|---|
-| Standard session (~1hr, 1-2 focus areas) | $60-80 |
-| Extended session (~1.5hr, multiple devices/complex setup) | $90-120 |
-| Follow-up/check-in (~30min) | $40-50 |
+| Standard session (~1hr, in-person) | **$70–85** |
+| Standard session (~1hr, remote/screen-share) | **$55–65** |
+| Extended session (~1.5hr, multiple devices/complex setup) | **$105–125** |
+| Follow-up/check-in (~30min) | **$40–50** |
+
+## Competitor evidence (verified 2026-08-06, live pricing pages)
+
+| Competitor | Price | Source |
+|---|---|---|
+| My Senior IT | $50 first 30min + $25/15min (~$100/hr-equiv) | myseniorit.com.au (search-confirmed, direct fetch blocked) |
+| Computer Cures | ~$75/session; ~$228/yr membership | computercures.com.au/it-support-for-seniors |
+| Geeks2U | $158/hr Home, $198/hr Business, 1hr minimum | geeks2u.com.au/pricing |
+| IT 4 Retirees (over-55 focused, has Perth trainers) | $162/hr + $73/hr travel; group class $275/hr | it4retirees.com.au/price-list |
+| The Original PC Doctor | Diagnostic $0–99, malware removal $120–200 | thepcdoctor.com.au |
+| Airtasker (Perth) | $10–100 typical, up to $200 for a full home visit | airtasker.com/au/services/technical-support/perth |
+
+**Correction to an earlier internal claim:** Geeks2U's "$198 minimum" is
+their *Business* rate — the consumer *Home* rate is $158/hr. Use the
+corrected figures in any client-facing comparison.
+
+## Reasoning
+
+$70–85/hr in-person and $55–65/hr remote sits comfortably above the
+Airtasker gig floor (avoids reading as hobbyist) and meaningfully under both
+My Senior IT's ~$100/hr-equivalent and Geeks2U/IT 4 Retirees ($158–235/hr
+effective) — the teaching/scam-safety framing (not generic PC repair)
+justifies sitting above Computer Cures' bare $75 flat session.
 
 ## Notes
 
-- Price toward the top of the range for in-person (travel time) vs. remote
-  screen-share sessions.
-- Consider a **multi-session pack** (e.g. 3 sessions for $200) for clients
-  who want ongoing help rather than a one-off — smooths your income and
-  builds a relationship, common in this space.
-- **Service area:** in-person is naturally local (your travel radius);
-  remote screen-share sessions can be Australia-wide — offer both and be
-  clear about which is which when pricing/booking.
+- Multi-session pack (e.g. 3 for $200) still a good idea for repeat clients.
+- Service area: in-person is local (travel radius); remote is Australia-wide.
 
-## Outreach ideas (brief — not a full campaign plan)
+## Status
 
-- Local retirement villages / seniors' community centers (ask to leave
-  flyers or do a free 15-min group demo)
-- Local Facebook community groups
-- Referral partnership with the GBP/ReviewGen client base — trades who
-  serve older homeowners are a natural referral source both ways
+**CONFIRMED 2026-08-06** — verified against 5 named competitors' live
+pricing pages/search results. `PRICING.md` row 13 and
+`ops-hub/app/config.py` RATE_CARD updated.

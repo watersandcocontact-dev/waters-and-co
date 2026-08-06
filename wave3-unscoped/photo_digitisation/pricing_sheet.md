@@ -1,63 +1,57 @@
-# Photo & Memory Digitisation Concierge — Pricing Sheet (draft, adjustable)
+# Photo & Memory Digitisation Concierge — Pricing Sheet
 
-**No figure for this line existed in `PRICING.md`** — new addition from the
-2026-08-01 opportunity scan. Every number here is a starting assumption.
+A coordination/concierge layer on top of existing bulk-scanning bureaus —
+pickup/drop-off logistics, sorting/labelling, curating a "best of"
+selection, delivering an organised digital archive. **Not** in-house bulk
+scanning.
 
-Two separate revenue components; keep them separate in quoting and in the
-hub, because they have completely different margins.
+## Pricing model (confirmed 2026-08-06)
 
-## 1. Your time — sorting, cataloguing, coordination, handback
+**Coordination fee on top of the bureau's pass-through cost, disclosed as
+such** — e.g. "Includes [Bureau]'s scanning at their published rate, plus
+our $X pickup/sort/deliver/curate fee." Do not attempt to mark up or beat
+the bureaus on their own per-item rate — see reasoning below.
 
-Anchored to Downsizing ($50–80/hr per `PRICING.md` row 18) since it's the
-same visit and the same kind of work, priced at the top of that band
-because it's lighter physical work with a higher-skill cataloguing
-component.
+| Component | Rate |
+|---|---|
+| Bureau scanning cost | Pass through at cost (bureau's own rate — see table below) |
+| Coordination/curation fee | **~$55/hr**, or a flat per-visit fee |
 
-| Package | Price | Time | Effective $/hr |
-|---|---|---|---|
-| **Sort & quote** — triage one to three boxes, catalogue, obtain vendor quotes | $150–200 | ~2 hr | **$75–100/hr** |
-| **Full concierge** — sort, catalogue, vendor run, collection, folder organisation, handback walkthrough | $400–550 | ~5–6 hr across the job | **$75–100/hr** |
-| **Bolt-on during a Downsizing job** — sorting only, added to an existing booking | $70–90/hr | as needed | **$70–90/hr** |
+## Bulk-scanning market (verified 2026-08-06, live pricing pages — confirms this layer is commoditised)
 
-## 2. The scanning itself — pass-through, not a profit centre
+| Provider | Service | Price |
+|---|---|---|
+| Memories 2 Digital | Bulk photo scan | 30c/photo (600dpi) |
+| RetroMedia (Brisbane) | ShoeBox Scan | 49c/photo (200-3,000), 29c/photo (3,001+) |
+| Scan My Photo (Qld) | Bulk 6x4" scan | 24c/photo |
+| Kelly's Photo Scan & Archive (Adelaide) | Slide scanning | $1.00/slide (1000+), down to $3/slide |
+| Tapes to Digital (national) | VHS→USB | $35/tape, down to $24/tape at 30+ |
 
-- Charge the vendor's invoice **at cost plus a 15–20% coordination
-  margin**, disclosed to the client as a coordination fee rather than
-  hidden in a marked-up per-photo rate. Clients can and will look up
-  Pixelfied's advertised rate; being caught marking it up quietly costs
-  more trust than the margin is worth.
-- **Take a deposit covering the full expected vendor cost before booking
-  the batch in.** This is what keeps the line at a genuine $0 barrier to
-  entry (it scored 4/5, not 5/5, precisely because of this exposure) —
-  never front a client's scanning bill out of your own pocket.
-- Indicative Perth vendor costs to sanity-check a quote (listings as at
-  2026-08-01, **confirm directly before quoting**): scanning advertised
-  from ~$0.60/photo, ~$100 minimum orders common, ~$4.50 for USB transfer,
-  ~$80 for a DVD slideshow.
+Full sourcing: memories2digital.com.au, retromedia.com.au,
+scanmyphoto.com.au, photoscanarchive.com.au, tapestodigital.com.au — all
+fetched directly 2026-08-06.
 
-## Worked example (use this to sense-check whether a job is worth taking)
+## Honest assessment
 
-A typical "four shoeboxes, roughly 1,200 photos" job:
+**The bulk-scanning layer is thoroughly commoditised — a solo operator
+cannot and should not try to beat these bureaus on the raw per-item rate.**
+At least 7 independent providers publish tight, competing rate cards
+(25-70c/photo, 75c-$2/slide, $24-35/tape). The real, defensible margin is
+in the coordination/curation labour these bureaus mostly don't offer:
+physical pickup/drop-off for irreplaceable originals, sorting/dating loose
+photos before they go to the bureau, curating rather than digitising
+indiscriminately, and assembling an organised archive rather than a flat
+file dump.
 
-- Your time: ~6 hr → **$450**
-- Vendor scan at ~$0.60/photo: ~$720, billed at cost + 18% → **$850**, of
-  which **$130** is coordination margin
-- Total to client ≈ **$1,300**; your revenue ≈ **$580** for ~6 hr =
-  **~$97/hr**
+**Do not build this as its own priced menu item.** Offer it bundled with
+Tech Concierge/Downsizing visits, where the sorting conversation is already
+happening.
 
-That $/hr is competitive with the rest of the portfolio, but note the
-client-facing number is large. Expect price resistance and lead with the
-sort-and-quote package as a low-commitment entry point rather than
-quoting the full job cold.
+## Status
 
-## Notes
-
-- Set the default rate-card entry at **$85/hr** if this line is confirmed
-  into the hub — mid-band, above Downsizing's $65.
-- Log the vendor pass-through as an expense against the lead, not as
-  revenue, or the $/hr figures in the Daily Queue will be badly inflated.
-- **Validate before investing further.** This scored 31/35 with a
-  deliberately low market-gap score. If the first two or three Downsizing
-  upsell attempts don't convert, log that in the candidates log and let
-  the line sit — don't build a website segment or run outreach for it
-  until a client has actually paid for it once.
+**CONFIRMED 2026-08-06** — pricing figures pulled from live provider pages;
+the "commoditised, coordination-fee-only" conclusion is itself the key
+finding. `PRICING.md` row 27 (new) and `ops-hub/app/config.py` (new
+`PhotoDigitisation` business_line key) added. Perth-specific bureau pricing
+not independently checked — most sourced providers are Sydney/Melbourne/
+Brisbane/Adelaide-based.

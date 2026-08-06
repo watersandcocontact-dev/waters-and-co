@@ -42,6 +42,15 @@ BUSINESS_LINES = [
     # the same kind of job starts repeating — see
     # wave3-unscoped/opportunity_scan/gig_marketplace_scan.md
     ("OddJobs", "Odd Jobs / Gig Marketplace"),
+    # 2026-08-06 additions — the two wave3-unscoped lines validated with real
+    # competitor data (see their service_scope.md/pricing_sheet.md "Status"
+    # notes) and now live on the public website.
+    ("AIImplementation", "AI Implementation for SMEs"),
+    ("RealEstateLeads", "AI Lead-Response — Real Estate Agents"),
+    # 2026-08-06 — the 2026-08-01 opportunity-scan candidates, now given a
+    # business_line key alongside their first real pricing research.
+    ("DigitalLegacy", "Digital Legacy / Account Organiser"),
+    ("PhotoDigitisation", "Photo & Memory Digitisation Concierge"),
 ]
 BUSINESS_LINE_KEYS = [k for k, _ in BUSINESS_LINES]
 
@@ -55,12 +64,19 @@ TASK_TYPE_LINES = {
     # session = live 1:1/workshop delivery, course = the pre-recorded product
     # (near-zero marginal delivery cost once built, very different $/hr)
     "CryptoLiteracy": ["session", "course"],
+    # 2026-08-06 research surfaced these as two genuinely different services
+    # (different liability/insurance profile too, not just a price split) —
+    # coordination = liaising with removalists/charities/agents, no physical
+    # labour; labour = hands-on sorting/packing/cleanout. See DECISIONS.md.
+    "Downsizing": ["coordination", "labour"],
 }
 TASK_TYPE_LABELS = {
     "setup": "Setup",
     "management": "Ongoing management",
     "session": "Live session",
     "course": "Pre-recorded course",
+    "coordination": "Coordination only (no physical labour)",
+    "labour": "Hands-on labour/sorting",
 }
 
 # Default $/hr per business line (midpoint of the range in PRICING.md),
@@ -71,23 +87,33 @@ RATE_CARD = {
     "ReviewGen": 300,
     "MissedCall": {"setup": 70, "management": 300},
     "LandTax": 280,
-    "Bookkeeping": 95,
-    "Concession": 140,
-    "GrantFinder": 325,
-    "Pension": 138,
-    "LostSuper": 635,
+    # --- 2026-08-06: re-priced from real sourced competitor research, see
+    # PRICING.md's 2026-08-06 update note and each pricing_sheet.md ---
+    "Bookkeeping": 95,  # $149-179/mo micro to $299-449/mo small, ~2-3hr/mo -- confirmed close to prior estimate
+    "Concession": 15,  # re-classified: NOT a standalone paid line (no AU market found) -- bundled free add-on to Tech Concierge/Downsizing visits, token rate for the rare occasion it's tracked as its own task
+    "GrantFinder": 60,  # was 325 -- real market is a $89 flat report (~1-2hr), not a $325/hr-equivalent service
+    "Pension": 175,  # was 138 -- real transparent-fixed-fee competitors ($349 claim/$249 review) support a higher rate than the old hourly-derived estimate
+    "LostSuper": 635,  # unchanged -- model confirmed (free-to-client + referral fee) but the $/case figure itself is still unconfirmed pending real partner negotiation, no evidence to revise the number itself
     "DeceasedEstate": 65,
-    "TechConcierge": 80,
+    "TechConcierge": 72,  # was 80 -- $70-85/hr in-person, $55-65/hr remote blended
     "GrantWriting": 315,
     "NDISNav": 75,
     "NDISCompliance": 95,
-    "VideoRepurpose": 80,
-    "Downsizing": 65,
+    "VideoRepurpose": 55,  # was 80 -- $249/episode over ~5-7hr; flagged medium-confidence (On Replay's real price couldn't be verified), kept above the pure Fiverr-floor implied rate
+    "Downsizing": {"coordination": 55, "labour": 80},  # split 2026-08-06 -- labour set flat $80/hr 2026-08-06 (Owner's call), see TASK_TYPE_LINES note
     "AirbnbCohost": 45,
-    "CryptoLiteracy": {"session": 100, "course": 300},
-    "AIToolsBusiness": 85,
+    "CryptoLiteracy": {"session": 90, "course": 300},  # session was 100 -- $85/hr 1:1 confirmed close, group workshops ($59/head or $349/8pp flat) blended in
+    "AIToolsBusiness": 85,  # unchanged -- $200-350/$400-600/$80-150mo bands confirmed as-is by real Fiverr + AU-consultant evidence
     "OddJobs": 50,  # rough default — every job varies, override per-lead with real quoted price/time
     "GeneralEnquiry": 0,  # website catch-all, not a priced service line itself -- see models.dollar_per_hour
+    # Tier 1 midpoint ($990-1490, ~5.5hr avg of the 3-8hr range) ~= $225/hr.
+    "AIImplementation": 225,
+    # $129-199/mo midpoint over ~25min/mo ongoing management, same shape as
+    # MissedCall/GBP management rows.
+    "RealEstateLeads": 390,
+    # 2026-08-06 — new lines, first real pricing research (see pricing_sheet.md)
+    "DigitalLegacy": 95,  # $120-150/$250-320/$80-100 tiers, ~1-3hr -- thin/unbenchmarked market, kept at the sheet's own recommended rate-card entry
+    "PhotoDigitisation": 55,  # coordination/curation fee on top of bureau pass-through cost, not a per-photo rate -- same shape as Downsizing coordination
 }
 
 STATUSES = [
@@ -185,6 +211,22 @@ EXTRA_FIELDS = {
     "OddJobs": [
         ("platform", "Platform (Airtasker/Marketplace/Gumtree/etc.)"),
         ("repeat_pattern_flag", "Is this the 2nd+ similar job recently? (y/n — signal to consider a real business line)"),
+    ],
+    "AIImplementation": [
+        ("workflow_description", "Workflow/process to automate"),
+        ("current_tools", "Current tools/software in use"),
+    ],
+    "RealEstateLeads": [
+        ("crm_platform", "CRM/lead platform in use"),
+        ("lead_volume_monthly", "Approx. monthly new-lead volume"),
+    ],
+    "DigitalLegacy": [
+        ("package_type", "Package (Starter/Full inventory/Annual refresh)"),
+        ("bolt_on_visit", "Bolt-on to an existing Tech Concierge visit? (y/n)"),
+    ],
+    "PhotoDigitisation": [
+        ("bureau_used", "Scanning bureau used for pass-through cost"),
+        ("item_counts", "Approx. item counts (photos/slides/tapes)"),
     ],
 }
 

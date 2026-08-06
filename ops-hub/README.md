@@ -21,7 +21,7 @@ The database is created automatically at `ops-hub/data/hub.sqlite3` on first run
 - `app/db.py` — SQLite schema (`leads`, `webhook_log`)
 - `app/models.py` — CRUD + deadline-alert logic (incl. auto 60-day land-tax deadline)
 - `app/routes.py` — dashboard, due-this-week, lead form (create/edit/delete)
-- `app/webhook.py` — intake webhook receiver, **inactive until you set env vars**
+- `app/webhook.py` — two webhook receivers: the phone-platform intake webhook (**inactive until you set env vars**), and `/webhook/website-lead` for the deployed public website (**always active once `WEBSITE_WEBHOOK_SECRET` is set** — see `docs/website_deployment.md`)
 - `app/payments.py` — Stripe payment requests per lead, **inactive until you set env vars**
 - `templates/`, `static/` — UI
 

@@ -18,7 +18,9 @@
 <body>
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="{{ url_for('main.landing') }}">Waters <em>&amp;</em> Co</a>
+      <a class="brand" href="{{ url_for('main.landing') }}">
+        <img class="brand-img" src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co">
+      </a>
       <nav>
         <a href="{{ url_for('main.enquire') }}">Contact</a>
       </nav>

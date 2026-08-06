@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "waters-co-website",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["website/run.py"],
+      "port": 5050
+    }
+  ]
+}

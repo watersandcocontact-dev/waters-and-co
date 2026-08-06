@@ -37,7 +37,14 @@
 html, body { margin: 0; padding: 0; }
 
 body {
-  background: var(--ground);
+  background-color: var(--ground);
+  background-image:
+    linear-gradient(rgba(9, 13, 10, 0.55), rgba(9, 13, 10, 0.55)),
+    url('/static/img/hero-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: var(--linen);
   font-family: var(--font-label);
   font-weight: 300;
@@ -82,16 +89,17 @@ header.site-header .wrap {
   justify-content: space-between;
 }
 header.site-header a.brand {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 1.4rem;
-  color: var(--gold-bright);
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
-  letter-spacing: 0.01em;
   transition: opacity 0.2s ease;
 }
 header.site-header a.brand:hover { opacity: 0.82; }
-header.site-header a.brand em { font-style: italic; font-weight: 400; color: var(--gold); }
+header.site-header .brand-img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
 header.site-header nav a {
   position: relative;
   font-family: var(--font-label);
@@ -163,73 +171,104 @@ p.body-copy {
   flex-direction: column;
   text-align: center;
   padding: 2rem;
-}
-
-.landing-flourish {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 1.5rem;
-}
-.landing-flourish .rule {
-  height: 1px;
-  width: 56px;
-  background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
-  opacity: 0.65;
-}
-.landing-flourish .dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--gold);
+  /* body already supplies the malachite background; this adds a little
+     extra top/bottom depth specifically around the centered wordmark */
+  background-image: linear-gradient(180deg, rgba(10, 14, 11, 0.2) 0%, rgba(10, 14, 11, 0) 40%, rgba(10, 14, 11, 0.3) 100%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .landing-flourish, .landing-mark {
+  .landing-mark {
     animation: mark-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.1s;
   }
-  .landing-flourish { animation-delay: 0s; }
-  .landing-mark { animation-delay: 0.1s; }
   @keyframes mark-in {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 }
 
+/* .landing-mark-wrap is the ONLY thing .landing-stage's flex centering
+   measures -- .landing-segments is taken out of normal flow (position:
+   absolute) below, so opening/closing the menu can never change this
+   wrap's height and can never shift the wordmark's on-screen position.
+
+   Real bug this fixes (2026-08-06, reported from an actual phone): the
+   old layout centered the wordmark+menu as ONE flex block, so opening
+   the menu (0 -> ~400px+) made the whole block recentre, physically
+   moving the wordmark upward WHILE a tap was still in progress -- a menu
+   item would slide into the exact spot the finger was touching and get
+   "accidentally" clicked, jumping straight to a sub-page instead of
+   showing the menu. Desktop never hit this since a mouse hover doesn't
+   involve a moving touch point. Pinning the wordmark's position (instead
+   of just enlarging max-height, which was a separate earlier fix for a
+   different symptom) removes the root cause rather than papering over
+   it. */
+.landing-mark-wrap {
+  position: relative;
+}
+
 .landing-mark {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(3rem, 10vw, 5.5rem);
-  color: var(--gold-bright);
-  letter-spacing: 0.01em;
   cursor: default;
   transition: opacity 0.5s ease;
   margin: 0;
+  line-height: 0;
 }
-.landing-mark em { font-style: italic; font-weight: 400; color: var(--gold); }
+.landing-mark-img {
+  width: min(90vw, 620px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 2px 18px rgba(0, 0, 0, 0.35));
+}
 
 .landing-segments {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 90vw;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.6rem;
   opacity: 0;
   max-height: 0;
   overflow: hidden;
   transition: opacity 0.6s ease 0.15s;
   margin-top: 1.75rem;
+  /* below the fold on a short viewport is fine -- the page scrolls (see
+     the 2026-08-06 fix for the max-height:300px clipping bug), it just
+     needed to never move the wordmark, which absolute positioning now
+     guarantees regardless of item count. */
 }
 
-.landing-stage:hover .landing-mark,
-.landing-stage:focus-within .landing-mark,
 .landing-stage.open .landing-mark {
   opacity: 0.18;
 }
-.landing-stage:hover .landing-segments,
-.landing-stage:focus-within .landing-segments,
 .landing-stage.open .landing-segments {
   opacity: 1;
-  max-height: 300px;
+  max-height: 1200px;
+}
+
+/* Only apply the hover-reveal fallback on devices with a real pointer
+   (mouse/trackpad). Mobile browsers commonly simulate a "sticky :hover"
+   on tap as a compatibility fallback for desktop-authored CSS -- without
+   this guard, a tap could trigger the reveal via :hover on top of (or
+   instead of) the deliberate JS .open toggle, reintroducing the same
+   shifting-target problem this fix exists to prevent. :focus-within is
+   left unconditional -- keyboard/tab navigation isn't touch-driven and
+   should keep working everywhere. */
+@media (hover: hover) and (pointer: fine) {
+  .landing-stage:hover .landing-mark { opacity: 0.18; }
+  .landing-stage:hover .landing-segments {
+    opacity: 1;
+    max-height: 1200px;
+  }
+}
+.landing-stage:focus-within .landing-mark { opacity: 0.18; }
+.landing-stage:focus-within .landing-segments {
+  opacity: 1;
+  max-height: 1200px;
 }
 
 .landing-segments a {
@@ -258,6 +297,16 @@ p.body-copy {
 .landing-footer-link:hover { color: var(--gold); }
 
 /* --- cards (segment lists, service lists) --- */
+.group-heading {
+  font-family: var(--font-label);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 2.25rem 0 0.75rem;
+}
+.group-heading:first-of-type { margin-top: 1rem; }
 .card-list {
   display: flex;
   flex-direction: column;
@@ -421,4 +470,17 @@ footer.site-footer a.enquire-link:hover { color: var(--gold); }
 
 @media (max-width: 560px) {
   header.site-header nav a { margin-left: 1rem; }
+
+  /* Longer price strings (e.g. "$45-65/hr, or $400-1,200 packaged") were
+     overflowing past the viewport edge on mobile -- `white-space: nowrap`
+     plus a side-by-side flex row never wraps, it just runs off-screen.
+     Stack label above price and let it wrap normally instead. */
+  .pricing-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  .pricing-row .price {
+    white-space: normal;
+  }
 }

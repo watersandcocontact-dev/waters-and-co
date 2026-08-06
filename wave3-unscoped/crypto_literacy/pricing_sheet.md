@@ -1,44 +1,40 @@
-# Crypto IT / Literacy — Pricing Sheet (draft, adjustable)
+# Crypto IT/Literacy Education for Over-40s — Pricing Sheet
 
-**No figure for this line existed in `PRICING.md`** — this is a new
-addition, not sourced from your original pricing table. Treat every number
-here as a starting assumption, not a researched figure like the others.
+Strictly mechanics/education — wallets, exchanges, self-custody, scam
+red-flags. **NOT investment/financial advice** — the ASIC advice boundary
+is a hard line, no "should I buy" guidance ever.
 
-## 1:1 sessions
+## Pricing
 
-| Session | Price | Notes |
-|---|---|---|
-| Standard (~1hr) | $80-100 | Slightly above Tech Concierge given more specialised subject matter and higher scam-avoidance stakes |
-| Extended (~1.5hr, full wallet+security setup) | $120-150 | |
+| Format | Price |
+|---|---|
+| 1:1 (in-person or video call) | **$85/hr** (band $75–95 depending on travel) |
+| Small-group workshop (60–120min, 4–10 people) | **$59/head**, or **$349 flat** for a private booking up to 8 |
+| Pre-recorded course (built once, sold repeatedly) | unchanged, near-zero marginal delivery cost |
 
-## Small-group workshops
+## Competitor evidence (verified 2026-08-06, live pages)
 
-- **$40-60/person**, 4-8 people, ~2hr session
-- At 6 people × $50 = $300 for a 2hr session = **$150/hr** — genuinely
-  strong $/hr for group delivery, worth prioritising over 1:1 once there's
-  enough demand to fill a group
+| Competitor | Offer | Price | Source |
+|---|---|---|---|
+| AusBlock (Australian Blockchain Association) | 1:1 in-person training | From **$150/hr** | ausblock.com.au/services/blockchain-academy-in-person-training |
+| AusBlock Academy | Accredited online courses | $999 / $1,299 / $1,499 | ausblock.com.au/academy |
+| The Knowledge Academy | 2-day Bitcoin/Crypto course | $4,795–5,695 | theknowledgeacademy.com/au |
+| The Knowledge Academy | 1-day Crypto Trading course | From $2,995 | same |
+| Superprof | Marketplace tutors, AU-wide | "From $15/hr", typical $35–90/hr, avg ~$29-45/hr | superprof.com.au/lessons/crypto-currency/australia |
+| Blockchain Collective | ASQA-accredited diplomas | **Price not published** — could not confirm | bccollective.io |
 
-## Pre-recorded course (the long-term high-$/hr play)
+## Reasoning
 
-- **Build cost**: estimate 15-20 hours to script, record, and edit a course
-  covering all 5 mechanics topics (wallet setup, seed phrase safety,
-  CEX vs DEX, transactions/gas fees, scam avoidance) — track this as
-  time logged against this line in the hub so the eventual $/hr
-  calculation is real, not guessed
-- **Sale price**: $99-149 per person (one-time purchase)
-- **Break-even**: at $120/copy and 18hrs build time, break-even is at
-  ~9 copies sold; every sale after that is close to pure margin (near-zero
-  marginal delivery cost)
-- Optional premium tier: course + one live group Q&A session (still
-  mechanics/safety only) at $180-220
+$85/hr sits well above the Superprof generalist-tutor average ($29–45/hr,
+unvetted, no senior-specific safety focus) — justified by curriculum,
+scam-avoidance focus, and over-40 pacing/specialisation — while landing at
+roughly half of AusBlock's $150/hr professional rate and a small fraction of
+accredited multi-day courses ($2,995+).
 
-## Notes
+## Status
 
-- Bundle 1:1 or workshop attendance with a discounted course add-on
-  ("take the course home for $30 more") — low marginal cost to you, real
-  perceived value to them
-- Track workshop/1:1 revenue and course revenue as separate line items in
-  the hub even though they share a business_line tag — the $/hr profile is
-  very different between "live delivery" and "sell the same recording
-  again," and lumping them together would hide how good the course
-  economics actually are once it's built
+**CONFIRMED 2026-08-06** — AusBlock and Knowledge Academy figures pulled
+directly from live pages; Superprof range medium-confidence (search-snippet
+sourced, page fetch blocked). `PRICING.md` row 20 and
+`ops-hub/app/config.py` RATE_CARD updated (session rate only — course rate
+unchanged, no new evidence).
