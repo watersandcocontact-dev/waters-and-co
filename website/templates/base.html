@@ -7,14 +7,15 @@
   <meta name="description" content="{% block meta_description %}Practical support for small business, AI systems, seniors and families, content repurposing and property valuation objections.{% endblock %}">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#182019">
-  <link rel="canonical" href="{% block canonical %}{{ request.base_url }}{% endblock %}">
+  <link rel="canonical" href="{% block canonical %}{{ canonical_domain }}{{ request.path }}{% endblock %}">
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Waters &amp; Co">
   <meta property="og:title" content="{% block og_title %}Waters &amp; Co{% endblock %}">
   <meta property="og:description" content="{% block og_description %}Practical support across business, technology, family and property-related needs.{% endblock %}">
-  <meta property="og:image" content="{{ url_for('static', filename='img/og-banner.png', _external=True) }}">
+  <meta property="og:image" content="{{ canonical_domain }}{{ url_for('static', filename='img/og-banner.png') }}">
+  <meta property="og:url" content="{{ canonical_domain }}{{ request.path }}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='overrides.css') }}">
