@@ -9,3 +9,4 @@ body:before{background:linear-gradient(rgba(12,24,17,.80),rgba(12,24,17,.92)),ur
 button.btn{cursor:pointer;width:max-content}a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold2);outline-offset:3px}
 @media(max-width:900px){.cta-panel{display:block}.cta-panel .btn{margin-top:1.5rem}body:before{background-attachment:scroll}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.card{transition:none}}
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:26px}.who-grid h3{font-size:1.05rem;color:var(--gold2);margin:0 0 8px}.faq{border-top:1px solid var(--line);padding:18px 0}.faq h3{font-size:1.05rem;margin:0 0 6px}@media(max-width:900px){.who-grid{grid-template-columns:1fr}}

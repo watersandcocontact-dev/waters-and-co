@@ -1,32 +1,53 @@
-"""Content model for the public website — segments, services, pricing.
+"""Content model for the public website — practices, services, pricing.
 
 Real numbers pulled from wave1/*/pricing_sheet.md, not invented. Keep this
 file in sync if pricing sheets change; it's a summary for web copy, not the
 source of truth (the pricing sheets remain that).
 
-A segment's "services" is a flat list of service slugs (most segments).
-A segment can instead use "groups" — a list of {"heading", "services"} —
-when it needs a visual sub-split on the segment page (currently just
-small-business-support: local-presence/never-miss-a-call kept visually
-distinct from bookkeeping/grant-finder even though they're one segment
-now). See segment_groups() below — every segment normalises to the same
-group shape either way, so the template doesn't need to know which kind
-a given segment is.
+Restructured 2026-08-07 from 5 flat "segments" to 4 "practices" per
+docs/deep_research_growth_seo_ai_blueprint_2026-08-07.md §1/§5.1 — the
+site was too broad to market as 16 equal offers; four focused practices
+read as expertise, not a catalogue. Every service kept, none dropped or
+renamed internally (SERVICES dict keys, business_line values, and hub
+routing are all unchanged) — only the grouping/URLs changed. The old
+gbp/reviewgen/missedcall cross-listing into the former "business-systems"
+segment is dropped: the blueprint's own sitemap doesn't cross-list them
+under AI Solutions, and one clear home per service is the whole point of
+this restructure.
 
-A service can appear in more than one segment's list (e.g. gbp/reviewgen/
-missedcall are cross-listed in business-systems too, since that audience
-overlaps and might only browse one segment) — a service's own "segment"
-field just names its primary home, it's not load-bearing for routing.
+A practice's "services" is a flat list of service slugs (most practices).
+A practice can instead use "groups" — a list of {"heading", "services"} —
+for a visual sub-split (currently just small-business: Get Found & Never
+Miss a Call / Books & Grants). See practice_groups() below — every
+practice normalises to the same group shape either way.
+
+Each service carries:
+- "practice": the practice slug it belongs to (exactly one -- no more
+  cross-listing, see above)
+- "url_slug": the SEO-friendly path segment used in the live URL
+  (/<practice-slug>/<url_slug>/) -- deliberately kept separate from the
+  SERVICES dict key, which stays a short internal identifier used for
+  hub routing, drafted-reply lookups and (via OLD_SERVICE_REDIRECTS) the
+  permanent redirect from the old flat /service/<key>/ URL.
+- "package": the offer-ladder package name this service maps to from the
+  blueprint's §3.3 (optional -- most services aren't part of a named
+  package, only the ones the blueprint explicitly bundles).
+- optional richer fields (who_for/who_not_for/process/faqs) used by the
+  upgraded page template for the five priority services flagged in the
+  blueprint's 90-day plan (§11, "Upgrade the five priority service
+  pages"): gbp, aitoolsbusiness, missedcall, ai_implementation, reviewgen.
+  Absent for the other 11 services -- service.html renders those sections
+  only when the data exists, so this is purely additive.
 """
 
-SEGMENTS = [
+PRACTICES = [
     {
-        "slug": "small-business-support",
-        "name": "Small Business Support",
-        "tagline": "The everyday work of running a small business — found, answered, and accounted for",
+        "slug": "small-business",
+        "name": "Local Business Growth",
+        "tagline": "Get found, get called, get paid — the everyday work of running a small business, handled properly",
         "groups": [
             {
-                "heading": "Local Presence & Never Miss a Call",
+                "heading": "Get Found & Never Miss a Call",
                 "services": ["gbp", "reviewgen", "missedcall"],
             },
             {
@@ -36,17 +57,14 @@ SEGMENTS = [
         ],
     },
     {
-        "slug": "business-systems",
-        "name": "AI Systems for Business",
-        "tagline": "A working automation, built and delivered — not a boutique price tag",
-        "services": [
-            "ai_implementation", "aitoolsbusiness", "realestate",
-            "gbp", "reviewgen", "missedcall",
-        ],
+        "slug": "ai-solutions",
+        "name": "AI Solutions for Small Business",
+        "tagline": "Practical AI, set up properly and actually used — not a subscription gathering dust",
+        "services": ["ai_implementation", "aitoolsbusiness", "realestate"],
     },
     {
-        "slug": "seniors-support",
-        "name": "Seniors & Family Support",
+        "slug": "personal-digital-support",
+        "name": "Personal Digital Support",
         "tagline": "Patient, plain-English help — tech, finances, and the paperwork nobody enjoys",
         "services": [
             "pension", "techconcierge", "cryptoliteracy",
@@ -54,23 +72,30 @@ SEGMENTS = [
         ],
     },
     {
-        "slug": "content-repurposing",
-        "name": "Content Repurposing",
-        "tagline": "One recording, a week's worth of clips",
-        "services": ["videorepurpose"],
-    },
-    {
-        "slug": "property-tax-review",
-        "name": "Property & Tax Review",
-        "tagline": "If your land valuation looks too high, it might be",
-        "services": ["landtax"],
+        "slug": "specialist-projects",
+        "name": "Specialist Projects",
+        "tagline": "Focused, one-off work — a recording repurposed, a valuation challenged",
+        "services": ["videorepurpose", "landtax"],
     },
 ]
+
+# Old (2026-08-07 morning) 5-segment slug -> new practice slug, for
+# permanent redirects. property-tax-review and content-repurposing both
+# collapse into specialist-projects; business-systems becomes ai-solutions.
+OLD_SEGMENT_REDIRECTS = {
+    "small-business-support": "small-business",
+    "business-systems": "ai-solutions",
+    "seniors-support": "personal-digital-support",
+    "content-repurposing": "specialist-projects",
+    "property-tax-review": "specialist-projects",
+}
 
 SERVICES = {
     "gbp": {
         "name": "Google Business Profile Management",
-        "segment": "small-business-support",
+        "practice": "small-business",
+        "url_slug": "google-business-profile-management-perth",
+        "package": "Get Found / Stay Visible",
         "business_line": "GBP",
         "one_liner": "Your Google listing, actually kept up to date.",
         "summary": (
@@ -83,10 +108,36 @@ SERVICES = {
             {"label": "One-off profile cleanup", "price": "$150–300"},
             {"label": "Ongoing monthly management", "price": "$100–200/mo"},
         ],
+        "who_for": [
+            "Trades and local service businesses who rely on Google Maps for jobs",
+            "Any business whose Google listing has wrong hours, missing photos, or no recent activity",
+        ],
+        "who_not_for": [
+            "Businesses that don't take customers via search or Maps at all",
+            "Anyone wanting guaranteed rankings — no one can promise that, and anyone who does is the risk, not us",
+        ],
+        "process": [
+            "Free 10-point visibility check of your current listing",
+            "Cleanup: category, hours, service area, photos, description, Q&A",
+            "Ongoing: posts, review responses and monitoring on the management tier",
+            "Monthly summary of what changed and what it's driving",
+        ],
+        "faqs": [
+            {
+                "q": "Can you guarantee a #1 ranking?",
+                "a": "No — nobody legitimately can. What a properly maintained profile does is remove the easy reasons Google (and customers) have to rank or trust you less.",
+            },
+            {
+                "q": "Do I need a street address listed?",
+                "a": "Only if you have a staffed storefront customers walk into. Service-area businesses should hide the address and set a proper service area instead — we'll set this correctly either way.",
+            },
+        ],
     },
     "reviewgen": {
         "name": "Review Generation & Reputation Management",
-        "segment": "small-business-support",
+        "practice": "small-business",
+        "url_slug": "review-management",
+        "package": "Get Found / Stay Visible",
         "business_line": "ReviewGen",
         "one_liner": "More reviews, and a considered reply to every one.",
         "summary": (
@@ -99,10 +150,25 @@ SERVICES = {
             {"label": "One-off setup", "price": "$100–200"},
             {"label": "Ongoing monthly management", "price": "$100–300/mo"},
         ],
+        "who_for": ["Any business with real, happy customers who just haven't been asked for a review"],
+        "who_not_for": ["Anyone wanting reviews written for them, gated, or incentivised — that breaches Google's policies and we won't do it"],
+        "process": [
+            "Set up a simple, neutral way to ask every customer for feedback",
+            "Draft considered replies to every incoming review",
+            "Flag anything that needs your direct attention",
+        ],
+        "faqs": [
+            {
+                "q": "Will you write fake reviews or pay for them?",
+                "a": "No. Ever. That's against Google's terms, it's the fastest way to lose the whole profile, and it's not how this business operates.",
+            },
+        ],
     },
     "missedcall": {
         "name": "AI Missed-Call Reception",
-        "segment": "small-business-support",
+        "practice": "small-business",
+        "url_slug": "ai-missed-call-reception",
+        "package": "Never Miss the Job",
         "business_line": "MissedCall",
         "one_liner": "The call you couldn't take still gets handled.",
         "summary": (
@@ -115,10 +181,24 @@ SERVICES = {
             {"label": "Setup", "price": "$300–600 one-off"},
             {"label": "Ongoing monthly management", "price": "$150–400/mo"},
         ],
+        "who_for": ["Trades and appointment-based businesses that lose jobs to voicemail"],
+        "who_not_for": ["Businesses that already have full-time reception staff answering every call"],
+        "process": [
+            "Set up automated text-back or AI reception on your existing number",
+            "Every missed call becomes a captured lead, not a lost one",
+            "Daily quality review so nothing sits unanswered",
+        ],
+        "faqs": [
+            {
+                "q": "Do I need a new phone number?",
+                "a": "No — this connects to the number you already advertise. Customers never notice a change except that missed calls now get a response.",
+            },
+        ],
     },
     "landtax": {
         "name": "Land Tax / Rates Valuation Objection",
-        "segment": "property-tax-review",
+        "practice": "specialist-projects",
+        "url_slug": "property-valuation-objection",
         "business_line": "LandTax",
         "one_liner": "If the valuation looks wrong, there's a process to challenge it.",
         "summary": (
@@ -135,7 +215,9 @@ SERVICES = {
     },
     "ai_implementation": {
         "name": "AI Implementation for SMEs",
-        "segment": "business-systems",
+        "practice": "ai-solutions",
+        "url_slug": "ai-automation-perth",
+        "package": "AI Efficiency Build",
         "business_line": "AIImplementation",
         "one_liner": "A working custom automation, built and delivered — not a DIY tool.",
         "summary": (
@@ -151,10 +233,29 @@ SERVICES = {
             {"label": "Small business system (multi-step)", "price": "$2,500–4,000 fixed"},
             {"label": "Optional ongoing monitoring", "price": "$150–250/mo"},
         ],
+        "who_for": ["A business with one clear, repetitive bottleneck eating real hours every week"],
+        "who_not_for": ["Anyone wanting a vague 'AI transformation' with no specific process in mind — start narrower, prove it, then expand"],
+        "process": [
+            "Describe the bottleneck — the task, how often, how long it takes now",
+            "We scope one workflow with a written acceptance test",
+            "Build, test against real data, hand over with documentation",
+            "Optional monthly monitoring so it keeps working as your business changes",
+        ],
+        "faqs": [
+            {
+                "q": "What happens to my data?",
+                "a": "Nothing goes into a public AI tool without your agreement, and personal or sensitive data is minimised or redacted before any processing. You'll always know what's being used and where.",
+            },
+            {
+                "q": "Do I own what's built?",
+                "a": "Yes — the workflow and its documentation are yours, with an export/handover path so you're never locked into us specifically to keep it running.",
+            },
+        ],
     },
     "realestate": {
         "name": "AI Lead-Response for Real Estate Agents",
-        "segment": "business-systems",
+        "practice": "ai-solutions",
+        "url_slug": "real-estate-lead-response",
         "business_line": "RealEstateLeads",
         "one_liner": "Instant lead response, fully managed — no dashboard for you to run.",
         "summary": (
@@ -170,7 +271,9 @@ SERVICES = {
     },
     "aitoolsbusiness": {
         "name": "AI Tools for Business",
-        "segment": "business-systems",
+        "practice": "ai-solutions",
+        "url_slug": "ai-tools-training-small-business",
+        "package": "AI Working Session",
         "business_line": "AIToolsBusiness",
         "one_liner": "Get set up on the AI tool you already pay for, properly.",
         "summary": (
@@ -185,10 +288,25 @@ SERVICES = {
             {"label": "Standard — 2-3 tools, 2 sessions, template pack", "price": "$400–600 one-off"},
             {"label": "Optional ongoing support", "price": "$80–150/mo"},
         ],
+        "who_for": ["A business already paying for an AI tool (or considering one) that isn't confidently used yet"],
+        "who_not_for": ["A business wanting a fully custom system built from scratch — that's AI Implementation, one step up"],
+        "process": [
+            "Confirm which tool(s) and what you want the team doing with them",
+            "Configuration and account setup done properly",
+            "Hands-on training session(s) with your actual team, using your actual work",
+            "A short reference pack so the training sticks after we leave",
+        ],
+        "faqs": [
+            {
+                "q": "Which AI tools do you cover?",
+                "a": "Whatever you're already using or considering — we work with the mainstream business AI tools rather than pushing one particular product.",
+            },
+        ],
     },
     "bookkeeping": {
         "name": "Small-Business Bookkeeping",
-        "segment": "small-business-support",
+        "practice": "small-business",
+        "url_slug": "bookkeeping",
         "business_line": "Bookkeeping",
         "one_liner": "Bank reconciliation and reporting, at a fixed monthly fee.",
         "summary": (
@@ -207,7 +325,8 @@ SERVICES = {
     },
     "grantfinder": {
         "name": "SME Grant-Finder",
-        "segment": "small-business-support",
+        "practice": "small-business",
+        "url_slug": "grant-finder",
         "business_line": "GrantFinder",
         "one_liner": "A curated shortlist of grants you actually qualify for.",
         "summary": (
@@ -222,7 +341,8 @@ SERVICES = {
     },
     "pension": {
         "name": "Age Pension / Centrelink Assistance",
-        "segment": "seniors-support",
+        "practice": "personal-digital-support",
+        "url_slug": "age-pension-centrelink-assistance",
         "business_line": "Pension",
         "one_liner": "A flat, disclosed fee — no surprise minimums if you're found ineligible.",
         "summary": (
@@ -240,7 +360,9 @@ SERVICES = {
     },
     "techconcierge": {
         "name": "Senior Technology Concierge",
-        "segment": "seniors-support",
+        "practice": "personal-digital-support",
+        "url_slug": "senior-technology-concierge",
+        "package": "Digital Confidence at Home",
         "business_line": "TechConcierge",
         "one_liner": "Patient, plain-English tech help — teaching, not just fixing.",
         "summary": (
@@ -258,7 +380,8 @@ SERVICES = {
     },
     "cryptoliteracy": {
         "name": "Crypto IT / Literacy Education",
-        "segment": "seniors-support",
+        "practice": "personal-digital-support",
+        "url_slug": "crypto-literacy-education",
         "business_line": "CryptoLiteracy",
         "one_liner": "How wallets and exchanges actually work — not investment tips.",
         "summary": (
@@ -274,7 +397,8 @@ SERVICES = {
     },
     "digitallegacy": {
         "name": "Digital Legacy / Account Organiser",
-        "segment": "seniors-support",
+        "practice": "personal-digital-support",
+        "url_slug": "digital-legacy-account-organiser",
         "business_line": "DigitalLegacy",
         "one_liner": "A password manager set up, your accounts inventoried, written down for your family.",
         "summary": (
@@ -291,7 +415,8 @@ SERVICES = {
     },
     "downsizing": {
         "name": "Senior Downsizing Support",
-        "segment": "seniors-support",
+        "practice": "personal-digital-support",
+        "url_slug": "senior-downsizing-support",
         "business_line": "Downsizing",
         "one_liner": "Coordination for a move, or hands-on help — your choice.",
         "summary": (
@@ -308,7 +433,8 @@ SERVICES = {
     },
     "photodigitisation": {
         "name": "Photo & Memory Digitisation",
-        "segment": "seniors-support",
+        "practice": "personal-digital-support",
+        "url_slug": "photo-memory-digitisation",
         "business_line": "PhotoDigitisation",
         "one_liner": "Your photos, slides, and videos, professionally digitised and organised for you.",
         "summary": (
@@ -324,7 +450,8 @@ SERVICES = {
     },
     "videorepurpose": {
         "name": "Video/Podcast Repurposing",
-        "segment": "content-repurposing",
+        "practice": "specialist-projects",
+        "url_slug": "video-podcast-repurposing",
         "business_line": "VideoRepurpose",
         "one_liner": "One episode in, a week's worth of short clips out.",
         "summary": (
@@ -341,38 +468,58 @@ SERVICES = {
     },
 }
 
+# url_slug -> internal SERVICES key, built once at import time so routes.py
+# can resolve /<practice>/<url_slug>/ without a linear scan per request.
+SERVICE_KEY_BY_URL_SLUG = {svc["url_slug"]: key for key, svc in SERVICES.items()}
 
-def segment_by_slug(slug):
-    return next((s for s in SEGMENTS if s["slug"] == slug), None)
+# Old (2026-08-07 morning) flat /service/<key>/ URL -> new nested URL, for
+# permanent redirects. Every current SERVICES key redirects; nothing new
+# needs adding here unless a service's url_slug changes again later.
+OLD_SERVICE_REDIRECTS = {key: (svc["practice"], svc["url_slug"]) for key, svc in SERVICES.items()}
+
+
+def practice_by_slug(slug):
+    return next((p for p in PRACTICES if p["slug"] == slug), None)
 
 
 def service_by_slug(slug):
     return SERVICES.get(slug)
 
 
-def services_in_segment(slug):
-    """Flat list of every service in a segment, regardless of whether it's
-    defined as a flat list or as groups. Used where grouping doesn't
-    matter (e.g. nothing currently, kept for any future flat listing)."""
-    seg = segment_by_slug(slug)
-    if not seg:
-        return []
-    if "groups" in seg:
-        return [{"slug": s, **SERVICES[s]} for g in seg["groups"] for s in g["services"]]
-    return [{"slug": s, **SERVICES[s]} for s in seg["services"]]
+def service_by_url_slug(practice_slug, url_slug):
+    """Resolve a live URL's two path segments back to a service dict, or
+    None if either doesn't match (wrong practice, wrong slug, or a
+    practice/url_slug pairing that doesn't actually exist -- e.g. a
+    service's url_slug requested under the wrong practice)."""
+    key = SERVICE_KEY_BY_URL_SLUG.get(url_slug)
+    if not key:
+        return None
+    svc = SERVICES[key]
+    if svc["practice"] != practice_slug:
+        return None
+    return key, svc
 
 
-def segment_groups(slug):
-    """Every segment normalised to the same shape for the template:
-    [{"heading": str|None, "services": [service dicts]}, ...].
-    Segments defined with a flat `services` list come back as one
-    unheaded group; segments defined with `groups` come back as-is."""
-    seg = segment_by_slug(slug)
-    if not seg:
+def services_in_practice(slug):
+    """Flat list of every service in a practice, regardless of whether
+    it's defined as a flat list or as groups."""
+    practice = practice_by_slug(slug)
+    if not practice:
         return []
-    if "groups" in seg:
+    if "groups" in practice:
+        return [{"slug": s, **SERVICES[s]} for g in practice["groups"] for s in g["services"]]
+    return [{"slug": s, **SERVICES[s]} for s in practice["services"]]
+
+
+def practice_groups(slug):
+    """Every practice normalised to the same shape for the template:
+    [{"heading": str|None, "services": [service dicts]}, ...]."""
+    practice = practice_by_slug(slug)
+    if not practice:
+        return []
+    if "groups" in practice:
         return [
             {"heading": g.get("heading"), "services": [{"slug": s, **SERVICES[s]} for s in g["services"]]}
-            for g in seg["groups"]
+            for g in practice["groups"]
         ]
-    return [{"heading": None, "services": [{"slug": s, **SERVICES[s]} for s in seg["services"]]}]
+    return [{"heading": None, "services": [{"slug": s, **SERVICES[s]} for s in practice["services"]]}]

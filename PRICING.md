@@ -114,3 +114,19 @@ line's own `pricing_sheet.md`.
 - Re-rank weekly once real client data exists — these are starting
   estimates, not fixed. Nothing about the sort order is hardcoded to this
   table; it's just today's default.
+
+## Update 2026-08-08 — offer-ladder package names added on the site
+
+Per `docs/deep_research_growth_seo_ai_blueprint_2026-08-07.md` §3.3, 6 of
+these rows now carry a customer-facing **package name** on their live
+service page (badge next to the price box) — this is a marketing label
+layered on top of the pricing above, not a separate price:
+
+- **Get Found / Stay Visible** — rows 5/6 (GBP) + ReviewGen
+- **Never Miss the Job** — rows 3/4 (MissedCall)
+- **AI Efficiency Build** — row 24 (AI Implementation for SMEs)
+- **AI Working Session** — row 22 (AI Tools for Business)
+- **Digital Confidence at Home** — Senior Technology Concierge
+
+Full detail, GBP category recommendation and content roadmap:
+`docs/implementation_workbook_2026-08-08.md`.

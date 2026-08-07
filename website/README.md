@@ -14,32 +14,50 @@ Tailscale Funnel setup, Render config, DNS.
 
 ## Structure
 
-- Landing page (`/`) — just the wordmark. Hover (or tap, on touch devices)
-  fades the mark and reveals the 3 segments.
-- Segment pages (`/segment/<slug>`) — the services grouped under that segment.
-- Service pages (`/service/<slug>`) — real pricing (from `webapp/config.py`,
-  sourced from `wave1/*/pricing_sheet.md`) + a contact form.
+**Rebuilt 2026-08-08** from a flat 5-segment structure to 4 practices, per
+`docs/deep_research_growth_seo_ai_blueprint_2026-08-07.md` — see
+`docs/implementation_workbook_2026-08-08.md` for the full build record.
+This section reflects the rebuilt structure directly; verify against
+`webapp/config.py`'s `PRACTICES`/`SERVICES` if in doubt, not this file.
+
+- Landing page (`/`) — hero + a card per practice.
+- Practice pages (`/<practice-slug>/`) — the services grouped under that
+  practice (some practices sub-group with a heading, e.g. small-business
+  splits "Get Found & Never Miss a Call" from "Books & Grants").
+- Service pages (`/<practice-slug>/<service-slug>/`) — real pricing (from
+  `webapp/config.py`, sourced from `wave1/*/pricing_sheet.md`) + a contact
+  form. The 5 blueprint-flagged priority services (GBP, AI Tools for
+  Business, AI Missed-Call Reception, AI Implementation for SMEs, Review
+  Management) also carry who-it's-for/isn't-for, real process steps and
+  FAQs — the template renders these sections only when present, so the
+  other 11 services are unaffected.
 - General enquiry (`/enquire`) — the "don't see what you need?" catch-all,
   linked from every page's footer and the landing page.
+- About (`/about/`), How We Work (`/how-we-work/`), Privacy (`/privacy/`),
+  Terms (`/terms/`) — new 2026-08-08, the site had none of these before.
 
-## Segments (current grouping — change in `webapp/config.py` if wrong)
+**Every pre-2026-08-08 URL still works** — `/segment/<old-slug>` and
+`/service/<old-slug>` both 301-redirect to the new URL (the old contact POST
+route 307-redirects, preserving the form body). See `config.py`'s
+`OLD_SEGMENT_REDIRECTS`/`OLD_SERVICE_REDIRECTS` for the full old→new map.
 
-**Updated 2026-08-07 — this section was stale, out of sync with the actual
-code since the 2026-08-06 restructure. Verify against `webapp/config.py`'s
-`SEGMENTS` list directly if in doubt, not this file, since docs drift.**
+## Practices (current grouping — change in `webapp/config.py` if wrong)
 
-5 segments, 16 services, in this landing-page order:
+4 practices, 16 services, in landing-page order:
 
-1. **Small Business Support** — two sub-groups: "Local Presence & Never Miss
-   a Call" (GBP, ReviewGen, MissedCall) and "Books & Grants" (Bookkeeping,
-   GrantFinder).
-2. **AI Systems for Business** — AI Implementation, AI Tools for Business,
-   AI Lead-Response for Real Estate Agents, plus GBP/ReviewGen/MissedCall
-   cross-listed here too (audience overlap with segment 1).
-3. **Seniors & Family Support** — Tech Concierge, Crypto Literacy, Digital
-   Legacy, Downsizing (coordination + labour), Photo & Memory Digitisation.
-4. **Content Repurposing** — Video/Podcast Repurposing.
-5. **Property & Tax Review** — Land Tax / Rates Objection.
+1. **Local Business Growth** (`/small-business/`) — two sub-groups: "Get
+   Found & Never Miss a Call" (GBP, ReviewGen, MissedCall) and "Books &
+   Grants" (Bookkeeping, GrantFinder).
+2. **AI Solutions for Small Business** (`/ai-solutions/`) — AI
+   Implementation, AI Tools for Business, AI Lead-Response for Real Estate
+   Agents. No longer cross-lists GBP/ReviewGen/MissedCall here (dropped in
+   the 2026-08-08 rebuild — one clear home per service, matching the
+   blueprint's own sitemap).
+3. **Personal Digital Support** (`/personal-digital-support/`) — Age
+   Pension/Centrelink, Tech Concierge, Crypto Literacy, Digital Legacy,
+   Downsizing (coordination + labour), Photo & Memory Digitisation.
+4. **Specialist Projects** (`/specialist-projects/`) — Video/Podcast
+   Repurposing, Land Tax / Rates Objection.
 
 (Lost Super was removed from the public site 2026-08-06 — it's free to the
 client, revenue is referral-fee only, not worth a landing-page slot. Still
@@ -48,12 +66,17 @@ fully trackable internally via the hub's `LostSuper` business_line.)
 ## Contact form → hub → draft email
 
 Every submission (service-specific or general enquiry):
-1. Creates a Lead in the hub, tagged to the right `business_line`
+1. Two spam checks first (`_is_spam()` in `routes.py`): a honeypot field
+   real visitors never see/fill, and a minimum 2-second time-on-page.
+   Either one fails silently — redirects to `/thanks` exactly like a real
+   success, no signal to a bot that it was caught. Blocked attempts logged
+   to `website/spam_blocked.log` (gitignored).
+2. Creates a Lead in the hub, tagged to the right `business_line`
    (or `GeneralEnquiry` for the catch-all).
-2. Generates a template-based draft reply (`webapp/draft_email.py` —
+3. Generates a template-based draft reply (`webapp/draft_email.py` —
    deterministic, no AI API call, no cost) referencing the specific service
    and its real pricing.
-3. Appends that draft to the lead's Notes field in the hub, clearly marked
+4. Appends that draft to the lead's Notes field in the hub, clearly marked
    "DRAFTED REPLY (review before sending)".
 
 **Nothing is sent automatically.** Review the draft in the hub's case
@@ -63,6 +86,16 @@ no email-sending account configured anyway.
 
 No phone number is shown anywhere on the site by design — every page pushes
 toward the contact form instead of a call.
+
+## Structured data
+
+Every page carries a site-wide `ProfessionalService` JSON-LD block
+(`webapp/structured_data.py`). Service pages add a `Service` block with
+pricing (numeric `PriceSpecification` only for clean single-clause prices —
+multi-clause pricing like "$45-65/hr, or $400-1,200 packaged" stays as free
+text rather than risk a misleading number) plus a `BreadcrumbList`.
+Practice/enquire/about/how-we-work/privacy/terms pages carry a
+`BreadcrumbList` only.
 
 ## Run it (local development)
 
@@ -80,23 +113,20 @@ instead, since a deployed site can't import local files.
 
 ## Branding
 
-Font files (`static/fonts/`) and the color system (`static/style.css`)
-match the Waters & Co brand concept — deep slate green (`#182019`), gold
-(`#c7a459`), Fraunces for display type (switched from Cormorant 2026-07-31
-after comparing options), Jost for labels. Single dark theme by design,
-same reasoning as the original brand concept artifact: the identity *is*
-the dark ground.
+Font files (`static/fonts/`) and the color system (`static/style.css`,
+`static/overrides.css`) match the Waters & Co brand concept — deep slate
+green (`#182019`), gold (`#D4AF37`/`#e3c787`), Fraunces for display type,
+Jost for labels. Single dark theme by design, malachite background image.
 
 ## Status — LIVE
 
 **Deployed and live at [watersandco.info](https://watersandco.info) since
-2026-08-07.** Full deployment walkthrough (Tailscale Funnel, Render,
-Cloudflare DNS) in `docs/website_deployment.md`; the real gotchas hit along
-the way are logged in `DECISIONS.md`'s 2026-08-07 entries — worth reading
-before touching the deploy chain again, several non-obvious things bit us
-(Funnel path-stripping, Render env-var overwrite, a `HUB_HOST`
-localhost-vs-Tailscale-IP binding mismatch that silently 502'd every real
-webhook call for a while).
+2026-08-07.** The 2026-08-08 practice/AI rebuild described above is on the
+`ai-practices-rebuild` branch, demoed but **not yet merged/deployed** —
+check `git log`/the current branch before assuming it's live. Full
+deployment walkthrough (Tailscale Funnel, Render, Cloudflare DNS) in
+`docs/website_deployment.md`; deploy gotchas logged in `DECISIONS.md`'s
+2026-08-07 entries.
 
 Real bug fixed 2026-08-07 (see `webapp/routes.py`/`webapp/hub_bridge.py`):
 a hub-unreachable failure on the contact form used to surface as a bare,
@@ -108,12 +138,15 @@ proper branded message pointing them to a fallback email address.
 
 ## Known gaps, not yet addressed
 
-- No CSRF token or spam mitigation (honeypot/rate-limit) on the two POST
-  forms. Low severity for a public marketing form, but every submission
-  creates a real record in the Daily Queue — an automated spam run could
-  pollute it. Worth a lightweight honeypot field if it becomes a problem.
-- Visual QA of the landing-page hover animation — verified structurally
-  (DOM, class toggling, CSS rules present and correctly scoped) but the
-  actual fade transition couldn't be visually confirmed in earlier
-  browser-testing sessions (sandbox didn't run a real compositor). Worth a
-  quick look in an actual browser if it ever seems off.
+- No CSRF token on the two POST forms. Low severity for a public marketing
+  form with no session/account state to forge, and the honeypot + timing
+  check (above) already covers the actual observed risk (bots), not a
+  targeted CSRF attack scenario.
+- The 21-article content cluster from the blueprint (`docs/
+  deep_research_growth_seo_ai_blueprint_2026-08-07.md` §5.3) is
+  deliberately not written yet — no Search Console/Keyword Planner access
+  to validate demand first. Full title list kept in
+  `docs/implementation_workbook_2026-08-08.md` §4.
+- The 11 non-priority services don't have the upgraded who-for/process/FAQ
+  content the 5 priority ones do — same "prove it's worth it first"
+  reasoning.

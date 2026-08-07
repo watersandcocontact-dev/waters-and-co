@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Terms | Waters &amp; Co{% endblock %}
+{% block meta_description %}Terms covering engagements, pricing, ownership and liability for work delivered by Waters & Co.{% endblock %}
+{% block canonical %}{{ request.url_root }}terms/{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{{ breadcrumb_ld_json | tojson }}</script>{% endblock %}
+{% block content %}
+<section class="hero compact"><div class="container"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('main.landing') }}">Home</a> / Terms</nav><div class="eyebrow">Terms</div><h1>Terms</h1><p class="lead">Last reviewed {{ now_year }}-08. Waters &amp; Co, ABN 85 928 697 823, Doubleview WA 6018. These terms are general in nature — significant engagements are confirmed in writing before work begins, and that written scope takes precedence over this page if the two differ.</p></div></section>
+
+<section class="section soft"><div class="container"><div class="section-head"><div><h2>Engagements and pricing</h2></div></div><p class="lead">Prices shown on each service page are current ranges, not final quotes — the specific price for your job is confirmed in writing before work begins, based on the scope agreed between us. Nothing is billed outside that agreed scope without telling you first.</p></div></section>
+
+<section class="section"><div class="container"><div class="section-head"><div><h2>Scope and referrals</h2></div></div><p class="lead">Work is deliberately scoped to preparation, coordination, administration and education — not licensed financial, legal, tax or valuation advice. Where a matter needs that kind of advice, it's named clearly and referred to an appropriately qualified professional; see <a href="{{ url_for('main.how_we_work') }}">How We Work</a> for the full explanation.</p></div></section>
+
+<section class="section soft"><div class="container"><div class="section-head"><div><h2>Ownership of deliverables</h2></div></div><p class="lead">What's built or delivered for you — a workflow, a document, an inventory, a set of files — is yours. Where practical, a handover or export path is provided so you're not dependent on Waters &amp; Co specifically to keep using it.</p></div></section>
+
+<section class="section"><div class="container"><div class="section-head"><div><h2>Liability</h2></div></div><p class="lead">Waters &amp; Co does not carry professional indemnity insurance; engagements are deliberately kept within scope that doesn't require it (see How We Work). To the extent permitted by Australian Consumer Law, Waters &amp; Co's liability for a service is limited to re-supplying the service or refunding the amount paid for it. Nothing in these terms excludes any guarantee or right that can't lawfully be excluded under Australian Consumer Law.</p></div></section>
+
+<section class="section soft"><div class="container"><div class="section-head"><div><h2>Governing law</h2></div></div><p class="lead">These terms are governed by the law of Western Australia, Australia.</p></div></section>
+
+<section class="section"><div class="container"><div class="section-head"><div><h2>Contact</h2></div></div><p class="lead">Questions about these terms: <a href="mailto:watersandco.contact@gmail.com">watersandco.contact@gmail.com</a>.</p></div></section>
+{% endblock %}

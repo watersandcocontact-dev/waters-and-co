@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}Waters &amp; Co | Practical support in Perth and Australia-wide{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}Practical support for small business, AI systems, seniors and families, content repurposing and property valuation objections.{% endblock %}">
+  <title>{% block title %}Waters &amp; Co | Practical Support and AI Solutions, Perth &amp; Australia-wide{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Practical support and AI solutions for small business, personal digital support and specialist property/content projects.{% endblock %}">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#182019">
   <link rel="canonical" href="{% block canonical %}{{ request.base_url }}{% endblock %}">
@@ -13,7 +13,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Waters &amp; Co">
   <meta property="og:title" content="{% block og_title %}Waters &amp; Co{% endblock %}">
-  <meta property="og:description" content="{% block og_description %}Practical support across business, technology, family and property-related needs.{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Practical support and AI solutions for problems that cost you time, money or peace of mind.{% endblock %}">
   <meta property="og:image" content="{{ url_for('static', filename='img/og-banner.png', _external=True) }}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -28,30 +28,28 @@
     <div class="container nav">
       <a class="brand" href="{{ url_for('main.landing') }}"><img src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co"></a>
       <nav class="navlinks" aria-label="Primary navigation">
-        <a href="{{ url_for('main.segment', slug='small-business-support') }}">Small Business</a>
-        <a href="{{ url_for('main.segment', slug='business-systems') }}">AI Systems</a>
-        <a href="{{ url_for('main.segment', slug='seniors-support') }}">Seniors &amp; Family</a>
-        <a href="{{ url_for('main.segment', slug='content-repurposing') }}">Content</a>
-        <a href="{{ url_for('main.segment', slug='property-tax-review') }}">Property &amp; Tax</a>
+        <a href="{{ url_for('main.practice', practice_slug='small-business') }}">Local Business Growth</a>
+        <a href="{{ url_for('main.practice', practice_slug='ai-solutions') }}">AI Solutions</a>
+        <a href="{{ url_for('main.practice', practice_slug='personal-digital-support') }}">Personal Support</a>
+        <a href="{{ url_for('main.practice', practice_slug='specialist-projects') }}">Specialist Projects</a>
         <a class="cta" href="{{ url_for('main.enquire') }}">Enquire</a>
       </nav>
       <button class="menu" type="button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
     </div>
     <nav class="container mobile" id="mobile-menu" aria-label="Mobile navigation">
-      <a href="{{ url_for('main.segment', slug='small-business-support') }}">Small Business</a>
-      <a href="{{ url_for('main.segment', slug='business-systems') }}">AI Systems</a>
-      <a href="{{ url_for('main.segment', slug='seniors-support') }}">Seniors &amp; Family</a>
-      <a href="{{ url_for('main.segment', slug='content-repurposing') }}">Content</a>
-      <a href="{{ url_for('main.segment', slug='property-tax-review') }}">Property &amp; Tax</a>
+      <a href="{{ url_for('main.practice', practice_slug='small-business') }}">Local Business Growth</a>
+      <a href="{{ url_for('main.practice', practice_slug='ai-solutions') }}">AI Solutions</a>
+      <a href="{{ url_for('main.practice', practice_slug='personal-digital-support') }}">Personal Support</a>
+      <a href="{{ url_for('main.practice', practice_slug='specialist-projects') }}">Specialist Projects</a>
       <a href="{{ url_for('main.enquire') }}">Enquire</a>
     </nav>
   </header>
   <main id="main-content">{% block content %}{% endblock %}</main>
   <footer class="footer">
     <div class="container footer-grid">
-      <div><img src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co"><p class="muted">Practical support across business, technology, family and property-related needs.</p><small>Perth, Western Australia · Services vary by location and scope.</small></div>
-      <div><h3>Services</h3><p><a href="{{ url_for('main.segment', slug='small-business-support') }}">Small Business Support</a><br><a href="{{ url_for('main.segment', slug='business-systems') }}">AI Systems for Business</a><br><a href="{{ url_for('main.segment', slug='seniors-support') }}">Seniors &amp; Family Support</a></p></div>
-      <div><h3>Explore</h3><p><a href="{{ url_for('main.segment', slug='content-repurposing') }}">Content Repurposing</a><br><a href="{{ url_for('main.segment', slug='property-tax-review') }}">Property &amp; Tax Review</a><br><a href="{{ url_for('main.enquire') }}">General enquiry</a></p></div>
+      <div><img src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co"><p class="muted">Practical support and AI solutions for problems that cost you time, money or peace of mind.</p><small>Doubleview, WA 6018 · North-of-river Perth in person · Australia-wide / worldwide remotely.</small></div>
+      <div><h3>Practices</h3><p><a href="{{ url_for('main.practice', practice_slug='small-business') }}">Local Business Growth</a><br><a href="{{ url_for('main.practice', practice_slug='ai-solutions') }}">AI Solutions for Small Business</a><br><a href="{{ url_for('main.practice', practice_slug='personal-digital-support') }}">Personal Digital Support</a><br><a href="{{ url_for('main.practice', practice_slug='specialist-projects') }}">Specialist Projects</a></p></div>
+      <div><h3>About</h3><p><a href="{{ url_for('main.about') }}">About Waters &amp; Co</a><br><a href="{{ url_for('main.how_we_work') }}">How We Work</a><br><a href="{{ url_for('main.enquire') }}">General enquiry</a><br><a href="{{ url_for('main.privacy') }}">Privacy</a> · <a href="{{ url_for('main.terms') }}">Terms</a></p></div>
     </div>
     <div class="container footer-note"><small>© {{ now_year }} Waters &amp; Co. Information on this site is general in nature. Relevant service boundaries are stated on each service page.</small></div>
   </footer>
