@@ -9,6 +9,11 @@
 {% if error %}<p class="form-error">{{ error }}</p>{% endif %}
 
 <form class="enquiry-form" method="post" action="{{ url_for('main.enquire') }}">
+  <div class="hp-field" aria-hidden="true">
+    <label for="website">Leave this field blank</label>
+    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+  </div>
+  <input type="hidden" name="rendered_at" value="{{ form_rendered_at }}">
   <div>
     <label for="name">Name</label>
     <input type="text" id="name" name="name" required>

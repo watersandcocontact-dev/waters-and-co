@@ -440,6 +440,19 @@ form.enquiry-form button {
 }
 form.enquiry-form button:hover { background: var(--gold); color: var(--ground); }
 
+/* Honeypot field for the enquiry forms -- invisible to a real visitor,
+   still present in the DOM so simple bots that auto-fill every field find
+   and fill it. Off-screen positioning (not display:none/visibility:hidden)
+   is deliberate: some spam bots specifically skip fields hidden that way. */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .form-error {
   color: #e0a37e;
   font-size: 13.5px;

@@ -44,6 +44,43 @@ ERROR_MESSAGE = (
     "get back to you."
 )
 
+# --- lightweight spam protection, no external dependency ---
+# Two cheap, zero-friction-for-real-visitors checks: a honeypot field (real
+# people never see or fill it; simple bots that auto-fill every input do),
+# and a minimum time-on-page (a bot that fetches the page and immediately
+# POSTs can't have spent even a couple of seconds actually looking at a
+# form). Neither requires a captcha, a library, or ever bothering a real
+# visitor. Deliberately silent on rejection -- redirect to /thanks exactly
+# like a real success, so a bot gets no signal that it was caught (and
+# tries again with the same easily-blocked pattern, rather than adapting).
+SPAM_LOG = Path(__file__).resolve().parent.parent / "spam_blocked.log"
+MIN_SECONDS_TO_FILL_FORM = 2
+
+
+def _is_spam(form):
+    if form.get("website", "").strip():
+        return "honeypot"
+    rendered_at = form.get("rendered_at", "")
+    try:
+        elapsed = datetime.datetime.now(datetime.timezone.utc).timestamp() - float(rendered_at)
+        if elapsed < MIN_SECONDS_TO_FILL_FORM:
+            return "too-fast"
+    except (TypeError, ValueError):
+        pass  # missing/malformed timestamp -- don't block on that alone
+    return None
+
+
+def _log_spam(reason):
+    try:
+        with SPAM_LOG.open("a") as f:
+            f.write(f"{datetime.datetime.now(datetime.timezone.utc).isoformat()} blocked: {reason}\n")
+    except OSError:
+        pass
+
+
+def _render_timestamp():
+    return str(datetime.datetime.now(datetime.timezone.utc).timestamp())
+
 
 @bp.route("/")
 def landing():
@@ -63,7 +100,7 @@ def service(slug):
     svc = service_by_slug(slug)
     if not svc:
         abort(404)
-    return render_template("service.html", service=svc, slug=slug)
+    return render_template("service.html", service=svc, slug=slug, form_rendered_at=_render_timestamp())
 
 
 @bp.route("/service/<slug>/contact", methods=["POST"])
@@ -72,6 +109,11 @@ def service_contact(slug):
     if not svc:
         abort(404)
 
+    spam_reason = _is_spam(request.form)
+    if spam_reason:
+        _log_spam(spam_reason)
+        return redirect(url_for("main.thanks"))
+
     name = request.form.get("name", "").strip()
     email = request.form.get("email", "").strip()
     phone = request.form.get("phone", "").strip()
@@ -79,7 +121,8 @@ def service_contact(slug):
 
     if not name or not email or not message:
         return render_template(
-            "service.html", service=svc, slug=slug, error="Name, email, and a message are required."
+            "service.html", service=svc, slug=slug, error="Name, email, and a message are required.",
+            form_rendered_at=_render_timestamp(),
         )
 
     try:
@@ -97,7 +140,9 @@ def service_contact(slug):
             name=name, email=email, phone=phone, message=message,
             business_line=svc["business_line"], error=exc,
         )
-        return render_template("service.html", service=svc, slug=slug, error=ERROR_MESSAGE), 502
+        return render_template(
+            "service.html", service=svc, slug=slug, error=ERROR_MESSAGE, form_rendered_at=_render_timestamp(),
+        ), 502
 
     return redirect(url_for("main.thanks"))
 
@@ -105,7 +150,12 @@ def service_contact(slug):
 @bp.route("/enquire", methods=["GET", "POST"])
 def enquire():
     if request.method == "GET":
-        return render_template("enquire.html")
+        return render_template("enquire.html", form_rendered_at=_render_timestamp())
+
+    spam_reason = _is_spam(request.form)
+    if spam_reason:
+        _log_spam(spam_reason)
+        return redirect(url_for("main.thanks"))
 
     name = request.form.get("name", "").strip()
     email = request.form.get("email", "").strip()
@@ -113,7 +163,10 @@ def enquire():
     message = request.form.get("message", "").strip()
 
     if not name or not email or not message:
-        return render_template("enquire.html", error="Name, email, and a message are required.")
+        return render_template(
+            "enquire.html", error="Name, email, and a message are required.",
+            form_rendered_at=_render_timestamp(),
+        )
 
     try:
         create_website_lead_with_draft(
@@ -128,7 +181,7 @@ def enquire():
             name=name, email=email, phone=phone, message=message,
             business_line="GeneralEnquiry", error=exc,
         )
-        return render_template("enquire.html", error=ERROR_MESSAGE), 502
+        return render_template("enquire.html", error=ERROR_MESSAGE, form_rendered_at=_render_timestamp()), 502
 
     return redirect(url_for("main.thanks"))
 

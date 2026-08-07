@@ -13,3 +13,4 @@ ops-hub/hub.log
 venv/
 ops-hub/.website_webhook_secret
 website/failed_submissions.log
+website/spam_blocked.log
