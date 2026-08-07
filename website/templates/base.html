@@ -53,7 +53,7 @@
   <main id="main-content">{% block content %}{% endblock %}</main>
   <footer class="footer">
     <div class="container footer-grid">
-      <div><img src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co"><p class="muted">Practical support and AI solutions for problems that cost you time, money or peace of mind.</p><small>Doubleview, WA 6018 · North-of-river Perth in person · Australia-wide / worldwide remotely.</small></div>
+      <div><img src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co"><p class="muted">Practical support and AI solutions for problems that cost you time, money or peace of mind.</p><small>Doubleview, WA · Australia-wide / worldwide remotely.</small></div>
       <div><h3>Practices</h3><p><a href="{{ url_for('main.practice', practice_slug='small-business') }}">Local Business Growth</a><br><a href="{{ url_for('main.practice', practice_slug='ai-solutions') }}">AI Solutions for Small Business</a><br><a href="{{ url_for('main.practice', practice_slug='personal-digital-support') }}">Personal Digital Support</a><br><a href="{{ url_for('main.practice', practice_slug='specialist-projects') }}">Specialist Projects</a></p></div>
       <div><h3>About</h3><p><a href="{{ url_for('main.about') }}">About Waters &amp; Co</a><br><a href="{{ url_for('main.how_we_work') }}">How We Work</a><br><a href="{{ url_for('main.enquire') }}">General enquiry</a><br><a href="{{ url_for('main.privacy') }}">Privacy</a> · <a href="{{ url_for('main.terms') }}">Terms</a></p></div>
     </div>
