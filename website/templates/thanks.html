@@ -1,7 +1,4 @@
 {% extends "base.html" %}
-{% block title %}Thank you — Waters &amp; Co{% endblock %}
-{% block content %}
-<h1 class="page-title">Thanks — that's through to us.</h1>
-<p class="lede">We reply by email, usually within a day or two.</p>
-<p class="body-copy"><a href="{{ url_for('main.landing') }}">Back to the start</a></p>
-{% endblock %}
+{% block title %}Enquiry received | Waters &amp; Co{% endblock %}
+{% block meta_description %}Your enquiry has been received by Waters &amp; Co.{% endblock %}
+{% block content %}<section class="hero"><div class="container"><div class="panel thank-you"><div class="eyebrow">Enquiry received</div><h1>Thanks — that’s through to us.</h1><p class="lead">We reply by email, usually within a day or two.</p><div class="actions"><a class="btn" href="{{ url_for('main.landing') }}">Back to the homepage</a><a class="btn ghost" href="{{ url_for('main.segment', slug='small-business-support') }}">Explore services</a></div></div></div></section>{% endblock %}

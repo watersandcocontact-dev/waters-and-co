@@ -1,0 +1,1 @@
+const b=document.querySelector('.menu'),m=document.querySelector('.mobile');if(b&&m)b.onclick=()=>{const o=m.classList.toggle('open');b.setAttribute('aria-expanded',o)};const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>io.observe(e));

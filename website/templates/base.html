@@ -1,38 +1,60 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Waters &amp; Co{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}Waters &amp; Co — Australia-wide service specialists.{% endblock %}">
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32.png') }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Waters &amp; Co | Practical support in Perth and Australia-wide{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Practical support for small business, AI systems, seniors and families, content repurposing and property valuation objections.{% endblock %}">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#182019">
+  <link rel="canonical" href="{% block canonical %}{{ request.base_url }}{% endblock %}">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
-  <meta property="og:title" content="Waters &amp; Co">
-  <meta property="og:description" content="Australia-wide service specialists.">
-  <meta property="og:image" content="{{ url_for('static', filename='img/og-banner.png', _external=True) }}">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Waters &amp; Co">
+  <meta property="og:title" content="{% block og_title %}Waters &amp; Co{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Practical support across business, technology, family and property-related needs.{% endblock %}">
+  <meta property="og:image" content="{{ url_for('static', filename='img/og-banner.png', _external=True) }}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='overrides.css') }}">
+  <script type="application/ld+json">{{ business_ld | tojson }}</script>
+  {% block structured_data %}{% endblock %}
+  <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="{{ url_for('main.landing') }}">
-        <img class="brand-img" src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co">
-      </a>
-      <nav>
-        <a href="{{ url_for('main.enquire') }}">Contact</a>
+    <div class="container nav">
+      <a class="brand" href="{{ url_for('main.landing') }}"><img src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co"></a>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a href="{{ url_for('main.segment', slug='small-business-support') }}">Small Business</a>
+        <a href="{{ url_for('main.segment', slug='business-systems') }}">AI Systems</a>
+        <a href="{{ url_for('main.segment', slug='seniors-support') }}">Seniors &amp; Family</a>
+        <a href="{{ url_for('main.segment', slug='content-repurposing') }}">Content</a>
+        <a href="{{ url_for('main.segment', slug='property-tax-review') }}">Property &amp; Tax</a>
+        <a class="cta" href="{{ url_for('main.enquire') }}">Enquire</a>
       </nav>
+      <button class="menu" type="button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
     </div>
+    <nav class="container mobile" id="mobile-menu" aria-label="Mobile navigation">
+      <a href="{{ url_for('main.segment', slug='small-business-support') }}">Small Business</a>
+      <a href="{{ url_for('main.segment', slug='business-systems') }}">AI Systems</a>
+      <a href="{{ url_for('main.segment', slug='seniors-support') }}">Seniors &amp; Family</a>
+      <a href="{{ url_for('main.segment', slug='content-repurposing') }}">Content</a>
+      <a href="{{ url_for('main.segment', slug='property-tax-review') }}">Property &amp; Tax</a>
+      <a href="{{ url_for('main.enquire') }}">Enquire</a>
+    </nav>
   </header>
-  <main class="wrap fade-in">
-    {% block content %}{% endblock %}
-  </main>
-  <footer class="site-footer">
-    <div class="wrap">
-      <a class="enquire-link" href="{{ url_for('main.enquire') }}">Don't see what you're looking for? Get in touch</a>
+  <main id="main-content">{% block content %}{% endblock %}</main>
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div><img src="{{ url_for('static', filename='img/wordmark-gold-header.png') }}" alt="Waters &amp; Co"><p class="muted">Practical support across business, technology, family and property-related needs.</p><small>Perth, Western Australia · Services vary by location and scope.</small></div>
+      <div><h3>Services</h3><p><a href="{{ url_for('main.segment', slug='small-business-support') }}">Small Business Support</a><br><a href="{{ url_for('main.segment', slug='business-systems') }}">AI Systems for Business</a><br><a href="{{ url_for('main.segment', slug='seniors-support') }}">Seniors &amp; Family Support</a></p></div>
+      <div><h3>Explore</h3><p><a href="{{ url_for('main.segment', slug='content-repurposing') }}">Content Repurposing</a><br><a href="{{ url_for('main.segment', slug='property-tax-review') }}">Property &amp; Tax Review</a><br><a href="{{ url_for('main.enquire') }}">General enquiry</a></p></div>
     </div>
+    <div class="container footer-note"><small>© {{ now_year }} Waters &amp; Co. Information on this site is general in nature. Relevant service boundaries are stated on each service page.</small></div>
   </footer>
+  <script src="{{ url_for('static', filename='site.js') }}" defer></script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+@font-face{font-family:Fraunces;src:url('/static/fonts/fraunces.woff2') format('woff2');font-display:swap;font-style:normal}
+@font-face{font-family:Fraunces;src:url('/static/fonts/fraunces-italic.woff2') format('woff2');font-display:swap;font-style:italic}
+@font-face{font-family:Jost;src:url('/static/fonts/jost.woff2') format('woff2');font-display:swap}
+body:before{background:linear-gradient(rgba(12,24,17,.80),rgba(12,24,17,.92)),url('/static/img/malachite-background-high-res.jpg') center/cover fixed no-repeat}
+.skip-link{position:fixed;left:1rem;top:-5rem;z-index:100;background:var(--gold2);color:var(--deep);padding:.7rem 1rem;border-radius:.4rem}.skip-link:focus{top:1rem}
+.hp-field{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+.form-error{padding:1rem;border-left:3px solid #ef9a7b;background:rgba(120,30,20,.28);border-radius:0 10px 10px 0}
+.form-note{font-size:.9rem;margin:0}.segment-grid{margin-bottom:3rem}.cta-panel{display:flex;align-items:center;justify-content:space-between;gap:2rem}.cta-panel h2{margin-bottom:0}.footer-note{margin-top:25px}.thank-you{max-width:850px;margin:auto;text-align:center}.thank-you .actions{justify-content:center}
+button.btn{cursor:pointer;width:max-content}a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold2);outline-offset:3px}
+@media(max-width:900px){.cta-panel{display:block}.cta-panel .btn{margin-top:1.5rem}body:before{background-attachment:scroll}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.card{transition:none}}
