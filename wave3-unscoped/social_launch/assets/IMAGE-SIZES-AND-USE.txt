@@ -1,0 +1,16 @@
+WATERS & CO PLATFORM IMAGE SET
+
+facebook-profile-1080x1080.jpg — Facebook Page profile image
+facebook-cover-1640x624.jpg — high-resolution Facebook cover
+facebook-cover-standard-851x315.jpg — Facebook standard cover ratio
+instagram-profile-1080x1080.jpg — Instagram profile image
+linkedin-company-logo-400x400.jpg — LinkedIn Company Page logo
+linkedin-company-cover-4200x700.jpg — LinkedIn Company Page cover
+linkedin-personal-cover-1584x396.jpg — LinkedIn personal profile cover
+google-business-profile-logo-720x720.jpg — Google Business Profile logo
+google-business-cover-1332x750.jpg — Google Business Profile cover
+facebook-linkedin-post-square-1080x1080.jpg — square organic post/ad
+facebook-instagram-feed-1440x1800.jpg — 4:5 feed post/ad
+facebook-instagram-story-1080x1920.jpg — story/reel cover
+
+All important text is centred inside a conservative safe area. Platform interfaces may crop covers differently by device, so preview each cover after upload before publishing.
