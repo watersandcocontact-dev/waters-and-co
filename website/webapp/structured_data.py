@@ -26,9 +26,8 @@ CANONICAL_DOMAIN = "https://watersandco.info"
 
 BUSINESS_NAME = "Waters & Co"
 BUSINESS_DESCRIPTION = (
-    "Practical support across small business, AI systems, seniors and "
-    "family technology, content repurposing and property valuation "
-    "objections."
+    "Practical support and AI solutions across local business growth, "
+    "small-business automation, personal digital support and specialist projects."
 )
 
 _PRICE_DISALLOWED_TOKENS = (" or ", " plus ", "~", "up to")

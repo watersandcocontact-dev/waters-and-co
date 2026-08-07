@@ -27,7 +27,11 @@ def inject_business_ld():
     # `now_year` rides along here too -- base.html's footer copyright used
     # to hardcode |default(2026) with nothing ever populating it, so it
     # would have gone stale silently every January.
-    return {"business_ld": organization_ld(), "now_year": datetime.datetime.now(datetime.timezone.utc).year}
+    return {
+        "business_ld": organization_ld(),
+        "canonical_domain": CANONICAL_DOMAIN,
+        "now_year": datetime.datetime.now(datetime.timezone.utc).year,
+    }
 
 
 def _abs_url(endpoint, **values):

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Terms | Waters &amp; Co{% endblock %}
 {% block meta_description %}Terms covering engagements, pricing, ownership and liability for work delivered by Waters & Co.{% endblock %}
-{% block canonical %}{{ request.url_root }}terms/{% endblock %}
+{% block canonical %}{{ canonical_domain }}/terms/{% endblock %}
 {% block structured_data %}<script type="application/ld+json">{{ breadcrumb_ld_json | tojson }}</script>{% endblock %}
 {% block content %}
 <section class="hero compact"><div class="container"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('main.landing') }}">Home</a> / Terms</nav><div class="eyebrow">Terms</div><h1>Terms</h1><p class="lead">Last reviewed {{ now_year }}-08. Waters &amp; Co, ABN 85 928 697 823, Doubleview WA 6018. These terms are general in nature — significant engagements are confirmed in writing before work begins, and that written scope takes precedence over this page if the two differ.</p></div></section>

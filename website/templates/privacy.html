@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Privacy Policy | Waters &amp; Co{% endblock %}
 {% block meta_description %}How Waters & Co collects, uses, stores and protects personal information, including our use of AI tools.{% endblock %}
-{% block canonical %}{{ request.url_root }}privacy/{% endblock %}
+{% block canonical %}{{ canonical_domain }}/privacy/{% endblock %}
 {% block structured_data %}<script type="application/ld+json">{{ breadcrumb_ld_json | tojson }}</script>{% endblock %}
 {% block content %}
 <section class="hero compact"><div class="container"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('main.landing') }}">Home</a> / Privacy</nav><div class="eyebrow">Privacy Policy</div><h1>Privacy Policy</h1><p class="lead">Last reviewed {{ now_year }}-08. Waters &amp; Co, ABN 85 928 697 823, Doubleview WA 6018.</p></div></section>
