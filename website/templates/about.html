@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}About | Waters &amp; Co{% endblock %}
+{% block meta_description %}Waters & Co is a solo-run Perth service business — practical business support and AI solutions, personal digital support, and specialist property/content projects.{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{{ breadcrumb_ld_json | tojson }}</script>{% endblock %}
+{% block content %}
+<section class="hero compact"><div class="container"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('main.landing') }}">Home</a> / About</nav><div class="eyebrow">About</div><h1>One person, four practices, one point of contact.</h1><p class="lead">Waters &amp; Co is run by a single operator based in Perth — not a call centre, not an agency with account managers passing you between departments. Whoever you deal with is whoever does the work.</p></div></section>
+
+<section class="section soft"><div class="container split">
+<div><div class="eyebrow">Where we work</div><h2>Perth in person, Australia-wide (or worldwide) remotely.</h2><p class="lead">In-person work is based out of Doubleview, WA, covering the Perth metro area. Anything that can be delivered remotely — AI systems, bookkeeping, content repurposing, senior tech support over a call — is available Australia-wide, and in some cases worldwide.</p></div>
+<div><div class="eyebrow">When we work</div><h2>Normal weekday hours, with after-hours by arrangement.</h2><p class="lead">Standard trading hours are weekdays. If a job genuinely needs an after-hours or weekend slot, say so when you get in touch and we'll see what's possible — it's not the default, but it's not off the table either.</p></div>
+</div></section>
+
+<section class="section"><div class="container"><div class="section-head"><div><div class="eyebrow">Why the four-practice structure</div><h2>Because "16 services" isn't how anyone actually thinks about their problem.</h2></div><p class="muted">You bring a problem — a Google listing that's gone stale, a workflow eating your evenings, a parent who needs patient tech help, a valuation that looks wrong. The site is organised around those problems, not around an internal list of what we happen to offer.</p></div>
+<div class="grid">
+{% for prac in practices %}<a class="card reveal" href="{{ url_for('main.practice', practice_slug=prac.slug) }}"><span class="tag">{{ prac.name }}</span><h3>{{ prac.tagline }}</h3><span class="arrow">Explore services →</span></a>{% endfor %}
+</div></div></section>
+
+<section class="section soft"><div class="container panel cta-panel"><div><div class="eyebrow">Want the detail behind the approach?</div><h2>See how a job actually runs, start to finish.</h2></div><a class="btn" href="{{ url_for('main.how_we_work') }}">How We Work →</a></div></section>
+{% endblock %}

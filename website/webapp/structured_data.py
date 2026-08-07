@@ -26,9 +26,8 @@ CANONICAL_DOMAIN = "https://watersandco.info"
 
 BUSINESS_NAME = "Waters & Co"
 BUSINESS_DESCRIPTION = (
-    "Practical support across small business, AI systems, seniors and "
-    "family technology, content repurposing and property valuation "
-    "objections."
+    "Practical support and AI solutions across local business growth, "
+    "small-business automation, personal digital support and specialist projects."
 )
 
 _PRICE_DISALLOWED_TOKENS = (" or ", " plus ", "~", "up to")
@@ -98,7 +97,7 @@ def breadcrumb_ld(items):
     }
 
 
-def service_ld(service, slug):
+def service_ld(service):
     offers = []
     for row in service.get("pricing", []):
         offer = {"@type": "Offer", "name": row["label"], "description": row["price"]}
@@ -117,12 +116,13 @@ def service_ld(service, slug):
             offer["priceSpecification"] = price_spec
         offers.append(offer)
 
+    service_url = f"{CANONICAL_DOMAIN}/{service['practice']}/{service['url_slug']}/"
     return {
         "@context": "https://schema.org",
         "@type": "Service",
-        "@id": f"{CANONICAL_DOMAIN}/service/{slug}#service",
+        "@id": f"{service_url}#service",
         "name": service["name"],
-        "url": f"{CANONICAL_DOMAIN}/service/{slug}",
+        "url": service_url,
         "description": service["one_liner"],
         "provider": {"@id": f"{CANONICAL_DOMAIN}/#business"},
         "areaServed": "AU",

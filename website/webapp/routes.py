@@ -4,7 +4,15 @@ from pathlib import Path
 
 from flask import Blueprint, Response, abort, redirect, render_template, request, url_for
 
-from .config import SEGMENTS, SERVICES, segment_by_slug, segment_groups, service_by_slug
+from .config import (
+    OLD_SEGMENT_REDIRECTS,
+    OLD_SERVICE_REDIRECTS,
+    PRACTICES,
+    SERVICES,
+    practice_by_slug,
+    practice_groups,
+    service_by_url_slug,
+)
 from .hub_bridge import HubUnreachableError, create_website_lead_with_draft
 from .structured_data import CANONICAL_DOMAIN, breadcrumb_ld, organization_ld, service_ld
 
@@ -108,53 +116,59 @@ def _render_timestamp():
 
 @bp.route("/")
 def landing():
-    return render_template("landing.html", segments=SEGMENTS)
+    return render_template("landing.html", practices=PRACTICES)
 
 
-@bp.route("/segment/<slug>")
-def segment(slug):
-    seg = segment_by_slug(slug)
-    if not seg:
+@bp.route("/<practice_slug>/")
+def practice(practice_slug):
+    prac = practice_by_slug(practice_slug)
+    if not prac:
         abort(404)
     breadcrumb = breadcrumb_ld([
         ("Home", _abs_url("main.landing")),
-        (seg["name"], _abs_url("main.segment", slug=slug)),
+        (prac["name"], _abs_url("main.practice", practice_slug=practice_slug)),
     ])
     return render_template(
-        "segment.html", segment=seg, groups=segment_groups(slug), breadcrumb_ld_json=breadcrumb,
+        "practice.html", practice=prac, groups=practice_groups(practice_slug), breadcrumb_ld_json=breadcrumb,
     )
 
 
-@bp.route("/service/<slug>")
-def service(slug):
-    svc = service_by_slug(slug)
-    if not svc:
+@bp.route("/<practice_slug>/<url_slug>/")
+def service(practice_slug, url_slug):
+    if not practice_by_slug(practice_slug):
         abort(404)
+    resolved = service_by_url_slug(practice_slug, url_slug)
+    if not resolved:
+        abort(404)
+    key, svc = resolved
     return render_template(
-        "service.html", service=svc, slug=slug, form_rendered_at=_render_timestamp(),
-        **_service_ld_context(svc, slug),
+        "service.html", service=svc, slug=key, form_rendered_at=_render_timestamp(),
+        **_service_ld_context(key, svc),
     )
 
 
-def _service_ld_context(svc, slug):
+def _service_ld_context(key, svc):
     """Shared structured-data context for every service.html render (the
     happy path and both error re-renders) so a validation error or a hub
     outage never silently drops the page's JSON-LD."""
-    parent_segment = segment_by_slug(svc["segment"])
+    prac = practice_by_slug(svc["practice"])
     breadcrumb = breadcrumb_ld([
         ("Home", _abs_url("main.landing")),
-        (parent_segment["name"] if parent_segment else svc["segment"], _abs_url("main.segment", slug=svc["segment"])),
-        (svc["name"], _abs_url("main.service", slug=slug)),
+        (prac["name"] if prac else svc["practice"], _abs_url("main.practice", practice_slug=svc["practice"])),
+        (svc["name"], _abs_url("main.service", practice_slug=svc["practice"], url_slug=svc["url_slug"])),
     ])
-    return {"service_ld_json": service_ld(svc, slug), "breadcrumb_ld_json": breadcrumb}
+    return {"service_ld_json": service_ld(svc), "breadcrumb_ld_json": breadcrumb}
 
 
-@bp.route("/service/<slug>/contact", methods=["POST"])
-def service_contact(slug):
-    svc = service_by_slug(slug)
-    if not svc:
+@bp.route("/<practice_slug>/<url_slug>/contact", methods=["POST"])
+def service_contact(practice_slug, url_slug):
+    if not practice_by_slug(practice_slug):
         abort(404)
-    ld_context = _service_ld_context(svc, slug)
+    resolved = service_by_url_slug(practice_slug, url_slug)
+    if not resolved:
+        abort(404)
+    key, svc = resolved
+    ld_context = _service_ld_context(key, svc)
 
     spam_reason = _is_spam(request.form)
     if spam_reason:
@@ -168,7 +182,7 @@ def service_contact(slug):
 
     if not name or not email or not message:
         return render_template(
-            "service.html", service=svc, slug=slug, error="Name, email, and a message are required.",
+            "service.html", service=svc, slug=key, error="Name, email, and a message are required.",
             form_rendered_at=_render_timestamp(), **ld_context,
         )
 
@@ -179,7 +193,7 @@ def service_contact(slug):
             phone=phone,
             message=message,
             business_line=svc["business_line"],
-            service_slug=slug,
+            service_slug=key,
             service_name=svc["name"],
         )
     except HubUnreachableError as exc:
@@ -188,7 +202,7 @@ def service_contact(slug):
             business_line=svc["business_line"], error=exc,
         )
         return render_template(
-            "service.html", service=svc, slug=slug, error=ERROR_MESSAGE, form_rendered_at=_render_timestamp(),
+            "service.html", service=svc, slug=key, error=ERROR_MESSAGE, form_rendered_at=_render_timestamp(),
             **ld_context,
         ), 502
 
@@ -251,6 +265,37 @@ def thanks():
     return render_template("thanks.html")
 
 
+def _static_page_breadcrumb(name, endpoint):
+    return breadcrumb_ld([
+        ("Home", _abs_url("main.landing")),
+        (name, _abs_url(endpoint)),
+    ])
+
+
+@bp.route("/about/")
+def about():
+    return render_template(
+        "about.html", practices=PRACTICES, breadcrumb_ld_json=_static_page_breadcrumb("About", "main.about"),
+    )
+
+
+@bp.route("/how-we-work/")
+def how_we_work():
+    return render_template(
+        "how_we_work.html", breadcrumb_ld_json=_static_page_breadcrumb("How We Work", "main.how_we_work"),
+    )
+
+
+@bp.route("/privacy/")
+def privacy():
+    return render_template("privacy.html", breadcrumb_ld_json=_static_page_breadcrumb("Privacy", "main.privacy"))
+
+
+@bp.route("/terms/")
+def terms():
+    return render_template("terms.html", breadcrumb_ld_json=_static_page_breadcrumb("Terms", "main.terms"))
+
+
 @bp.route("/robots.txt")
 def robots():
     return Response(
@@ -264,9 +309,15 @@ def sitemap():
     # served the request (onrender.com during testing, localhost in dev) --
     # otherwise a crawl hitting the Render URL before DNS cutover would
     # publish a sitemap full of onrender.com URLs instead of the real ones.
-    urls = [_abs_url("main.landing"), _abs_url("main.enquire")]
-    urls.extend(_abs_url("main.segment", slug=segment["slug"]) for segment in SEGMENTS)
-    urls.extend(_abs_url("main.service", slug=slug) for slug in SERVICES)
+    urls = [
+        _abs_url("main.landing"), _abs_url("main.enquire"), _abs_url("main.about"),
+        _abs_url("main.how_we_work"), _abs_url("main.privacy"), _abs_url("main.terms"),
+    ]
+    urls.extend(_abs_url("main.practice", practice_slug=p["slug"]) for p in PRACTICES)
+    urls.extend(
+        _abs_url("main.service", practice_slug=svc["practice"], url_slug=svc["url_slug"])
+        for svc in SERVICES.values()
+    )
     body = "".join(f"<url><loc>{url}</loc></url>" for url in urls)
     return Response(
         '<?xml version="1.0" encoding="UTF-8"?>'
@@ -274,6 +325,41 @@ def sitemap():
         f"{body}</urlset>",
         mimetype="application/xml",
     )
+
+
+# --- permanent redirects from the pre-2026-08-07-evening URL scheme ---
+# The site launched that morning with /segment/<slug> and /service/<slug>
+# URLs (already submitted to Search Console, already in the sitemap that
+# was live for several hours). Rather than let those 404 after this
+# restructure, every old URL 301s to its new home. GET routes redirect
+# with 301 (permanent, search engines transfer ranking signal); the old
+# contact POST route 307s instead, which is the only redirect status that
+# preserves the HTTP method and form body -- a 301/302 here would silently
+# turn a form submission into a GET and lose the data.
+@bp.route("/segment/<slug>")
+def old_segment_redirect(slug):
+    new_slug = OLD_SEGMENT_REDIRECTS.get(slug)
+    if not new_slug:
+        abort(404)
+    return redirect(url_for("main.practice", practice_slug=new_slug), code=301)
+
+
+@bp.route("/service/<slug>")
+def old_service_redirect(slug):
+    target = OLD_SERVICE_REDIRECTS.get(slug)
+    if not target:
+        abort(404)
+    practice_slug, url_slug = target
+    return redirect(url_for("main.service", practice_slug=practice_slug, url_slug=url_slug), code=301)
+
+
+@bp.route("/service/<slug>/contact", methods=["POST"])
+def old_service_contact_redirect(slug):
+    target = OLD_SERVICE_REDIRECTS.get(slug)
+    if not target:
+        abort(404)
+    practice_slug, url_slug = target
+    return redirect(url_for("main.service_contact", practice_slug=practice_slug, url_slug=url_slug), code=307)
 
 
 @bp.app_errorhandler(404)

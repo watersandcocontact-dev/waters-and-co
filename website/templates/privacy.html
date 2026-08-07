@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy | Waters &amp; Co{% endblock %}
+{% block meta_description %}How Waters & Co collects, uses, stores and protects personal information, including our use of AI tools.{% endblock %}
+{% block canonical %}{{ canonical_domain }}/privacy/{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{{ breadcrumb_ld_json | tojson }}</script>{% endblock %}
+{% block content %}
+<section class="hero compact"><div class="container"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('main.landing') }}">Home</a> / Privacy</nav><div class="eyebrow">Privacy Policy</div><h1>Privacy Policy</h1><p class="lead">Last reviewed {{ now_year }}-08. Waters &amp; Co, ABN 85 928 697 823, Doubleview WA 6018.</p></div></section>
+
+<section class="section soft"><div class="container"><div class="section-head"><div><h2>What we collect</h2></div></div><p class="lead">When you submit an enquiry or a service contact form, we collect your name, email address, phone number (if provided) and the message you send us. We don't ask for or collect anything beyond what's needed to respond to your enquiry through this site's forms — no identity documents, financial account details or health information are ever requested through a general website form.</p></div></section>
+
+<section class="section"><div class="container"><div class="section-head"><div><h2>How we use it</h2></div></div><p class="lead">Your submission is used to respond to your enquiry, assess fit and scope, and — if you go ahead — deliver the service you've engaged us for. It's stored in our internal case-management system and is not sold, rented or shared with third parties for their own marketing purposes.</p></div></section>
+
+<section class="section soft"><div class="container"><div class="section-head"><div><h2>Our use of AI tools</h2></div></div><p class="lead">Some parts of our work — research, drafting, workflow automation — are assisted by AI tools. We follow the OAIC's guidance on AI and privacy: we do not enter your personal information, and particularly sensitive information, into publicly available generative AI tools without your informed agreement, and we minimise what's used wherever possible. Anything consequential produced with AI assistance is reviewed by a person before it reaches you or affects a decision about your matter. We never represent AI-generated material as an independent professional opinion.</p></div></section>
+
+<section class="section"><div class="container"><div class="section-head"><div><h2>Cookies and tracking</h2></div></div><p class="lead">This site does not currently set tracking cookies or run third-party analytics. If that changes — for example, adding privacy-respecting analytics to understand which pages are useful — this policy will be updated first and the change will be reflected here with a new review date.</p></div></section>
+
+<section class="section soft"><div class="container"><div class="section-head"><div><h2>Storage and security</h2></div></div><p class="lead">Submissions are stored in a password-protected internal system, accessed only by the operator of Waters &amp; Co. We take reasonable steps to keep it secure, but no online system can be guaranteed completely free of risk.</p></div></section>
+
+<section class="section"><div class="container"><div class="section-head"><div><h2>Your rights</h2></div></div><p class="lead">Under the Privacy Act, you can ask what personal information we hold about you, request a correction, or ask us to delete it. To do any of these, or to make a privacy complaint, email <a href="mailto:watersandco.contact@gmail.com">watersandco.contact@gmail.com</a>. If you're not satisfied with our response, you can complain to the <a href="https://www.oaic.gov.au/" target="_blank" rel="noopener">Office of the Australian Information Commissioner</a>.</p></div></section>
+{% endblock %}
