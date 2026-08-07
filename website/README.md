@@ -24,9 +24,26 @@ Tailscale Funnel setup, Render config, DNS.
 
 ## Segments (current grouping — change in `webapp/config.py` if wrong)
 
-1. **Local Presence** — GBP + Review Generation
-2. **Never Miss a Call** — AI Missed-Call Reception
-3. **Property & Tax Review** — Land Tax Objection
+**Updated 2026-08-07 — this section was stale, out of sync with the actual
+code since the 2026-08-06 restructure. Verify against `webapp/config.py`'s
+`SEGMENTS` list directly if in doubt, not this file, since docs drift.**
+
+5 segments, 16 services, in this landing-page order:
+
+1. **Small Business Support** — two sub-groups: "Local Presence & Never Miss
+   a Call" (GBP, ReviewGen, MissedCall) and "Books & Grants" (Bookkeeping,
+   GrantFinder).
+2. **AI Systems for Business** — AI Implementation, AI Tools for Business,
+   AI Lead-Response for Real Estate Agents, plus GBP/ReviewGen/MissedCall
+   cross-listed here too (audience overlap with segment 1).
+3. **Seniors & Family Support** — Tech Concierge, Crypto Literacy, Digital
+   Legacy, Downsizing (coordination + labour), Photo & Memory Digitisation.
+4. **Content Repurposing** — Video/Podcast Repurposing.
+5. **Property & Tax Review** — Land Tax / Rates Objection.
+
+(Lost Super was removed from the public site 2026-08-06 — it's free to the
+client, revenue is referral-fee only, not worth a landing-page slot. Still
+fully trackable internally via the hub's `LostSuper` business_line.)
 
 ## Contact form → hub → draft email
 
@@ -70,17 +87,33 @@ after comparing options), Jost for labels. Single dark theme by design,
 same reasoning as the original brand concept artifact: the identity *is*
 the dark ground.
 
-## Not yet done
+## Status — LIVE
 
-- **Actually deployed** — code/config is ready (`render.yaml`, `wsgi.py`,
-  `requirements.txt`, `docs/website_deployment.md`), but nobody's clicked
-  deploy yet. That needs a GitHub push + a Render account (your own
-  account/payment — see the deployment doc).
-- **Domain name** — not registered yet; going with a global `.com` per your
-  call (not `.com.au`, since `.com.au` needs an ASIC business-name
-  registration first and you want worldwide reach anyway).
+**Deployed and live at [watersandco.info](https://watersandco.info) since
+2026-08-07.** Full deployment walkthrough (Tailscale Funnel, Render,
+Cloudflare DNS) in `docs/website_deployment.md`; the real gotchas hit along
+the way are logged in `DECISIONS.md`'s 2026-08-07 entries — worth reading
+before touching the deploy chain again, several non-obvious things bit us
+(Funnel path-stripping, Render env-var overwrite, a `HUB_HOST`
+localhost-vs-Tailscale-IP binding mismatch that silently 502'd every real
+webhook call for a while).
+
+Real bug fixed 2026-08-07 (see `webapp/routes.py`/`webapp/hub_bridge.py`):
+a hub-unreachable failure on the contact form used to surface as a bare,
+unbranded Flask 500 with the visitor's submission completely lost. Now
+caught explicitly (`HubUnreachableError`), logged to
+`website/failed_submissions.log` (gitignored — check it if a visitor
+reports an error) so nothing's silently dropped, and the visitor sees a
+proper branded message pointing them to a fallback email address.
+
+## Known gaps, not yet addressed
+
+- No CSRF token or spam mitigation (honeypot/rate-limit) on the two POST
+  forms. Low severity for a public marketing form, but every submission
+  creates a real record in the Daily Queue — an automated spam run could
+  pollute it. Worth a lightweight honeypot field if it becomes a problem.
 - Visual QA of the landing-page hover animation — verified structurally
   (DOM, class toggling, CSS rules present and correctly scoped) but the
-  actual fade transition couldn't be visually confirmed in this session's
-  browser-testing sandbox (it doesn't run a real compositor). Worth a
-  quick look in an actual browser before relying on it.
+  actual fade transition couldn't be visually confirmed in earlier
+  browser-testing sessions (sandbox didn't run a real compositor). Worth a
+  quick look in an actual browser if it ever seems off.

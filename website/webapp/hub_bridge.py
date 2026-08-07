@@ -76,39 +76,62 @@ def _attach_draft_local(lead_id, draft, get_lead, update_lead):
     update_lead(lead_id, data)
 
 
+class HubUnreachableError(Exception):
+    """Raised whenever the hub call fails for any reason (network error,
+    timeout, wrong/missing secret, hub down, malformed response). routes.py
+    catches this specifically -- never let it surface as a bare Flask 500,
+    and never let the visitor's submission just vanish when it happens
+    (see the fallback-logging call in routes.py)."""
+
+
 def _create_remote(*, name, email, phone, message, business_line, next_action, draft):
     import requests
 
     url = os.environ.get("HUB_WEBHOOK_URL")
     secret = os.environ.get("HUB_WEBHOOK_SECRET")
     if not url or not secret:
-        raise RuntimeError(
+        raise HubUnreachableError(
             "HUB_MODE=remote requires HUB_WEBHOOK_URL and HUB_WEBHOOK_SECRET to be set "
             "(see docs/website_deployment.md)."
         )
-    resp = requests.post(
-        url.rstrip("/") + "/webhook/website-lead",
-        headers={"X-Website-Secret": secret, "Content-Type": "application/json"},
-        json={
-            "name": name,
-            "email": email,
-            "phone": phone,
-            "message": message,
-            "business_line": business_line,
-            "next_action": next_action,
-            "draft_subject": draft["subject"],
-            "draft_body": draft["body"],
-        },
-        timeout=15,
-    )
-    resp.raise_for_status()
-    return resp.json()["lead_id"]
+    try:
+        resp = requests.post(
+            url.rstrip("/") + "/webhook/website-lead",
+            headers={"X-Website-Secret": secret, "Content-Type": "application/json"},
+            json={
+                "name": name,
+                "email": email,
+                "phone": phone,
+                "message": message,
+                "business_line": business_line,
+                "next_action": next_action,
+                "draft_subject": draft["subject"],
+                "draft_body": draft["body"],
+            },
+            timeout=15,
+        )
+        resp.raise_for_status()
+        return resp.json()["lead_id"]
+    except requests.RequestException as exc:
+        # Network error, timeout, DNS failure, connection refused, etc.
+        raise HubUnreachableError(f"could not reach the hub: {exc}") from exc
+    except (KeyError, ValueError) as exc:
+        # Hub responded but not with the {"lead_id": ...} shape expected
+        # (e.g. its own error JSON on a 401/503 that raise_for_status
+        # didn't already catch, or a non-JSON body).
+        raise HubUnreachableError(f"hub responded but not in the expected shape: {exc}") from exc
 
 
 def create_website_lead_with_draft(*, name, email, phone, message, business_line, service_slug=None, service_name=None):
     """Create a lead (tagged to the right business line) and attach a
     template-based drafted reply to it, in one call, in whichever mode
-    HUB_MODE selects. Returns the new lead_id."""
+    HUB_MODE selects. Returns the new lead_id.
+
+    Raises HubUnreachableError (never lets a raw exception escape) if the
+    hub can't be reached or reports an unexpected shape, in either mode --
+    routes.py always has exactly one exception type to catch, and its own
+    fallback logging (see routes.py's _log_lost_submission) makes sure a
+    failed submission is never just silently dropped."""
     next_action = f"Respond re: {service_name} enquiry" if service_name else "Respond to website enquiry"
     draft = _draft_for(service_slug, name, message)
 
@@ -118,9 +141,16 @@ def create_website_lead_with_draft(*, name, email, phone, message, business_line
             business_line=business_line, next_action=next_action, draft=draft,
         )
 
-    lead_id, get_lead, update_lead = _create_local(
-        name=name, email=email, phone=phone, message=message,
-        business_line=business_line, next_action=next_action,
-    )
-    _attach_draft_local(lead_id, draft, get_lead, update_lead)
-    return lead_id
+    try:
+        lead_id, get_lead, update_lead = _create_local(
+            name=name, email=email, phone=phone, message=message,
+            business_line=business_line, next_action=next_action,
+        )
+        _attach_draft_local(lead_id, draft, get_lead, update_lead)
+        return lead_id
+    except HubUnreachableError:
+        raise
+    except Exception as exc:  # noqa: BLE001 -- deliberately broad: any local-mode
+        # failure (missing hub DB file, import error, etc.) must still route
+        # through the same fallback-logging path as the remote-mode failures.
+        raise HubUnreachableError(f"local hub write failed: {exc}") from exc
