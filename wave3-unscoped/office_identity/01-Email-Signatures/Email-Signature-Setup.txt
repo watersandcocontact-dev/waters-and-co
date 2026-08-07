@@ -1,0 +1,5 @@
+HTML SIGNATURE SETUP
+
+Open the HTML file in a browser, select the rendered signature and copy it into the signature settings for Gmail, Outlook or Apple Mail. Send a test email to desktop and mobile. Some email systems block embedded images; use the plain-text version if the logo does not persist.
+
+Do not add a public phone number or personal name unless the Waters & Co contact strategy changes.
