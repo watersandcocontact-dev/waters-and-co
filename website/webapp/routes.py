@@ -231,6 +231,7 @@ def enquire():
     name = request.form.get("name", "").strip()
     email = request.form.get("email", "").strip()
     phone = request.form.get("phone", "").strip()
+    interest = request.form.get("interest", "Not sure yet").strip()
     message = request.form.get("message", "").strip()
 
     if not name or not email or not message:
@@ -244,7 +245,7 @@ def enquire():
             name=name,
             email=email,
             phone=phone,
-            message=message,
+            message=f"Interest: {interest}\n\n{message}",
             business_line="GeneralEnquiry",
         )
     except HubUnreachableError as exc:

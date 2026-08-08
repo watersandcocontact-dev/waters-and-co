@@ -105,8 +105,9 @@ SERVICES = {
             "listing."
         ),
         "pricing": [
-            {"label": "One-off profile cleanup", "price": "$150–300"},
-            {"label": "Ongoing monthly management", "price": "$100–200/mo"},
+            {"label": "Visibility check and action plan", "price": "$99 fixed"},
+            {"label": "Profile cleanup and relaunch", "price": "$249 fixed"},
+            {"label": "Ongoing profile management", "price": "$149/mo"},
         ],
         "who_for": [
             "Trades and local service businesses who rely on Google Maps for jobs",
@@ -147,8 +148,9 @@ SERVICES = {
             "ignored review list quietly costs you the job."
         ),
         "pricing": [
-            {"label": "One-off setup", "price": "$100–200"},
-            {"label": "Ongoing monthly management", "price": "$100–300/mo"},
+            {"label": "Review-request system setup", "price": "$149 fixed"},
+            {"label": "Managed requests and monitoring", "price": "$149/mo"},
+            {"label": "Managed requests, responses and reporting", "price": "$249/mo"},
         ],
         "who_for": ["Any business with real, happy customers who just haven't been asked for a review"],
         "who_not_for": ["Anyone wanting reviews written for them, gated, or incentivised — that breaches Google's policies and we won't do it"],
@@ -178,8 +180,9 @@ SERVICES = {
             "competitor picks up instead."
         ),
         "pricing": [
-            {"label": "Setup", "price": "$300–600 one-off"},
-            {"label": "Ongoing monthly management", "price": "$150–400/mo"},
+            {"label": "Missed-call text-back setup", "price": "$349 fixed"},
+            {"label": "Managed text-back and lead capture", "price": "$199/mo"},
+            {"label": "AI reception and managed follow-up", "price": "From $299/mo"},
         ],
         "who_for": ["Trades and appointment-based businesses that lose jobs to voicemail"],
         "who_not_for": ["Businesses that already have full-time reception staff answering every call"],
@@ -209,8 +212,8 @@ SERVICES = {
             "valuation simply pay more than they should."
         ),
         "pricing": [
-            {"label": "Standard residential objection", "price": "$400–800 flat"},
-            {"label": "Commercial / complex property", "price": "Quote on assessment"},
+            {"label": "Residential evidence and objection pack", "price": "$590 fixed"},
+            {"label": "Complex or commercial objection pack", "price": "From $990"},
         ],
     },
     "ai_implementation": {
@@ -229,9 +232,10 @@ SERVICES = {
             "systems available for more complex needs."
         ),
         "pricing": [
-            {"label": "Single automation build", "price": "$990–1,490 fixed"},
-            {"label": "Small business system (multi-step)", "price": "$2,500–4,000 fixed"},
-            {"label": "Optional ongoing monitoring", "price": "$150–250/mo"},
+            {"label": "Workflow check and implementation plan", "price": "$290 fixed"},
+            {"label": "Practical AI workflow pilot", "price": "From $1,290"},
+            {"label": "Multi-step small-business system", "price": "From $2,900"},
+            {"label": "Optional monitoring and improvements", "price": "$199/mo"},
         ],
         "who_for": ["A business with one clear, repetitive bottleneck eating real hours every week"],
         "who_not_for": ["Anyone wanting a vague 'AI transformation' with no specific process in mind — start narrower, prove it, then expand"],
@@ -266,7 +270,8 @@ SERVICES = {
             "listing."
         ),
         "pricing": [
-            {"label": "Managed lead-response service", "price": "$129–199/mo flat"},
+            {"label": "Lead-response workflow setup", "price": "$390 fixed"},
+            {"label": "Managed lead response and follow-up", "price": "$179/mo"},
         ],
     },
     "aitoolsbusiness": {
@@ -284,9 +289,9 @@ SERVICES = {
             "service)."
         ),
         "pricing": [
-            {"label": "Basic — 1 tool, 1 training session", "price": "$200–350 one-off"},
-            {"label": "Standard — 2-3 tools, 2 sessions, template pack", "price": "$400–600 one-off"},
-            {"label": "Optional ongoing support", "price": "$80–150/mo"},
+            {"label": "One tool setup and training session", "price": "$290 fixed"},
+            {"label": "2–3 tools, two sessions and template pack", "price": "$490 fixed"},
+            {"label": "Optional ongoing support", "price": "$120/mo"},
         ],
         "who_for": ["A business already paying for an AI tool (or considering one) that isn't confidently used yet"],
         "who_not_for": ["A business wanting a fully custom system built from scratch — that's AI Implementation, one step up"],
@@ -319,8 +324,8 @@ SERVICES = {
             "out."
         ),
         "pricing": [
-            {"label": "Micro (0-25 transactions/mo)", "price": "$149–179/mo"},
-            {"label": "Small (25-100 transactions/mo)", "price": "$299–449/mo"},
+            {"label": "Micro — up to 25 transactions/mo", "price": "$169/mo"},
+            {"label": "Small — 26–100 transactions/mo", "price": "From $349/mo"},
         ],
     },
     "grantfinder": {
@@ -336,7 +341,7 @@ SERVICES = {
             "report, not a subscription."
         ),
         "pricing": [
-            {"label": "Grant-match shortlist report", "price": "$79–99 flat"},
+            {"label": "Grant-match shortlist report", "price": "$89 fixed"},
         ],
     },
     "pension": {
@@ -372,10 +377,10 @@ SERVICES = {
             "scam."
         ),
         "pricing": [
-            {"label": "Standard session, in-person (~1hr)", "price": "$70–85"},
-            {"label": "Standard session, remote (~1hr)", "price": "$55–65"},
-            {"label": "Extended session (~1.5hr)", "price": "$105–125"},
-            {"label": "Follow-up/check-in (~30min)", "price": "$40–50"},
+            {"label": "Standard in-person session — up to 1 hour", "price": "$79"},
+            {"label": "Standard remote session — up to 1 hour", "price": "$59"},
+            {"label": "Extended in-person session — up to 90 minutes", "price": "$119"},
+            {"label": "Remote follow-up — up to 30 minutes", "price": "$45"},
         ],
     },
     "cryptoliteracy": {
@@ -392,7 +397,8 @@ SERVICES = {
         ),
         "pricing": [
             {"label": "1:1 session", "price": "$85/hr"},
-            {"label": "Small-group workshop", "price": "$59/head, or $349 flat for a private group up to 8"},
+            {"label": "Public small-group workshop", "price": "$59/person"},
+            {"label": "Private workshop — up to 8 people", "price": "$349 fixed"},
         ],
     },
     "digitallegacy": {
@@ -408,9 +414,9 @@ SERVICES = {
             "something ever happens to you."
         ),
         "pricing": [
-            {"label": "Starter", "price": "$120–150"},
-            {"label": "Full inventory", "price": "$250–320"},
-            {"label": "Annual refresh", "price": "$80–100"},
+            {"label": "Starter account organiser", "price": "$139 fixed"},
+            {"label": "Full digital account inventory", "price": "$289 fixed"},
+            {"label": "Annual refresh", "price": "$89 fixed"},
         ],
     },
     "downsizing": {
@@ -427,7 +433,8 @@ SERVICES = {
             "take it from there."
         ),
         "pricing": [
-            {"label": "Coordination only", "price": "$45–65/hr, or $400–1,200 packaged"},
+            {"label": "Planning and coordination", "price": "$59/hr"},
+            {"label": "Coordinated downsizing package", "price": "From $490"},
             {"label": "Hands-on labour/sorting", "price": "$80/hr flat"},
         ],
     },
@@ -445,7 +452,9 @@ SERVICES = {
             "every year they're left as they are."
         ),
         "pricing": [
-            {"label": "Coordination/curation fee", "price": "~$55/hr, plus bureau scanning cost at their rate"},
+            {"label": "Photo sorting and project setup", "price": "$149 fixed"},
+            {"label": "Additional coordination and curation", "price": "$55/hr"},
+            {"label": "Scanning and restoration", "price": "Quoted at supplier cost"},
         ],
     },
     "videorepurpose": {

@@ -24,3 +24,8 @@ h1{text-wrap:balance}h1 em{color:var(--gold2);font-weight:inherit}.btn{gap:.5rem
 @media(hover:none){.card:hover,.btn:hover,.brand:hover img{transform:none}.card:hover:before{transform:translateX(-105%)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .reveal,.reveal{opacity:1;transform:none;transition:none}.card,.card:before,.card .arrow span,.btn,.btn span,.brand img,.menu i,.menu i:before{transition:none!important}.mobile.open{animation:none}}
 @keyframes menu-in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.email-start{border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(227,199,135,.035),transparent)}
+.priority-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.priority-card{display:flex;flex-direction:column}.priority-card p{color:var(--muted);margin:0 0 24px}.priority-card .arrow{margin-top:auto}
+select{width:100%;border:1px solid var(--line);border-radius:10px;background:rgba(245,237,218,.06);color:var(--cream);padding:14px 16px;font:inherit}select option{color:var(--deep);background:var(--cream)}
+@media(max-width:900px){.priority-grid{grid-template-columns:1fr}}
+.price-note{font-size:.84rem;line-height:1.55;margin:18px 0 0;padding-top:16px;border-top:1px solid var(--line)}

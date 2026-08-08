@@ -130,3 +130,22 @@ layered on top of the pricing above, not a separate price:
 
 Full detail, GBP category recommendation and content roadmap:
 `docs/implementation_workbook_2026-08-08.md`.
+
+## Update 2026-08-09 — website moved to fixed pricing per Master Handover §5
+
+Per the Owner-supplied handover (`docs/handover-proposals/2026-08-09/`),
+`website/webapp/config.py` now quotes **exact fixed prices** instead of
+ranges for every service — e.g. GBP is now "$99 fixed / $249 fixed /
+$149/mo" instead of "$150–300 / $100–200/mo", MissedCall is now "$349 fixed
+/ $199/mo / from $299/mo" instead of "$300–600 / $150–400/mo". Full new
+figures are in the handover PDF §5 and directly in `config.py`.
+
+**Not yet reconciled:** `wave1/gbp/pricing_sheet.md` and
+`wave1/missedcall/pricing_sheet.md` — marked elsewhere in this file as the
+*authoritative client-facing quote* — still show the old ranges and haven't
+been updated to match. Don't quote from those two sheets until they're
+brought in line with the live site; `website/webapp/config.py` is the
+current source of truth for what a prospect actually sees. This table's
+rows above (used for `$/hr` queue sorting, not client quotes) also haven't
+been re-derived from the new fixed prices — worth a pass next time pricing
+is touched, but the sort order isn't materially affected by this change.
