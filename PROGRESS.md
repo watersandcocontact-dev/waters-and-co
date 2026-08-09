@@ -191,6 +191,40 @@ email is a prepared draft for the Owner to paste and send from their own inbox.
 If it matters for other workflows, worth reporting as a bug via the desktop
 app's own feedback channel; it's outside what this session can fix.
 
+## 2026-08-09 — daily opportunity scan: 1 drafted, 1 rejected
+
+**Drafted: AI Search Visibility Audit (32/35)** —
+`wave3-unscoped/ai_search_visibility/` (service_scope.md + pricing_sheet.md).
+Flat-fee audit of whether a local business gets recommended by
+ChatGPT/Gemini/Perplexity/AI Overviews, plus a 90-day fix list. Highest
+infrastructure-reuse score yet: sells straight into the existing
+GBP/ReviewGen/MissedCall client base using the same report-and-action-plan
+format as LandTax/GrantFinder. Proposed $249–349 standard, $149–199 bolt-on
+for existing clients, free snapshot as lead magnet.
+
+Market gap scored 3 (not higher) on purpose — **the local tier already has a
+Perth competitor**: SocialPulse247 sells a $497 AI Search Visibility Audit to
+trades and local services, the same segment. AI Local Link $299, AIReady
+Australia $497, against agency retainers of $2,500–15,000/mo and $27 self-serve
+tools. Contested, not empty — but a Perth operator betting on this segment
+validates the model.
+
+**Owner decision needed:** own business line vs a `task_type` on GBP (the fix
+half overlaps GBP heavily). Nothing wired into `config.py`, `PRICING.md` or the
+website either way.
+
+**Rejected: New Business Launch Concierge (20/35)** — verified against the
+regulator, not assumed: TPB(I) 39/2023 lists applying for an ABN on a client's
+behalf as a tax agent service, and TPB registration is required to provide those
+for a fee. Same class as the held NDIS/Deceased-Estate lines. Logged with
+reasoning in `candidates_log.md`.
+
+**Process gap found:** the session buffer says two candidates were scored
+2026-08-05 (AI Answer Visibility, Declutter-to-Cash) but neither was ever
+written into `candidates_log.md` — no scores survive. AI Answer Visibility is
+superseded by today's row; **Declutter-to-Cash remains genuinely open** and its
+claimed WA-licensing blocker is unverified. Noted in the log.
+
 ## How to pick this back up
 
 - Run both apps (see top of this file).
