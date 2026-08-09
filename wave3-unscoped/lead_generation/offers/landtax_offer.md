@@ -2,10 +2,9 @@
 
 Format: Martell's Problem/Promise/Timeline/Price/Guarantee. Numbers pulled
 from the already-CONFIRMED pricing (`wave1/landtax/pricing_sheet.md`,
-CONFIRMED 2026-08-01) — the source report's $550 flat sits inside that
-sheet's $400-800 confirmed range, so quoting $550 as a clean, memorable
-number for this one-pager doesn't conflict with it (price toward the top
-of the range for larger/more complex properties, per the sheet).
+CONFIRMED 2026-08-09, fixed pricing) — now $590 fixed for a standard
+residential objection, replacing the earlier $550 (which sat inside the
+old $400-800 range) and the range itself.
 
 ## The offer
 
@@ -23,11 +22,11 @@ states, 2 months in VIC, NT is 30 days — see `wave1/landtax/state_*.md`
 for the client's specific state). Valuer-General/authority review
 typically ~90 days after that.
 
-**Price.** Flat $550 for a standard residential objection (research +
+**Price.** Flat $590 for a standard residential objection (research +
 comparable-sales evidence + drafted objection letter — client lodges it
 themselves via the state's identity-verified portal, per
-`objection_letter_template.md`'s notes). Commercial/complex properties:
-quote on assessment, scaling with evidence-gathering complexity.
+`objection_letter_template.md`'s notes). Complex/commercial properties:
+from $990.
 
 **Guarantee.** Free 15-minute eligibility check before any fee changes
 hands — if the valuation is genuinely defensible and not worth

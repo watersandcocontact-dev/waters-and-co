@@ -89,7 +89,7 @@ on Maps. I help fix exactly that, want a quick look at what's missing?"*
 Confirmed real, still trading, but has 72 reviews at 1.9★ with a
 multi-year pattern of "never called back" complaints. This is a harder,
 longer conversation than the others — the fix needed may be bigger than
-a $300-600 setup, and they've likely had marketing pitches before.
+a $349 setup, and they've likely had marketing pitches before.
 **Lower priority** despite strong evidence — worth a text, not a first
 call:
 

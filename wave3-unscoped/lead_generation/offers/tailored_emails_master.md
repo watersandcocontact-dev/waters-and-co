@@ -759,7 +759,7 @@ contacts (`contact_channels_and_strategy.md`, `launch_leads_and_contacts.md`,
 
 ## Real Estate AI Lead-Response — solo/small-team agents (UK/US/Canada)
 
-Angle: AI Lead-Response for Real Estate Agents ($129-199/mo, positioned against
+Angle: AI Lead-Response for Real Estate Agents ($179/mo (+ $390 setup), positioned against
 expensive/complex incumbents like Structurely/Ylopo/kvCORE, not the $20/mo DIY
 tier). Each of these is a solo broker-owner or small independent agency with no
 dedicated instant-response tooling — the exact profile the service is priced for.

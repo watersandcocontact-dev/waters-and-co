@@ -1,9 +1,13 @@
 # GBP / Local SEO — Pricing Sheet
 
-**Status: CONFIRMED 2026-08-01** — cross-checked against competitor research
+**Status: CONFIRMED 2026-08-09** — moved from ranged to fixed pricing per
+the Owner-supplied Master Handover (`docs/handover-proposals/2026-08-09/`,
+§5). Original range pricing was cross-checked against competitor research
 (`docs/competitor_pricing_research.md`, sourced 2026-07-30, re-verified
-2026-08-01, no change). This is the live client-facing quote and matches
-the public website exactly.
+2026-08-01) and held as reasonable; these fixed prices sit within that
+same validated range, just quoted as exact numbers instead of bands. This
+is the live client-facing quote and matches the public website
+(`website/webapp/config.py`) exactly.
 
 **Service area: Australia-wide.** This entire service is delivered remotely —
 GBP access is granted online, photos/posts are supplied digitally, and calls/
@@ -13,10 +17,16 @@ the starting point for the initial cold-outreach target list — see
 `target_businesses_perth.md` — that's a prospecting batch, not a service-area
 limit.)
 
-## One-off profile cleanup — $150-$300
+## Visibility check and action plan — $99 fixed
 
-Scope (adjust price by how much cleanup is needed — use the audit score as a guide:
-sub-40 scores often need the full high end, 40-60 mid-range):
+A low-risk diagnostic entry point (the site's "Local Visibility Check" wedge
+offer): review the Google Business Profile, website journey, contact path,
+review signals and obvious local-search gaps, then deliver a concise ranked
+action plan. Does not promise ranking positions.
+
+## Profile cleanup and relaunch — $249 fixed
+
+Scope (was the $150-300 one-off cleanup range — now a single fixed price):
 
 - Full audit against the 10-point checklist
 - Category correction (primary + secondary)
@@ -28,21 +38,26 @@ sub-40 scores often need the full high end, 40-60 mid-range):
 - Website/booking link fix
 - Written before/after summary for the client
 
-## Ongoing monthly management — $100-$200/month
+## Ongoing profile management — $149/month
 
-Suggested tiers:
+Was a $100-200/month range with Basic/Standard/Growth tiers; now one fixed
+monthly price. Use the tier descriptions below as the scope of what $149/mo
+includes (roughly the old "Standard" tier) — offer more frequent posting or
+reporting as a manual up-sell if a client wants it, rather than a separate
+published tier:
 
-| Tier | Price/mo | Includes |
-|------|----------|----------|
-| Basic | $100/mo | 2 Google Posts/month, monthly photo refresh (2-4 photos), review monitoring (no responses) |
-| Standard | $150/mo | 4 Google Posts/month, monthly photo refresh (4-6 photos), review response management (all reviews), quarterly re-audit |
-| Growth | $200/mo | Weekly Google Posts (4-5/month), ongoing photo requests from client + upload, full review response management, monthly mini-report, Q&A section monitoring/seeding |
+- 4 Google Posts/month
+- Monthly photo refresh (4-6 photos)
+- Review response management (all reviews)
+- Quarterly re-audit
 
 ## Notes
 
-- First-month often bundles the one-off cleanup fee into a package with the first
-  month of management at a discount to reduce friction (e.g. cleanup + first
-  month for $299 instead of $250-350 combined).
-- Price toward the top of each range for businesses with multiple locations or
-  very poor starting profiles (more initial labor).
-- Revisit pricing after the first 5-10 clients once real time-per-client is known.
+- The visibility check ($99) is the front door — it's designed to convert
+  into the $249 cleanup and/or $149/mo management, not stand alone as the
+  whole engagement.
+- First engagement can still bundle cleanup + first month of management at
+  a small discount to reduce friction (e.g. $349 combined instead of $398).
+- Revisit pricing after the first 5-10 clients once real time-per-client is
+  known — these fixed prices assume roughly the same effort the old
+  mid-range estimate did.

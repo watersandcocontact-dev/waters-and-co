@@ -2,9 +2,9 @@
 
 Format: Martell's Problem/Promise/Timeline/Price/Guarantee. Numbers pulled
 from the already-CONFIRMED pricing (`wave1/missedcall/pricing_sheet.md`,
-`wave1/gbp/pricing_sheet.md`, both marked CONFIRMED 2026-08-01), not the
-source report's numbers where they differ — those sheets are the
-authoritative client-facing quote.
+`wave1/gbp/pricing_sheet.md`, both marked CONFIRMED 2026-08-09, fixed
+pricing), not the source report's numbers where they differ — those sheets
+are the authoritative client-facing quote.
 
 ## The offer
 
@@ -20,11 +20,11 @@ first place.
 number. GBP cleanup live within 14 days.
 
 **Price.**
-- Missed-call setup: $300–600 one-off (quote toward the low end for a
-  simple single-tradie setup)
-- Missed-call ongoing: $150/mo Basic tier to start
-- GBP cleanup (bundled): $150–300 one-off
-- GBP ongoing (bundled): $100/mo Basic tier to start
+- Missed-call setup: $349 fixed
+- Missed-call ongoing: $199/mo (managed text-back), or from $299/mo for
+  full AI reception
+- GBP cleanup (bundled): $249 fixed (or $99 for a visibility check first)
+- GBP ongoing (bundled): $149/mo
 - First-month bundle discount: offer cleanup + first month together at a
   discount to reduce friction, per the existing pricing sheet's own note
 

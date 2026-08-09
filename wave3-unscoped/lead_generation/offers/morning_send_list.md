@@ -1209,12 +1209,12 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 
 ---
 
-## AI Lead-Response (instant reply to new enquiries, $129-199/mo) (12 emails)
+## AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup)) (12 emails)
 
 ### 66. Bests Estate Agents — Terry Nam (Runcorn, Cheshire, UK)
 - **Who:** Bests Estate Agents — Terry Nam (Runcorn, Cheshire, UK)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** 3-person family partnership, fully independent, relies on Rightmove/Zoopla portal leads with no dedicated instant-response capability.
 - **Send to:** terry@bests.co.uk
 
@@ -1231,7 +1231,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 67. Rose & Co Estates (South Hampstead, London, UK)
 - **Who:** Rose & Co Estates (South Hampstead, London, UK)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Independent family-run agency, small headcount, all sales/lettings/management in-house with no visible tech/CRM layer.
 - **Send to:** info@roseandcoestates.co.uk
 
@@ -1248,7 +1248,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 68. Solo Property Management (Ripon, North Yorkshire, UK)
 - **Who:** Solo Property Management (Ripon, North Yorkshire, UK)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Single-office independent agency in a small-town market — can't justify enterprise lead-response tools.
 - **Send to:** info@solopm.com
 
@@ -1265,7 +1265,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 69. AB Property Consultants — Alexander McTurk (Baillieston, Glasgow, UK)
 - **Who:** AB Property Consultants — Alexander McTurk (Baillieston, Glasgow, UK)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** 2-founder independent agency positioned against "corporate estate agency," fielding Rightmove/Zoopla/S1homes leads manually.
 - **Send to:** alex@abpropertyconsultants.co.uk
 
@@ -1282,7 +1282,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 70. Robbie Howarth Estate Agents (Llandudno Junction, North Wales, UK)
 - **Who:** Robbie Howarth Estate Agents (Llandudno Junction, North Wales, UK)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Single-owner, family-run since 1988, no team (primarily lettings/property management).
 - **Send to:** info@robbie-howarth.co.uk
 
@@ -1299,7 +1299,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 71. Falloon Estate Agents — Ed & Heather Falloon (Lisburn, Northern Ireland, UK)
 - **Who:** Falloon Estate Agents — Ed & Heather Falloon (Lisburn, Northern Ireland, UK)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Second-generation sibling-run independent agency, single office, no corporate backing or shared tech platform.
 - **Send to:** admin@falloonestateagents.com
 
@@ -1316,7 +1316,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 72. The Maine Agent — Rachel Lorraine (Windham, Maine, US)
 - **Who:** The Maine Agent — Rachel Lorraine (Windham, Maine, US)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Solo broker-owner of her own brokerage, no team — handling everything from lead to close herself.
 - **Send to:** rachel@rlsellsmaine.com
 
@@ -1333,7 +1333,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 73. Local Realty Company — Mike Volquardsen (Ankeny, Iowa, US)
 - **Who:** Local Realty Company — Mike Volquardsen (Ankeny, Iowa, US)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Small independent brokerage where agents work as individual contractors — no shared instant-response system.
 - **Send to:** mike@localrealtycompany.com
 
@@ -1350,7 +1350,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 74. My Texas Home Broker — Kim Lookabaugh (Marble Falls, Texas, US)
 - **Who:** My Texas Home Broker — Kim Lookabaugh (Marble Falls, Texas, US)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Boutique 5-agent independent agency covering a high-lead resort/lake market with no enterprise tech stack.
 - **Send to:** Kim@MyTexasHomeBroker.com
 
@@ -1367,7 +1367,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 75. Desert Sky Real Estate — Cat Zwicker (Redmond, Central Oregon, US)
 - **Who:** Desert Sky Real Estate — Cat Zwicker (Redmond, Central Oregon, US)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Solo broker-owner running leads through a personal Gmail — a direct signal of no dedicated lead-response infrastructure.
 - **Send to:** CatZ.dsre@gmail.com
 
@@ -1384,7 +1384,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 76. Brad Oliver Realty Inc. (Prince Edward Island, Canada)
 - **Who:** Brad Oliver Realty Inc. (Prince Edward Island, Canada)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Small family-owned independent agency (3 realtors + 1 appraiser), single-market island brokerage with no big-franchise backing.
 - **Send to:** office@peilife.ca
 
@@ -1401,7 +1401,7 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 ### 77. 3% Realty Nova Scotia — Darcy MacDonald (Sydney, Nova Scotia, Canada)
 - **Who:** 3% Realty Nova Scotia — Darcy MacDonald (Sydney, Nova Scotia, Canada)
 - **What they do:** Solo or small-team real estate agency
-- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $129-199/mo)
+- **What we want to provide them:** AI Lead-Response (instant reply to new enquiries, $179/mo (+ $390 setup))
 - **Why them (the hook):** Small discount-model independent brokerage (6 people) in a small-market region, built around low-fee volume.
 - **Send to:** darcy.macdonald@3percentrealty.ca
 

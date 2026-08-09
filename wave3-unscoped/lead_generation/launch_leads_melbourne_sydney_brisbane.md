@@ -12,12 +12,12 @@ profiles and job ads change.
 
 - **GBP/local SEO**: nationally, freelancers run $500-2,000/mo, agencies
   $1,000-5,000+/mo (themepress.com.au, paramark.com.au, waypointdigital
-  .com.au, all 2026). Waters & Co's confirmed $150-300 one-off / $100-200
-  /mo sits well below even the freelancer floor everywhere checked.
+  .com.au, all 2026). Waters & Co's confirmed $99/$249 fixed one-off /
+  $149/mo sits well below even the freelancer floor everywhere checked.
 - **AI reception/missed-call**: typical AU market $199-699/mo once
   minutes/setup/integrations included, budget end $48-99/mo (Office HQ,
   Hey Jodie — amily.ai, yesai.au, valory.com.au, all 2026). Waters & Co's
-  confirmed $300-600 setup / $150-400/mo remains competitive against
+  confirmed $349 setup / $199-299+/mo remains competitive against
   both ends.
 - No city-specific premium found that would change this — the earlier
   CONFIRMED national pricing pass holds for Melbourne/Sydney/Brisbane too.

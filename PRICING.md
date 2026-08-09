@@ -65,38 +65,50 @@ checked and confirmed unchanged. Also added `AIImplementation`,
 Full sourcing for every figure is in DECISIONS.md's 2026-08-06 entry and each
 line's own `pricing_sheet.md`.
 
-## Full table (2026-08-06 update — see note above)
+## Update 2026-08-09 — website moved to fixed pricing, table recalculated
+
+`website/webapp/config.py` now quotes exact fixed prices (see the update
+note further below and `docs/handover-proposals/2026-08-09/`); the 4 lines
+with their own `wave1/*/pricing_sheet.md` (GBP, ReviewGen, MissedCall,
+LandTax) had those sheets updated to match on the same date. Rows 1-6, 9,
+10, 13, 18, 22, 24-27 below are recalculated from the new fixed prices
+against the **same time-per-job estimates as before** (those weren't
+re-measured — only the price side of the $/hr math changed). Rows without
+a `pricing_sheet.md` (9, 10, 13, 22, 24-27) still only exist here and in
+`config.py` — no separate sheet to keep in sync for those.
+
+## Full table (2026-08-09 update — see notes above)
 
 | Rank | Business | Hub `business_line` key | Typical price per job/case | Time per job | Est. $/hr |
 |---|---|---|---|---|---|
-| 1 | Review generation (ongoing) | `ReviewGen` | $50–100/mo per client | ~15 min/mo active work | **$200–400/hr** |
-| 2 | Land tax/rates objection | `LandTax` | $175–525/case (25–50% of ~$500–1,500 saving) | ~60–75 min/case | **$140–420/hr** |
-| 3 | AI missed-call (monthly mgmt) | `MissedCall` (task type: management) | $100–200/mo per client | ~20–30 min/mo | **$200–400/hr** |
-| 4 | AI missed-call (setup, one-off) | `MissedCall` (task type: setup) | $100–300/client | ~2–3 hrs | **$40–100/hr** |
-| 5 | GBP/GEO (monthly mgmt) | `GBP` (task type: management) | $100–200/mo per client | ~40 min/mo | **$150–300/hr** |
-| 6 | GBP/GEO (one-off cleanup) | `GBP` (task type: setup) | $150–300/client | ~2–3 hrs | **$60–100/hr** |
+| 1 | Review generation (ongoing) | `ReviewGen` | **$149–249/mo per client** (fixed 2026-08-09, was $50–100/mo) | ~15 min/mo active work | **$596–996/hr** |
+| 2 | Land tax/rates objection | `LandTax` | **$590–990/case flat fee** (fixed 2026-08-09, was 25–50% contingency) | ~60–75 min/case | **$470–990/hr** |
+| 3 | AI missed-call (monthly mgmt) | `MissedCall` (task type: management) | **$199/mo, or from $299/mo for AI reception** (fixed 2026-08-09, was $100–200/mo) | ~20–30 min/mo | **$400–720/hr** |
+| 4 | AI missed-call (setup, one-off) | `MissedCall` (task type: setup) | **$349/client fixed** (was $100–300/client) | ~2–3 hrs | **$115–175/hr** |
+| 5 | GBP/GEO (monthly mgmt) | `GBP` (task type: management) | **$149/mo per client fixed** (was $100–200/mo) | ~40 min/mo | **~$225/hr** |
+| 6 | GBP/GEO (setup) | `GBP` (task type: setup) | **$99 fixed visibility check, or $249 fixed cleanup/relaunch** (was $150–300/client) | ~30 min (check) / ~2–3 hrs (cleanup) | **$85–200/hr** |
 | 7 | Lost super/TPD navigation (referral fee) | `LostSuper` | Free to client (ATO search); $200–800/referred case, model confirmed 2026-08-06 but **exact $/case still unconfirmed** — needs a real partner agreement (Claimsplus is the natural first call) | ~30–45 min | **$270–1,000+/hr** (high but infrequent, and unconfirmed) |
 | 8 | Concession/rebate navigation | `Concession` | **Re-classified 2026-08-06: not a viable standalone paid line** — two search passes found zero AU businesses charging for this; covered by free channels (Service NSW, financial counsellors) and several rebates now auto-renew once a concession card is on file. Fold into Tech Concierge/Downsizing visits as a free value-add. | ~15–20 min if bundled | **$0–25/visit if ever charged at all — do not sell standalone** |
-| 9 | Bookkeeping (monthly retainer) | `Bookkeeping` | **CONFIRMED 2026-08-06**: $149–179/mo micro (0–25 txns), $299–449/mo small (25–100 txns) — undercuts Advancr's $249/mo entry tier | ~2–3 hrs/mo | **$60–95/hr** |
-| 10 | SME grant-finder (flat report) | `GrantFinder` | **CONFIRMED 2026-08-06**: $79–99 flat (sweet spot $89) for a curated shortlist + eligibility pre-check — was priced as a $300–1,000+ success fee, real market is a one-off flat report undercutting The Grants Hub ($313–486/yr) and GrantHelper ($149/yr) | ~1–2 hrs | **$45–90/hr** |
+| 9 | Bookkeeping (monthly retainer) | `Bookkeeping` | **Fixed 2026-08-09**: $169/mo micro (up to 25 txns), from $349/mo small (26–100 txns) — was $149–179/$299–449/mo; still undercuts Advancr's $249/mo entry tier | ~2–3 hrs/mo | **$65–140/hr** |
+| 10 | SME grant-finder (flat report) | `GrantFinder` | **Fixed 2026-08-09**: $89 flat (was $79–99, now pinned to the sweet spot) for a curated shortlist + eligibility pre-check — undercuts The Grants Hub ($313–486/yr) and GrantHelper ($149/yr) | ~1–2 hrs | **$45–90/hr** |
 | 11 | Age Pension/Centrelink assistance | `Pension` | **CONFIRMED 2026-08-06**: $349 flat (new claim), $249 flat (ARO review), disclosed up front — undercuts My Age Pension's $660+ package and beats their $132/hr-with-$396-minimum-even-if-ineligible clause | ~1.5–2 hrs | **$125–235/hr** |
 | 12 | Deceased-estate admin | `DeceasedEstate` *(new, unscoped)* | $50–80/hr or $500–1,500/estate flat | ~5–7 hrs/wk/active estate | **$50–80/hr** |
-| 13 | Senior tech concierge | `TechConcierge` | **CONFIRMED 2026-08-06**: $70–85/hr in-person, $55–65/hr remote — verified against My Senior IT (~$100/hr-equiv), Geeks2U ($158–198/hr), IT 4 Retirees ($162/hr+$73/hr travel) | ~1 hr | **$55–85/hr** |
+| 13 | Senior tech concierge | `TechConcierge` | **Fixed 2026-08-09**: $79/hr in-person, $59/hr remote, $119/90min extended, $45/30min follow-up (was $70–85/$55–65/hr ranges) — verified against My Senior IT (~$100/hr-equiv), Geeks2U ($158–198/hr), IT 4 Retirees ($162/hr+$73/hr travel) | ~1 hr | **$59–79/hr** |
 | 14 | Grant writing (nonprofit) | `GrantWriting` *(new, unscoped)* | $500–2,000/grant | ~3–4 hrs total | **$130–500/hr** (lumpy, needs portfolio first) |
 | 15 | NDIS plan navigation | `NDISNav` *(new, unscoped)* | $60–90/hr typical, or capped fee | ~7–9 hrs/wk ongoing | **$60–90/hr** |
 | 16 | NDIS provider compliance/audit-prep | `NDISCompliance` *(new, unscoped)* | $70–120/hr or $1,500–3,000/audit package | ~4–6 hrs/audit cycle | **$70–120/hr** |
 | 17 | Video/podcast repurposing | `VideoRepurpose` | **CONFIRMED 2026-08-06 (medium confidence)**: $249/episode for a 10-clip package, $199/episode on a 4-episode/mo subscription — undercuts agency retainers ($800–3,000+/mo); On Replay's real current price couldn't be verified (site blocked automated access), so treat this figure as reasonable, not fully pinned down | ~5–7 hrs/episode | **$28–50/hr** |
-| 18 | Senior downsizing — coordination only | `Downsizing` (task type: coordination) | **Split into two tiers 2026-08-06** — no physical labour, liaising with removalists/cleaners/charities/agents only: $45–65/hr, or $400–1,200 packaged flat quote (vendor costs pass through to client) | ~2–4 hrs/job | **$45–65/hr** |
+| 18 | Senior downsizing — coordination only | `Downsizing` (task type: coordination) | **Fixed 2026-08-09**: $59/hr, or from $490 coordinated package (was $45–65/hr or $400–1,200 packaged) — no physical labour, liaising with removalists/cleaners/charities/agents only | ~2–4 hrs/job | **$59/hr** |
 | 18b | Senior downsizing — hands-on labour | `Downsizing` (task type: labour) | **$80/hr flat (set 2026-08-06, Owner's call)** — was a $50-80/hr range; real AU competitor pricing for this specific split is genuinely unpublished (Care to Move, Home Moving Planners, We Move It are all quote-only) | ~4–6 hrs/job day | **$80/hr** |
 | 19 | Airbnb co-hosting | `AirbnbCohost` *(new, unscoped)* | 10–25% of nightly revenue | ~5–7 hrs/wk/listing (with automation) | **$30–60/hr equivalent** |
 | 20 | Crypto IT/Literacy (live session) | `CryptoLiteracy` (task type: session) | **CONFIRMED 2026-08-06**: $85/hr 1:1, $59/head or $349 flat (private group up to 8) — verified against AusBlock ($150/hr), Superprof generalist tutors ($29–45/hr avg) | ~1 hr | **$85–90/hr** |
 | 21 | Crypto IT/Literacy (pre-recorded course) | `CryptoLiteracy` (task type: course) | built once, sold repeatedly | n/a — near-zero marginal delivery | **$300/hr equivalent** |
-| 22 | AI Tools for Business | `AIToolsBusiness` | **CONFIRMED 2026-08-06, unchanged**: $200–350 basic / $400–600 standard one-off, $80–150/mo optional support — real Fiverr gigs ($10–95) and AU AI-consultant rates ($150–450/hr) both support the existing bands as-is | varies | **$85/hr** |
+| 22 | AI Tools for Business | `AIToolsBusiness` | **Fixed 2026-08-09**: $290 one tool + training, $490 for 2–3 tools, $120/mo optional support (was $200–350/$400–600/$80–150/mo) — real Fiverr gigs ($10–95) and AU AI-consultant rates ($150–450/hr) both still support these bands | varies | **~$85/hr** |
 | 23 | Odd Jobs / gig marketplace | `OddJobs` | per-job, highly variable (Airtasker/Marketplace-style) | varies | **$50/hr** (rough default — override per-lead with the real quoted price/time) |
-| 24 | AI Implementation for SMEs | `AIImplementation` | $990–1,490 single automation build, $2,500–4,000 multi-step system, $150–250/mo optional retainer — validated 2026-08-01, live on the website | ~3–8 hrs/client | **$225/hr** |
-| 25 | AI Lead-Response — Real Estate Agents | `RealEstateLeads` | $129–199/mo flat, managed service — validated 2026-08-01 "GO WITH CAVEATS", US/UK/Canada remote-deliverable, live on the website | ~20–30 min/mo | **$390/hr** |
-| 26 | Digital Legacy / Account Organiser | `DigitalLegacy` | **CONFIRMED 2026-08-06**: $120–150 Starter (~1.5hr), $250–320 Full inventory (~3hr), $80–100 Annual refresh (~1hr) — genuinely thin market, only one direct AU competitor found (Digital Care Services Australia) and even they don't publish a price | ~1–3 hrs | **$80–107/hr** |
-| 27 | Photo & Memory Digitisation Concierge | `PhotoDigitisation` | **CONFIRMED 2026-08-06**: NOT a per-photo pricing menu — bulk scanning is commoditised (25–70c/photo, $24–35/tape across 7+ national bureaus); charge a coordination/curation fee on top of the bureau's pass-through cost | varies | **~$55/hr coordination fee** |
+| 24 | AI Implementation for SMEs | `AIImplementation` | **Fixed 2026-08-09**: $290 workflow check + plan (new entry tier), from $1,290 single pilot, from $2,900 multi-step system, $199/mo optional monitoring (was $990–1,490/$2,500–4,000/$150–250/mo) — live on the website | ~3–8 hrs/client | **$160–430/hr** |
+| 25 | AI Lead-Response — Real Estate Agents | `RealEstateLeads` | **Fixed 2026-08-09**: $390 setup (new one-off, wasn't priced separately before) + $179/mo managed service (was $129–199/mo flat) — "GO WITH CAVEATS", US/UK/Canada remote-deliverable, live on the website | ~20–30 min/mo (ongoing) | **~$425/hr** (ongoing fee only) |
+| 26 | Digital Legacy / Account Organiser | `DigitalLegacy` | **Fixed 2026-08-09**: $139 Starter (~1.5hr), $289 Full inventory (~3hr), $89 Annual refresh (~1hr) — was $120–150/$250–320/$80–100 — genuinely thin market, only one direct AU competitor found (Digital Care Services Australia) and even they don't publish a price | ~1–3 hrs | **$89–96/hr** |
+| 27 | Photo & Memory Digitisation Concierge | `PhotoDigitisation` | **Fixed 2026-08-09**: $149 sorting/project setup (new fixed fee) + $55/hr additional coordination/curation (unchanged) — NOT a per-photo pricing menu; bulk scanning (25–70c/photo, $24–35/tape) is quoted at supplier cost, passed through | varies | **~$55/hr coordination fee** |
 | — | General Enquiry (website catch-all) | `GeneralEnquiry` | n/a — not a priced service, a triage bucket for unclassified website enquiries | n/a | **$0/hr by design** — reclassify to a real business line once triaged |
 
 *(27 numbered rows + 1 unnumbered (+ an 18b split), 25 distinct hub business lines. Rows 3/4 both MissedCall, 5/6 both GBP, 18/18b both Downsizing, 20/21 both CryptoLiteracy — split by task type since the sub-modes have very different $/hr. Rows 20-23 added 2026-08-01; rows 24-27 added 2026-08-06 alongside the real-competitor-research pass on rows 7-11, 13, 17, 18/18b, 20, 22 — see the update note above and DECISIONS.md for full sourcing.)*
@@ -140,12 +152,12 @@ $149/mo" instead of "$150–300 / $100–200/mo", MissedCall is now "$349 fixed
 / $199/mo / from $299/mo" instead of "$300–600 / $150–400/mo". Full new
 figures are in the handover PDF §5 and directly in `config.py`.
 
-**Not yet reconciled:** `wave1/gbp/pricing_sheet.md` and
-`wave1/missedcall/pricing_sheet.md` — marked elsewhere in this file as the
-*authoritative client-facing quote* — still show the old ranges and haven't
-been updated to match. Don't quote from those two sheets until they're
-brought in line with the live site; `website/webapp/config.py` is the
-current source of truth for what a prospect actually sees. This table's
-rows above (used for `$/hr` queue sorting, not client quotes) also haven't
-been re-derived from the new fixed prices — worth a pass next time pricing
-is touched, but the sort order isn't materially affected by this change.
+**Reconciled 2026-08-09:** all four `wave1/*/pricing_sheet.md` files (GBP,
+ReviewGen, MissedCall, LandTax) and the full table below now match
+`website/webapp/config.py` exactly — see the "Update 2026-08-09" note above
+the table for the recalculated `$/hr` figures. The 12 business lines that
+never had their own `pricing_sheet.md` (Bookkeeping, GrantFinder,
+TechConcierge, AIToolsBusiness, AIImplementation, RealEstateLeads,
+DigitalLegacy, PhotoDigitisation, Downsizing, CryptoLiteracy, Pension,
+VideoRepurpose) still only live here and in `config.py` — that's unchanged,
+not a gap introduced today.

@@ -1,47 +1,53 @@
 # Review Generation & Reputation Management — Pricing Sheet
 
-**Status: CONFIRMED 2026-08-01**, with one thing to watch. Sourced from
-competitor research (`docs/competitor_pricing_research.md`, 2026-07-30,
-re-verified 2026-08-01) — no AU trades-specific competitor bundles this with
-GBP the way you can; full agencies still run $450-2,500+/mo. **The self-serve
-SaaS floor moved since the original research**: Starworks repriced down to
-Essentials $49/mo, Professional $99/mo ("most popular"), Growth $135/mo
-(was $150-300/$279/$449 two days ago) — see the re-verification section of
-the competitor research doc. Prices below are **kept as-is**, not lowered —
-undercutting a self-serve tool's popular tier with a *managed* service reads
-as "automated, not actually managed," which undermines the whole pitch — but
-the differentiation now has to work harder in the pitch itself (see Notes).
+**Status: CONFIRMED 2026-08-09** — moved from ranged to fixed pricing per
+the Owner-supplied Master Handover (`docs/handover-proposals/2026-08-09/`,
+§5). Underlying market research is unchanged (`docs/competitor_pricing_research.md`,
+2026-07-30, re-verified 2026-08-01 — full agencies still run $450-2,500+/mo;
+Starworks self-serve SaaS floor is Essentials $49/mo, Professional $99/mo
+"most popular", Growth $135/mo). This is the live client-facing quote and
+matches the public website (`website/webapp/config.py`) exactly.
 
 **Service area: Australia-wide.** Entirely remote — see
 `review_request_templates.md` for detail.
 
-## One-off setup — $100-200
+## Review-request system setup — $149 fixed
+
+Was a $100-200 one-off range; now a single fixed price. Includes:
 
 - Initial review-request campaign build (SMS/email templates, sequencing)
 - Review-platform connections (Google, Facebook)
 - AI response-template tuning for the client's trade/tone
 
-## Ongoing monthly management
+## Managed requests and monitoring — $149/month
 
-| Tier | Price/mo | Includes |
-|------|----------|----------|
-| Basic | $100-150/mo | Automated review-request sending, review monitoring, monthly count report |
-| Managed | $200-300/mo | Basic + drafted responses to every review (client approves or auto-post per their preference), monthly summary with sentiment notes |
+Was the old "Basic" $100-150/mo tier; now a fixed price. Includes:
+
+- Automated review-request sending
+- Review monitoring
+- Monthly count report
+
+## Managed requests, responses and reporting — $249/month
+
+Was the old "Managed" $200-300/mo tier; now a fixed price. Includes:
+
+- Everything in the $149/mo tier
+- Drafted responses to every review (client approves or auto-post per their
+  preference)
+- Monthly summary with sentiment notes
 
 ## Notes
 
-- **Don't go below ~$100/month.** The SaaS-tool floor moved down to $49/mo
-  (Starworks Essentials) as of 2026-08-01, with their most-popular tier at
-  $99/mo — pricing a *managed*, human-overseen service below or level with a
-  self-serve tool's popular tier undermines the "we actually manage this"
-  pitch and reads as automated/low-quality for something about trust and
-  reputation. Our $100-150/mo entry tier now sits right at that self-serve
-  "most popular" price point — lead with the human-managed angle explicitly
-  in the pitch (see below), don't let the price alone carry the argument
-  anymore.
+- **Both tiers now sit above the SaaS-tool floor** (Starworks $49-135/mo) —
+  that gap is the pitch: "human-managed, not a self-serve tool" needs to be
+  explicit in every conversation, since the price alone won't carry the
+  differentiation.
 - **Bundle with GBP as a real differentiator** — no competitor found sells
   GBP + reviews together, despite reviews directly feeding GBP ranking.
-  Consider a combined rate (e.g. $175-250/mo for both Basic tiers together)
-  once you have clients on both.
-- First month often waives the setup fee if bundled with a GBP or MissedCall
-  signup, same bundling logic as the other services.
+  Consider a combined rate once you have clients on both (e.g. GBP $149/mo +
+  ReviewGen $149/mo bundled at a small discount).
+- First month often waives the $149 setup fee if bundled with a GBP or
+  MissedCall signup, same bundling logic as the other services.
+- **Do not go below $149/mo** for either tier — pricing a managed, human-
+  overseen service at or below the self-serve "most popular" price point
+  ($99/mo) undermines the "we actually manage this" pitch.

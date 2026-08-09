@@ -1,10 +1,11 @@
 # Land Tax / Rates Objection — Pricing Sheet
 
-**Status: CONFIRMED 2026-08-01** — cross-checked against competitor research
-(`docs/competitor_pricing_research.md`, sourced 2026-07-30, re-verified
-2026-08-01, no change — market is still 100% quote-gated, nobody publishes a
-fee). This is the live client-facing quote and matches the public website
-exactly.
+**Status: CONFIRMED 2026-08-09** — moved from ranged to fixed pricing per
+the Owner-supplied Master Handover (`docs/handover-proposals/2026-08-09/`,
+§5). Underlying market research is unchanged (`docs/competitor_pricing_research.md`,
+sourced 2026-07-30, re-verified 2026-08-01 — market is still 100% quote-gated,
+nobody publishes a fee). This is the live client-facing quote and matches
+the public website (`website/webapp/config.py`) exactly.
 
 **Service area: Australia-wide** — see `objection_letter_template.md`.
 
@@ -17,12 +18,16 @@ being directly undercut by a visible competitor number, and (2) prospects
 have no anchor, so you'll need to sell on value/evidence quality, not price
 comparison.
 
-## Recommended: flat fee (not contingency, for a new solo operator)
+## Flat fee (not contingency, for a new solo operator)
 
 | Property type | Flat fee |
 |---|---|
-| Standard residential objection | **$400-800** |
-| Commercial / complex property | Quote on assessment — scales with evidence-gathering complexity |
+| Residential evidence and objection pack | **$590 fixed** |
+| Complex or commercial objection pack | **From $990** — scales with evidence-gathering complexity |
+
+Was a $400-800 residential range plus "quote on assessment" for commercial;
+now a fixed $590 for standard residential and a **from** price for complex/
+commercial (confirm scope before quoting above $990).
 
 Covers: eligibility assessment, comparable-sales evidence research, letter
 drafting (see `objection_letter_template.md`), and guidance through
@@ -48,8 +53,8 @@ Land tax/rates objection is the one service in the whole portfolio where
 being cheap is a red flag, not an asset. Clients are trusting you with a
 formal dispute against a government valuation — evidence quality is what
 authorities actually weigh, and a bargain-bin price signals a rushed,
-low-quality case. Price at or near what a credentialed valuation report
-alone tends to cost, then frame your fee as "report-quality evidence + the
+low-quality case. $590 is priced at or near what a credentialed valuation
+report alone tends to cost — frame it as "report-quality evidence + the
 full objection service" for similar money.
 
 ## Non-price ways to win the first few clients (no track record yet)

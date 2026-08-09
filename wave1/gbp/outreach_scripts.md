@@ -75,8 +75,8 @@ no obligation, and you'll see exactly what's holding your listing back."
 >
 > These are some of the biggest local-ranking factors Google uses, so fixing them
 > usually shows up fast in map-pack visibility. I do a one-off profile cleanup
-> ($150-300 depending on scope) plus ongoing monthly management if you want it
-> kept fresh ($100-200/month).
+> ($249 fixed, or $99 for a quick visibility check and action plan first)
+> plus ongoing monthly management if you want it kept fresh ($149/month).
 >
 > Happy to send a quick before/after style breakdown for free, no obligation —
 > want me to put one together?
