@@ -225,6 +225,55 @@ written into `candidates_log.md` — no scores survive. AI Answer Visibility is
 superseded by today's row; **Declutter-to-Cash remains genuinely open** and its
 claimed WA-licensing blocker is unverified. Noted in the log.
 
+## 2026-08-09 — website rebuild, pricing reconciliation, full audit, headline rework
+
+Full-day session, five threads. **Where to find each one:**
+
+1. **Website merge from Owner-supplied handover (v1/v2).** Compared, both
+   turned out to share an identical strategy doc — only the website source
+   in v2 was new. Merged the fixed-pricing config, new hero/wedge section,
+   enquiry interest field; rejected two regressions (solo-run language,
+   Doubleview mentions) that would have undone earlier fixes. Full record:
+   `DECISIONS.md` (2026-08-09, "MASTER HANDOVER PROPOSAL"),
+   `docs/handover-proposals/2026-08-09/COMPARISON.md`.
+2. **Pricing reconciliation.** All 4 `wave1/*/pricing_sheet.md` files,
+   `PRICING.md`'s master table (14 rows), and every outreach doc that had a
+   hardcoded old price — brought in line with the new fixed pricing.
+   `DECISIONS.md` (2026-08-09, "WAVE1 PRICING SHEETS...").
+3. **Tech Concierge repriced** to $99/hr in-person (was $79), $69/hr remote
+   (was $59, deliberately held back — different competitive market to
+   in-person). Full competitor research (Geeks2U, IT 4 Retirees, Fixable,
+   Dtech, IT Help at Home, Seniors Tech and Tea, My Senior IT) in
+   `wave3-unscoped/tech_concierge/pricing_sheet.md` and two `DECISIONS.md`
+   entries. Deployed, live on watersandco.info.
+4. **Full audit before the email campaign goes out:** all 117 Gmail drafts
+   checked directly (not the repo copies) — zero contain a price, nothing
+   stale. Spam Act 2003 re-verified live against AustLII/ACMA — current
+   practice already compliant, one flag raised (the 2026-08-05 SMS list
+   needs the same consent check before outbound use). 8 new legal
+   lead-gen channels found and written up:
+   `wave3-unscoped/lead_generation/legal_channels_not_yet_tried_2026-08-09.md`.
+   `DECISIONS.md` (2026-08-09, "FULL EMAIL/LEGAL/CHANNEL AUDIT").
+5. **Landing page hero headline** reworked with the Owner through several
+   rounds — final: "Find and fix what's quietly costing your business
+   time, jobs and opportunities." Full creative-process record, including
+   why "money" was rejected as a claim: `DECISIONS.md` (2026-08-09,
+   "LANDING PAGE HERO HEADLINE").
+
+**Structured/machine-readable version of all five:** `ml_training_log/events.jsonl`
+(6 new events appended same day) — see `ml_training_log/README.md` for the
+schema. This is now standing practice for every decision-bearing step, not
+just when asked — see CLAUDE.md's "Memory and logging" section.
+
+**Recurring tooling issue, not resolved this session:** the Semgrep
+Guardian PreToolUse hook blocks `.py` (and occasionally other) file edits
+until logged in, and its login needs an interactive browser OAuth callback
+this environment can't complete. Worked around each time with the Owner's
+explicit go-ahead (disclosed plainly, verified after writing) — but it
+needs a real interactive-terminal `semgrep login` at some point to stop
+recurring. `DECISIONS.md` (2026-08-09, "TECH CONCIERGE PRICING — THE TWO
+BLOCKED CONFIG EDITS...").
+
 ## How to pick this back up
 
 - Run both apps (see top of this file).

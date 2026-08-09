@@ -65,6 +65,18 @@ inventing a parallel one. Cross-session facts about the Owner, standing
 preferences, and business context also live in the auto-memory system
 (`~/.claude/projects/.../memory/`) — check `MEMORY.md` there.
 
+**`ml_training_log/events.jsonl`** (standing instruction, 2026-08-09
+reinforced): every decision-bearing step — research done and what it
+found, pricing/copy decisions and the reasoning behind them, lead
+evaluation criteria, outreach approach — gets a structured JSONL event
+here too, not just prose in DECISIONS.md/PROGRESS.md. See
+`ml_training_log/README.md` for the schema and why (built so a model can
+eventually learn the business's actual operating judgment, not just its
+outcomes). DECISIONS.md/PROGRESS.md stay the human-readable narrative;
+this is the machine-readable index over the same events — log to both,
+not one instead of the other. Append-only; correct via a new `correction`
+event referencing the original, never edit history in place.
+
 ## The triple-check rule
 
 Before treating anything as settled: (1) check it against what's already on
