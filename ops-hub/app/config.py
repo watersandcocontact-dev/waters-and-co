@@ -95,7 +95,7 @@ RATE_CARD = {
     "Pension": 175,  # was 138 -- real transparent-fixed-fee competitors ($349 claim/$249 review) support a higher rate than the old hourly-derived estimate
     "LostSuper": 635,  # unchanged -- model confirmed (free-to-client + referral fee) but the $/case figure itself is still unconfirmed pending real partner negotiation, no evidence to revise the number itself
     "DeceasedEstate": 65,
-    "TechConcierge": 72,  # was 80 -- $70-85/hr in-person, $55-65/hr remote blended
+    "TechConcierge": 85,  # raised 2026-08-09 -- $99 in-person / $69 remote blended (was 72)
     "GrantWriting": 315,
     "NDISNav": 75,
     "NDISCompliance": 95,

@@ -377,10 +377,10 @@ SERVICES = {
             "scam."
         ),
         "pricing": [
-            {"label": "Standard in-person session — up to 1 hour", "price": "$79"},
-            {"label": "Standard remote session — up to 1 hour", "price": "$59"},
-            {"label": "Extended in-person session — up to 90 minutes", "price": "$119"},
-            {"label": "Remote follow-up — up to 30 minutes", "price": "$45"},
+            {"label": "Standard in-person session — up to 1 hour", "price": "$99"},
+            {"label": "Standard remote session — up to 1 hour", "price": "$69"},
+            {"label": "Extended in-person session — up to 90 minutes", "price": "$145"},
+            {"label": "Remote follow-up — up to 30 minutes", "price": "$49"},
         ],
     },
     "cryptoliteracy": {
