@@ -66,16 +66,30 @@ preferences, and business context also live in the auto-memory system
 (`~/.claude/projects/.../memory/`) — check `MEMORY.md` there.
 
 **`ml_training_log/events.jsonl`** (standing instruction, 2026-08-09
-reinforced): every decision-bearing step — research done and what it
-found, pricing/copy decisions and the reasoning behind them, lead
-evaluation criteria, outreach approach — gets a structured JSONL event
-here too, not just prose in DECISIONS.md/PROGRESS.md. See
-`ml_training_log/README.md` for the schema and why (built so a model can
-eventually learn the business's actual operating judgment, not just its
-outcomes). DECISIONS.md/PROGRESS.md stay the human-readable narrative;
-this is the machine-readable index over the same events — log to both,
-not one instead of the other. Append-only; correct via a new `correction`
-event referencing the original, never edit history in place.
+reinforced): every decision-bearing step — the Owner's actual request,
+what was done in response, the reasoning, and the outcome once known —
+gets a structured JSONL event here too, not just prose in
+DECISIONS.md/PROGRESS.md. This applies to **whoever/whatever is working in
+this repo** — this session, a future session, a background/autonomous
+scan, a subagent — not just the one that happened to write the first
+batch of entries. **Read it, not just write it:** before a
+decision-bearing task (pricing, copy, positioning, compliance calls),
+check recent events here for how a similar call was made before, so the
+Owner's actual judgment compounds instead of getting re-derived from
+scratch each session. See `ml_training_log/README.md` for the full
+schema.
+
+**Deliberately scoped to this project only** (Owner's call, 2026-08-09):
+this log captures how *Waters & Co* operates, not a cross-business view of
+the Owner — the Owner is running the same pattern separately in other
+projects rather than one shared log, specifically so unrelated context
+never bleeds across businesses. Don't reference or pull in another
+project's log from here, and don't assume this one applies anywhere else.
+
+DECISIONS.md/PROGRESS.md stay the human-readable narrative; this is the
+machine-readable index over the same events — log to both, not one
+instead of the other. Append-only; correct via a new `correction` event
+referencing the original, never edit history in place.
 
 ## The triple-check rule
 
