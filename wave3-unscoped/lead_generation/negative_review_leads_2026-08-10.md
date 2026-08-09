@@ -17,13 +17,13 @@ reception staff, so their complaints are about service quality/culture,
 not "no one answers the phone because it's a solo operator." The MissedCall
 angle only lands on genuinely small/family-run operators.
 
-## Ready to use — contact email verified live, today
+## Drafted — 2026-08-10, Gmail drafts created, not sent
 
-| Business | Trade | Location | Review evidence | Verified contact |
-|---|---|---|---|---|
-| Northside Fencing | Fencing (Colorbond/timber/glass) | Burpengary, QLD | "Tried to contact them over and over again but never return any calls" | sales@northsidefencing.com.au — confirmed direct from their own contact page |
-| All Hills Fencing | Fencing & gates | Girraween/Sydney, NSW | "Does not turn up to appointment and does not call back to provide apology and acceptable explanation" | sales@allhills.com.au (Sydney region) / newcastle@allhills.com.au (Hunter region) |
-| Priority One Plumbing Services | Plumbing/gasfitting, 24/7 emergency | Canberra/Watson, ACT | Reviews describe the operations manager as someone who "never calls back" | info@priorityoneplumbingservices.com.au |
+| Business | Trade | Location | Review evidence | Verified contact | Status |
+|---|---|---|---|---|---|
+| Northside Fencing | Fencing (Colorbond/timber/glass) | Burpengary, QLD | "Tried to contact them over and over again but never return any calls" | sales@northsidefencing.com.au — confirmed direct from their own contact page | Drafted (#93 in tailored_emails_master.md) |
+| All Hills Fencing | Fencing & gates | Girraween/Sydney, NSW | "Does not turn up to appointment and does not call back to provide apology and acceptable explanation" | sales@allhills.com.au (Sydney region) / newcastle@allhills.com.au (Hunter region) | Drafted (#94) |
+| Priority One Plumbing Services | Plumbing/gasfitting, 24/7 emergency | Canberra/Watson, ACT | Reviews describe the operations manager as someone who "never calls back" | info@priorityoneplumbingservices.com.au | Drafted (#95) |
 
 ## Real leads found, contact info needs one more verification pass
 

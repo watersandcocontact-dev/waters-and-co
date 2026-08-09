@@ -1572,6 +1572,53 @@ Full source file with sourcing notes: `wave3-unscoped/lead_generation/offers/tai
 
 ---
 
+## Negative-review leads (added 2026-08-10, contact emails verified live)
+
+### 93. Northside Fencing (Burpengary, QLD)
+- **Who:** Northside Fencing
+- **What they do:** Colorbond/timber/glass fencing contractor
+- **What we want to provide them:** AI Missed-Call Reception
+- **Why them (the hook):** ProductReview complaint — repeated contact attempts with no callback.
+- **Send to:** sales@northsidefencing.com.au
+
+**Draft email:**
+
+> **Subject:** Quick one for Northside Fencing
+>
+> Hi — came across Northside Fencing while looking at fencing contractors around Burpengary. Noticed a review mentioning repeated attempts to get through with no callback — the kind of gap that's easy to lose a job to, especially once someone's already had to chase.
+>
+> I help trade businesses make sure every call gets answered or texted back, so a follow-up request doesn't just go quiet. Worth a quick look, or happy to send through how it works?
+
+### 94. All Hills Fencing (Sydney/Girraween, NSW)
+- **Who:** All Hills Fencing
+- **What they do:** Fencing and gates contractor
+- **What we want to provide them:** AI Missed-Call Reception
+- **Why them (the hook):** ProductReview complaint — missed appointment, no follow-up call.
+- **Send to:** sales@allhills.com.au
+
+**Draft email:**
+
+> **Subject:** Quick one for All Hills Fencing
+>
+> Hi — was looking at fencing contractors around Sydney and noticed a review mentioning a missed appointment with no follow-up call to explain or reschedule. That kind of gap usually isn't a reflection of the work itself, just a call that should've gone out and didn't.
+>
+> I help trade businesses make sure every call and follow-up actually happens, so a job like that doesn't turn into a review instead of a repeat customer. Worth a quick look, or happy to send through how it works?
+
+### 95. Priority One Plumbing Services (Canberra, ACT)
+- **Who:** Priority One Plumbing Services
+- **What they do:** Plumbing/gasfitting, 24/7 emergency callouts
+- **What we want to provide them:** AI Missed-Call Reception
+- **Why them (the hook):** ProductReview complaint — no callback despite 24/7 emergency promise.
+- **Send to:** info@priorityoneplumbingservices.com.au
+
+**Draft email:**
+
+> **Subject:** Quick one for Priority One Plumbing Services
+>
+> Hi — noticed Priority One offers 24/7 emergency callouts, but a review mentions trying to reach the team multiple times with no callback. For a business promising round-the-clock availability, a gap like that stands out more than it would elsewhere.
+>
+> I help trade businesses make sure every call gets answered or texted back, so that promise holds up in practice too. Worth a quick look, or happy to send through how it works?
+
 ## Not included above — skip these
 
 - **#6 Electrician Services Adelaide (Adelaide, SA)** — duplicate of #39 (same business, same email, found twice). Send #39 instead; see the full source file for the reasoning.

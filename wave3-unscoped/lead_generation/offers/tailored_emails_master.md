@@ -1112,3 +1112,44 @@ referral partners, 10 video-repurposing prospects, 12 real-estate AI
 lead-response agents, 4 older verified contacts. None sent — every item a
 prepared draft awaiting per-item confirmation. See the standalone
 "easy-read" summary doc for a quick-scan version of all of these before sending.
+
+---
+
+## Negative-review leads — 2026-08-10
+
+Sourced from real ProductReview.com.au complaints about missed calls/no
+callback — full research and evidence in
+`wave3-unscoped/lead_generation/negative_review_leads_2026-08-10.md`. All
+3 contact emails verified live from each business's own site before
+drafting. Not sent — Gmail drafts created, awaiting per-item confirmation
+like everything else in this file.
+
+### 93. Northside Fencing (Burpengary, QLD)
+**To:** sales@northsidefencing.com.au
+**Why:** ProductReview complaint — repeated contact attempts with no callback.
+
+> Subject: Quick one for Northside Fencing
+>
+> Hi — came across Northside Fencing while looking at fencing contractors around Burpengary. Noticed a review mentioning repeated attempts to get through with no callback — the kind of gap that's easy to lose a job to, especially once someone's already had to chase.
+>
+> I help trade businesses make sure every call gets answered or texted back, so a follow-up request doesn't just go quiet. Worth a quick look, or happy to send through how it works?
+
+### 94. All Hills Fencing (Sydney/Girraween, NSW)
+**To:** sales@allhills.com.au
+**Why:** ProductReview complaint — missed appointment, no follow-up call.
+
+> Subject: Quick one for All Hills Fencing
+>
+> Hi — was looking at fencing contractors around Sydney and noticed a review mentioning a missed appointment with no follow-up call to explain or reschedule. That kind of gap usually isn't a reflection of the work itself, just a call that should've gone out and didn't.
+>
+> I help trade businesses make sure every call and follow-up actually happens, so a job like that doesn't turn into a review instead of a repeat customer. Worth a quick look, or happy to send through how it works?
+
+### 95. Priority One Plumbing Services (Canberra, ACT)
+**To:** info@priorityoneplumbingservices.com.au
+**Why:** ProductReview complaint — no callback despite 24/7 emergency promise.
+
+> Subject: Quick one for Priority One Plumbing Services
+>
+> Hi — noticed Priority One offers 24/7 emergency callouts, but a review mentions trying to reach the team multiple times with no callback. For a business promising round-the-clock availability, a gap like that stands out more than it would elsewhere.
+>
+> I help trade businesses make sure every call gets answered or texted back, so that promise holds up in practice too. Worth a quick look, or happy to send through how it works?
