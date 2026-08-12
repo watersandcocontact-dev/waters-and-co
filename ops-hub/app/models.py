@@ -186,6 +186,45 @@ def find_lead_by_phone(phone):
     return None
 
 
+def _normalize_email(email):
+    """Lowercase and strip surrounding whitespace/angle brackets so
+    'Kirrilee <Info@QueensOfClutter.com.au>' and 'info@queensofclutter.com.au'
+    compare equal. Deliberately does NOT strip +tags or dots -- those are
+    Gmail-specific conventions, and treating them as equal would wrongly
+    merge two genuinely different business addresses."""
+    raw = (email or "").strip()
+    if "<" in raw and ">" in raw:
+        raw = raw[raw.rfind("<") + 1 : raw.rfind(">")]
+    return raw.strip().lower()
+
+
+def find_lead_by_email(email):
+    """Best-effort match of an inbound email sender to an existing lead, for
+    the campaign-reply-watch ingestion path (see
+    scripts/create_email_reply_lead.py). Returns the most recently updated
+    matching lead, or None if nothing matches.
+
+    Mirrors find_lead_by_phone deliberately. Once the reply-watch scan
+    detects individual follow-up messages rather than whole threads
+    (2026-08-11 fix), a second message from someone who already has a lead
+    must append to that lead instead of creating a duplicate case record."""
+    target = _normalize_email(email)
+    if not target:
+        return None
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT id, contact_email FROM leads WHERE contact_email IS NOT NULL "
+            "ORDER BY updated_at DESC, id DESC"
+        ).fetchall()
+    finally:
+        conn.close()
+    for row in rows:
+        if _normalize_email(row["contact_email"]) == target:
+            return get_lead(row["id"])
+    return None
+
+
 def append_note(lead_id, text):
     """Append a timestamped line to a lead's notes without clobbering
     existing notes -- used by the SMS inbound webhook so a client's reply
