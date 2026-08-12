@@ -150,19 +150,27 @@ after needs either a tool signup or patience for the right lead.
 
 ---
 
-## Phase 3 — Wave 2 rollout (bookkeeping → concessions → grant-finder → pension)
+## Phase 3 — Wave 2 rollout (bookkeeping → grant-finder → pension)
 
 Bookkeeping is the most similar skill-set to what you're already doing
-(ongoing client management); the other three are more navigation/advocacy
-work with seniors and small businesses.
+(ongoing client management); the other two are more navigation/advocacy
+work with seniors and small businesses. **Updated 2026-08-12:**
+Concession/rebate navigation dropped from this list — re-classified
+2026-08-06 as not a viable standalone paid line (no AU market found,
+already free via Service NSW/financial counsellors and auto-renewing
+concession cards). It's a free value-add folded into Tech
+Concierge/Downsizing visits instead (`ops-hub/app/config.py`'s
+`Concession` line, `PRICING.md` row 8) — nothing left to roll out here.
+Its eligibility matrix (`wave2/concessions/eligibility_matrix.md`) still
+feeds that free add-on, so keep its dollar figures current even though
+it's not sold on its own.
 
-- [ ] **Bookkeeping** — pick Xero or QBO (`wave2/bookkeeping/bank_feed_research.md`),
-      use the onboarding + reconciliation checklists already built. No
-      BAS lodgement — explicitly out of scope.
-- [ ] **Concession/rebate navigation** — the eligibility matrix
-      (`wave2/concessions/eligibility_matrix.md`) is solid but every
-      dollar figure needs re-confirming before you quote a real senior
-      client — these are indexed annually.
+- [x] **Bookkeeping** — **Xero picked 2026-08-12** (`wave2/bookkeeping/bank_feed_research.md`).
+      Onboarding + reconciliation checklists and a new engagement letter
+      template (`wave2/bookkeeping/engagement_letter_template.md`) are built.
+      No BAS lodgement — explicitly out of scope. Pricing ($169/mo micro,
+      $349/mo small), scope, and the public website page are already live.
+      Ready for a first real client — nothing left to build.
 - [ ] **SME grant-finder** — `wave2/grantfinder/` has the screening
       checklist and application template; business.gov.au has no alert
       feature, so this one only works with periodic manual checks (or a
@@ -172,7 +180,7 @@ work with seniors and small businesses.
       letter template ready (`wave2/pension/`). The 13-week point is
       about backdating arrears, not a hard deadline to request review.
 
-Don't launch all four at once — layer them in as Wave 1 stabilizes and
+Don't launch all three at once — layer them in as Wave 1 stabilizes and
 you have spare capacity.
 
 ---

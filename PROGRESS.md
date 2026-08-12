@@ -60,6 +60,7 @@ General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker
 - ✅ No phone number anywhere — every page pushes to the contact form
 - ✅ Branding: dark slate green + gold, **Fraunces** for display type (switched from Cormorant after comparing 16+ fonts), Jost for labels
 - ✅ **LIVE at [watersandco.info](https://watersandco.info)** (2026-08-07) — real domain, real HTTPS, real deploy. Hosted on Render (free tier, `render.yaml` Blueprint), talking to this hub over a Tailscale-Funnel-exposed webhook (`HUB_MODE=remote`, only `/webhook/website-lead` is public — the dashboard/login stay private on the tailnet). DNS via Cloudflare. Verified end-to-end with 3 real test submissions all the way through to real hub lead records (#7-9, test data, Owner to delete). Full setup trail in `docs/website_deployment.md` and DECISIONS.md's 2026-08-07 entry.
+- 🔶 **Google Business Profile — launch pack ready, account not yet created (2026-08-10).** Owner supplied `/home/m/Downloads/google business/Waters-and-Co-Google-Business-Launch-Pack/` — logo (720×720), cover (1332×750), 8 branded info-graphic photos, and a field-by-field setup guide. Verified against the live repo: all 8 service prices match `website/webapp/config.py` exactly, phone-blank instruction matches the deliberate no-phone decision in `structured_data.py`, category/service-area choices are reasonable for a home-based Doubleview SAB. GBP account creation itself is a Google-login action only the Owner can do (see punch list). Two fields the pack correctly leaves open rather than guessing: real weekly available hours (day-job constraint) and the genuine opening/accepting-work date.
 
 ## D. Opportunity scanning & competitive monitoring — ✅ built, running
 
@@ -72,6 +73,14 @@ General Enquiry (website catch-all), Odd Jobs/Gig Marketplace (one-off Airtasker
 - ✅ **Scan run 2026-08-01** — first automated run. Two candidates scored and drafted (neither wired into the live hub — awaiting your confirmation): **Digital Legacy / Account Organiser** (33/35, `wave3-unscoped/digital_legacy/`) and **Photo & Memory Digitisation Concierge** (31/35, `wave3-unscoped/photo_digitisation/`). Both are deliberate bolt-ons to an existing client visit (Tech Concierge / Downsizing) rather than standalone lines. The photo one scored a low 3/5 on market gap on purpose — Perth's scanning market is crowded, so it's scoped as a sorting/coordination layer, not a scan bureau, and its pricing sheet says to stop if the first few upsells don't convert.
 - ✅ Local-cron fallback script documented as backup (`run_daily_scan.sh`), not currently needed
 - ✅ **Competitive monitoring, monthly** (`monthly-competitive-monitor` scheduled task, 1st of the month) — re-checks competitor pricing/reviews for 3-4 business lines per run against `docs/competitive_analysis_full_portfolio.md` (deep, 18-business, sourced complaint quotes — added 2026-08-01) and the older `docs/competitor_pricing_research.md` (GBP-focused). Logs findings (including "nothing changed") to `wave3-unscoped/competitive_monitoring/monitoring_log.md`. Recommends pricing changes, never applies them — same "flag, don't file" pattern as expansion-spend evaluation. **Needs the same one-time "Run now" approval click as the opportunity scan before its automatic runs will go hands-off.**
+
+## D2. Campaign reply pipeline — ✅ built 2026-08-11, needs one "Run now" click
+
+- ✅ **Gap found and closed same session** (see D's opportunity-scan section for the general pattern) — `ops-hub/app/webhook.py` only ever ingested leads from the website form and the phone/SMS webhook; a reply to any of the 120 cold-outreach emails had no automated path into the hub at all. Flagged to the Owner (`ml_training_log` event `campaign-reply-pipeline-gap-2026-08-10`), then scoped and built the same night.
+- ✅ **`ops-hub/scripts/create_email_reply_lead.py`** — the local DB-write half. Takes name/email/subject/snippet/thread-url/business-line (+ `--urgent` for opt-outs), creates a properly-formed hub lead tagged `source=cold_email_reply`, business_line validated against the real `BUSINESS_LINE_KEYS` in `app/config.py` (not a hand-copied list — those drift). Smoke-tested end to end against the real DB (leads #27 normal-path, #28 urgent-path) — both real rows, flagged above for the Owner to delete.
+- ✅ **`campaign-reply-watch` scheduled task** (every 30 min, 7am-9:59pm daily) — the Gmail-search half. Searches for new inbound mail not yet labelled `reply-processed`, classifies each thread (bounce/auto-reply → skip-and-label only; opt-out/unsubscribe → urgent, calls out the Spam Act 2003 ~5-business-day honour window; genuine reply → normal), calls the script above to log it, labels the thread so it's never reprocessed, then one `PushNotification` per run summarising what came in — never pings on a quiet run. Runs as a real local agent turn (not a cloud routine — deliberately, since Gmail access here only exists via the connected MCP session and the hub DB is local-only; a cloud-hosted routine could reach neither, same reasoning `ops-hub/scripts/new_case_check.py`'s docstring already documents for a different check).
+- ✅ **First real reply captured 2026-08-11 10:07** — Queens of Clutter (Kirrilee, `info@queensofclutter.com.au`) replied to the downsizing referral-partner email *eight minutes* after it sent, asking "can you send us a bit more information about what you do and your business?". Logged automatically as **hub lead 29** (`PhotoDigitisation`, not urgent), thread labelled. First end-to-end exercise of the pipeline against a genuine reply rather than the synthetic test rows — worked with no manual correction. **Owner action owed: she asked a direct question and nothing has been sent back.** Business line was taken from the outbound record (`tailored_emails_master.md` #82, the Digital Legacy + Photo Digitisation referral batch), not guessed from her reply, which carries no service signal.
+- 🔶 **Not built yet, flagged not silently skipped:** no auto-suppression of future scheduled sends to someone who's opted out (still manual once the lead's flagged urgent), no reply-rate/response-time dashboard. Worth doing once real reply volume shows whether either is actually needed.
 
 ## E. Pricing & research foundations
 
@@ -93,7 +102,7 @@ Ran a full end-to-end pass after today's additions: all 21 business line views, 
 1. **Pick and sign up for an AI phone/reception platform** (`wave1/missedcall/platform_research.md`) and give me the API key to activate the webhook.
 2. **Pick and sign up for a review-automation tool** (`wave1/reviewgen/tool_research.md` — NiceJob recommended).
 3. **Confirm Stripe's live-mode activation status** (Gmail's already done) — see `ROADMAP.md` Phase 0 / accounts table.
-4. **Pick accounting software (Xero or QBO)** for bookkeeping — clients invite you in, you generally don't pay.
+4. ✅ **Xero picked** (2026-08-12) for bookkeeping. Client owns/pays for their own subscription and invites you in as a Standard/Advisor user by email — no account creation or cost on your end to start with the first 1-2 clients. Engagement letter template now built (`wave2/bookkeeping/engagement_letter_template.md`), so the line is ready for its first real client the moment one comes in.
 5. **Review every draft template before client use** — none are legally vetted.
 6. **If serious about Airbnb co-hosting: talk to a property/real estate lawyer first.**
 7. **Decide if/when to pursue the 5 still-held lines** — each needs a scope/qualifications conversation.
@@ -106,6 +115,9 @@ Ran a full end-to-end pass after today's additions: all 21 business line views, 
 14. **Review the referral/loyalty discount-rate assumptions** (5%/referral retention increment, 10% loyalty base, 20% stacked tier, 50%-of-rate-card margin floor) — my judgement calls, documented in DECISIONS.md 2026-08-01, change `app/config.py`'s `REFERRAL_*`/`LOYALTY_*`/`DISCOUNT_*` constants if you want different numbers.
 15. **Click "Run now" once on `monthly-competitive-monitor`** too, same reason as the opportunity scan (pre-approves its tools).
 16. **Decide whether the two 2026-08-01 scan candidates become real business lines** — Digital Legacy (33/35) and Photo Digitisation (31/35). Scopes and pricing are drafted in `wave3-unscoped/digital_legacy/` and `wave3-unscoped/photo_digitisation/`; nothing was added to `BUSINESS_LINES` in `ops-hub/app/config.py`, deliberately. That's your call, not the scan's.
+17. **Create the actual Google Business Profile** — sign into the Google account you want the listing on and click through account creation yourself (not something I can do); the launch pack (images + copy, verified 2026-08-10) is ready in `/home/m/Downloads/google business/Waters-and-Co-Google-Business-Launch-Pack/`. Hours confirmed 2026-08-10: Mon-Sun 9am-5pm, live/accepting work as of today — both ready to paste into the profile once the account exists.
+18. **Click "Run now" once on the new `campaign-reply-watch` scheduled task**, same reason as the opportunity scan and competitive monitor — pre-approves the Gmail/Bash tools it needs so its automatic 30-minute runs don't stall on a permission prompt.
+19. **Delete 2 test leads (#27, #28)** from the hub — real smoke-test rows created while verifying `create_email_reply_lead.py` works end-to-end, same pattern as the earlier website/SMS test leads.
 
 ---
 
@@ -273,6 +285,165 @@ explicit go-ahead (disclosed plainly, verified after writing) — but it
 needs a real interactive-terminal `semgrep login` at some point to stop
 recurring. `DECISIONS.md` (2026-08-09, "TECH CONCIERGE PRICING — THE TWO
 BLOCKED CONFIG EDITS...").
+
+## 2026-08-10 — daily opportunity scan: 1 drafted, 1 rejected, 1 open loop closed
+
+**Drafted: Job-Software Activation (33/35 — highest scored to date)** —
+`wave3-unscoped/job_software_activation/` (service_scope.md +
+pricing_sheet.md). Configuring the automations trades already pay for and
+never switch on inside ServiceM8: automated quote follow-up, booking
+reminders, "on my way" texts, invoice chasing. Every one of those is
+bundled into every ServiceM8 plan including the free tier — nothing is
+resold, the product is purely the configuration. Sells into the same
+trades base as GBP/ReviewGen/MissedCall (and essentially all of the
+120-lead campaign), in the same setup-plus-management shape. Proposed
+$390–490 switch-on, $890–1,190 full setup, $290–350 for existing clients,
+$99–149/mo upkeep, free 15-minute check as the lead magnet.
+
+Market gap held to 3 on purpose — **contested at the top**: Growth Local,
+a certified AU ServiceM8 partner, charges $1,250 setup + $197/mo and
+$1,870 + $297/mo, which prices out the one-to-three-person crews this
+business already talks to. What lifts it above a rebadge: **ServiceM8
+itself matches what a client pays a certified Partner, up to $2,000**,
+credited back at 50% of their plan base price per month. A vendor
+subsidising the service is documented demand, not an inferred gap — a
+better evidence base than the last two drafted candidates had.
+
+**Owner decisions needed, two:** (1) own line vs a named package under the
+existing `AIImplementation` line — recommendation is the package, same
+reasoning that sent AI Search Visibility to a GBP tier; (2) the ServiceM8
+Partner certification has to be completed before this is offered to
+anyone, because the rebate is explicitly a *Partner* rebate. Nothing
+wired into `config.py`, `PRICING.md` or the website.
+
+**Rejected: Declutter-to-Cash (24/35) — and the 2026-08-05 open loop is
+now closed.** Verified against the regulator: WA Police's own Second-Hand
+Dealer Licence description covers buying/selling/exchanging second-hand
+goods "on the person's own behalf or on behalf of another person"
+(Pawnbroker and Second-Hand Dealer Act 1994 (WA)). Criterion #1 = 0, a
+hard reject regardless of total. The compliant residual — coaching a
+client to list on their own accounts, never taking possession — already
+exists as a Downsizing `coordination` task. Caveat recorded: the Act's own
+exemption clauses couldn't be read (image-only PDF), so this rests on the
+regulator's plain-language wording.
+
+**Both scan lanes checked:** `gig_marketplace_scan.md` still holds no
+logged one-off jobs, so there is no repeating pattern to graduate into a
+line yet.
+
+## 2026-08-11 — cold campaign sent; 5 still scheduled, 1 reply in
+
+**Drafts queue is empty.** Verified directly against the connected Gmail
+account, not the tracking doc.
+
+**Still pending — 5 scheduled sends, not 4:**
+
+| Recipient | Business | Fires |
+|---|---|---|
+| CatZ.dsre@gmail.com | Desert Sky Real Estate | **23:30 AWST tonight, 11 Aug** (= 08:30 Mountain, US) |
+| clinton@placeelectrical.com.au | Place Electrical | Wed 12 Aug 07:30 AWST |
+| info@authentic.com.au | Marketing Made Easy | Wed 12 Aug 07:30 AWST |
+| hello@alexanderspencer.com.au | The Bottom Line | Wed 12 Aug 07:30 AWST |
+| suzanne@suzchadwick.com | Brand Builders Lab | Wed 12 Aug 07:30 AWST |
+
+Two batches, both intentional: the 4 re-verified and approved on the 11th
+for the Wed morning slot, plus Desert Sky from the earlier international
+batch at its own recipient-local time. **Scheduled Gmail sends don't appear
+in `list_drafts`** — they leave the drafts collection once scheduled — so an
+empty drafts folder reads as "all done" when it isn't. Check the scheduled
+folder separately before calling a campaign finished.
+
+**Replies so far: 1.** Queens of Clutter (Kirrilee) → hub lead **29**,
+`PhotoDigitisation`, status **Contacted**, reply already sent. No bounces
+in the last 24 hours. Hub sits at 21 leads (20 New, 1 Contacted).
+
+**`campaign-reply-watch` is live** — every 30 min, 07:00–21:59 AWST, next
+run 12 Aug 07:06. Note the ~9-hour overnight blind window: fine for AU
+recipients, but US replies now land while it's asleep. Flagged in
+`DECISIONS.md`, not changed — one-line cron fix if wanted.
+
+## 2026-08-12 — daily opportunity scan: 1 drafted (scoped down by a channel conflict), 1 held
+
+**Drafted: Aged Care Navigation (32/35)** —
+`wave3-unscoped/aged_care_navigation/` (service_scope.md +
+pricing_sheet.md). My Aged Care registration, assessment preparation,
+application lodgement, provider shortlisting. Sells to the same seniors
+base as Tech Concierge/Downsizing and runs the same Services-Australia
+paperwork shape as Pension. Proposed $249–299 entry, $449–549 full bundle,
+$199 as a bolt-on to an existing in-home visit.
+
+**Demand is the largest documented of any candidate scored so far:**
+106,977 waiting for Support at Home at 30 June 2026 (up 13%), 98,606
+waiting on an assessment at 31 March 2026, ~306 days average from
+application to services starting — the fallout of the Aged Care Act 2024 /
+Support at Home commencement on 1 November 2025. These are industry-press
+figures, **not primary sources**; flagged in the scope doc for
+re-verification. Market gap still held at 3: **ApplyWise sells the
+identical slice nationally at $595**, Perth already has four fee-for-service
+placement consultants, and a **free provider-commission-funded tier**
+exists. The wedge is that the free tier earns its commission on
+*residential placement* and so has no reason to help anyone at the
+home-care/assessment stage, which is where the 107k backlog actually is.
+
+**The important finding wasn't the score — it was a channel conflict, and
+it came from checking the repo before the web.** 18 outreach emails are
+sitting as unsent Gmail drafts scheduled for the morning of **13 August**,
+addressed to aged-care financial advisers and placement consultants —
+**including RELACS in Stirling, Perth** — each one positioning Waters & Co
+as the complementary "paperwork and process only, no financial or
+investment advice" partner. A placement or advisory line would convert 18
+prospective partners into 18 competitors the day before the emails land.
+So the offer was scoped to precisely the half those emails already promise
+and explicitly excludes placement broking, RAD negotiation and
+means-tested-fee strategy — which sit behind the AFSL boundary regardless.
+**No action needed on the drafts; they remain accurate as written.**
+
+**Owner decisions needed, two:** (1) Pension scope extension vs its own
+business line — recommendation is the scope extension, same reasoning that
+sent AI Search Visibility to a GBP tier and Job-Software Activation to an
+`AIImplementation` package; (2) confirm the placement/advice boundary
+holds before anything is offered. Nothing wired into `config.py`,
+`PRICING.md` or the website.
+
+**Held (not drafted): Subcontractor Compliance Document Chasing (28/35).**
+Cleared 25 but was deliberately not drafted — the rubric says reuse acts
+as a multiplier, and reuse scored 3, the lowest of any candidate to date.
+The trades base built through GBP/ReviewGen/MissedCall is **sole traders
+who supply certificates, not builders who collect them** — a different
+buyer entirely. Compounding it: the category is served by software at
+$60–200/user/month against a free-spreadsheet alternative, and no evidence
+was found that anyone pays a human for the chasing. Revisit only if real
+head-contractor clients ever arrive.
+
+**Both scan lanes checked:** `gig_marketplace_scan.md` still holds no
+logged one-off jobs and no `OddJobs` leads have accumulated — no repeating
+pattern to graduate.
+
+## 2026-08-13 — Wave 2 + Wave 1 deep-search batch: all 79 drafts scheduled
+
+**All 79 outreach/referral emails are scheduled, not drafts anymore.**
+Verified directly against the connected Gmail account: Drafts folder
+empty ("You don't have any saved drafts"), Scheduled folder shows 79.
+None were sent directly — every one went through Schedule Send, never
+Send — so nothing fires before its recipient-local 9am-equivalent slot on
+13 Aug (9:00am AWST/WA — 11, 7:30am AWST=9:00am ACST/SA-NT — 11, 7:00am
+AWST=9:00am AEST/QLD-NSW-VIC-ACT-TAS — 56, plus the earlier RELACS
+referral draft). Full recipient list and timing: `wave3-unscoped/lead_generation/offers/send_schedule_2026-08-13_batch2.md`.
+
+This closes the full cycle for the Wave 2 (Bookkeeping, GrantFinder,
+Pension) + Wave 1 deep-search batch: research → 78 new leads drafted →
+audit for pitch-fit/fee-policy/overlaps → Gmail auto-link-wrapping bug
+found and fixed (sign-off block dropped from all 79 per Owner's call) →
+supervised browser schedule-send, done one at a time with a
+screenshot-before/screenshot-after check on every single send (recipient,
+subject, body before; Scheduled/Drafts count increment/decrement after).
+Caught and retried ~5 transient "Message could not be sent" Gmail network
+errors along the way — none were mis-scheduled or double-sent.
+
+Xero was picked as the bookkeeping software this session; engagement
+letter template built (`wave2/bookkeeping/engagement_letter_template.md`)
+— Bookkeeping line has nothing left to build, first real client can be
+onboarded as soon as a reply lands.
 
 ## How to pick this back up
 
