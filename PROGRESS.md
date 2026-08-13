@@ -445,6 +445,62 @@ letter template built (`wave2/bookkeeping/engagement_letter_template.md`)
 — Bookkeeping line has nothing left to build, first real client can be
 onboarded as soon as a reply lands.
 
+## 2026-08-13 — daily opportunity scan: 1 drafted (as an inclusion, not a line), 1 rejected on licensing
+
+**Drafted: Scam & Online Safety Check, seniors, in-home (30/35)** —
+`wave3-unscoped/senior_scam_proofing/` (service_scope.md +
+pricing_sheet.md). Harden a senior's accounts and devices against the
+scams that actually hit over-65s, leave a large-print "what to do" card,
+hand over to the adult child. Reuses the Tech Concierge base, visit and
+booking flow exactly.
+
+**It cleared 25, but the verdict is "name it, don't build it."** Demand
+for the *outcome* is documented and large — 55+ reported **over $53M** in
+losses in 2025, remote-access scams average **~$17,943 per victim**
+(secondary press summaries of ACCC/NASC data, flagged for re-verification
+against the primary report). Demand for it as a *paid product* is not, and
+that is the finding. **Market gap scored 2**: the deliverable is supplied
+free by bodies whose entire purpose is supplying it — WA ScamNet
+presentations on request, **IDCARE Cyber Resilience Outreach Clinics
+running in WA**, eSafety's Be Connected partner network — and the free
+tier is **expanding**, with ID Support NSW launching a free one-on-one
+face-to-face scam-support roadshow from March 2026. Where it is paid it is
+already bundled: **Geeks Perth's "Tech Help for Seniors" page explicitly
+includes scam emails, phishing and passwords inside its normal in-home
+session**. So it was priced entirely off the existing Tech Concierge card
+($145 extended / +$49 bolt-on / $49 re-check) with **no new price
+invented** — a fear-priced premium would just send the family looking for
+the free option.
+
+**Sharpest boundary written to date, and it belongs on the file:** this
+service looks exactly like the door-knock fraud it prevents. Booked by the
+adult child only, never cold-called, never credential custody, never
+operate the account, and scam *recovery* is referred free to IDCARE rather
+than billed.
+
+**Owner decision needed:** add it as a `TechConcierge` task type plus a
+line of website copy, or leave it. Nothing wired into `config.py`.
+
+**Rejected: Invoice Chasing / Accounts-Receivable Follow-up (25/35)** —
+looked ideal on paper (same trades base, same shape as Bookkeeping and
+Job-Software Activation, and chasing money is the classic thing a tradie
+won't do), and is a hard **licensing reject**, verified against the
+regulator. WA's **Debt Collectors Licensing Act 1964** catches anyone who
+requests payment of debts **on behalf of another person**: **$2,630
+application for a 3-year licence, plus a $6,000 fidelity bond**
+(individual), fit-and-proper assessment by the **Commissioner for Police**,
+and operating unlicensed risks **up to $50,000** — and means **no
+entitlement to be paid for the work at all**. The regulator's exemptions
+cover legal practitioners and **public accountants**; a bookkeeper is
+neither, so the Bookkeeping line carries no exemption across. Same class as
+Declutter-to-Cash. **The compliant residual already exists**: configure the
+client's own Xero/ServiceM8 so *their* business sends the reminders — which
+is Job-Software Activation, unchanged.
+
+**Both scan lanes checked:** no logged one-off jobs in
+`gig_marketplace_scan.md`, and the hub database holds **zero `OddJobs`
+leads** — no repeating pattern to graduate.
+
 ## How to pick this back up
 
 - Run both apps (see top of this file).
